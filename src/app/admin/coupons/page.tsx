@@ -4,6 +4,8 @@ import { getAllCoupons } from "@/services/couponService";
 import { CouponActions } from "./_components/actions";
 import type { Coupon } from "@/lib/types";
 
+export const dynamic = 'force-dynamic';
+
 export default async function AdminCouponsPage() {
   const coupons: Coupon[] = await getAllCoupons();
 

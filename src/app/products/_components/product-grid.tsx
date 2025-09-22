@@ -5,7 +5,6 @@ import { ProductCard } from './product-card';
 import { Button } from '@/components/ui/button';
 import type { Product } from '@/lib/types';
 import { useState, useMemo } from 'react';
-import { Frown } from 'lucide-react';
 
 interface ProductGridProps {
   products: Product[];
@@ -34,7 +33,7 @@ export function ProductGrid({ products }: ProductGridProps) {
 
       {products.length === 0 ? (
         <div className="flex flex-col items-center justify-center text-center py-24 text-muted-foreground border-2 border-dashed rounded-lg">
-          <Frown className="h-16 w-16 mb-4" />
+          <p className="h-16 w-16 mb-4">:(</p>
           <h3 className="text-xl font-semibold text-foreground">No Products Found</h3>
           <p className="mt-2 max-w-xs">Your search or filter combination didn't return any results. Try adjusting your filters.</p>
         </div>

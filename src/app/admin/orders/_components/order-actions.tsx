@@ -26,7 +26,6 @@ import {
 } from '@/components/ui/accordion';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
-import { MoreHorizontal, PackageCheck, Truck, XCircle, CircleAlert, ExternalLink } from 'lucide-react';
 import type { Order, CartItem } from '@/lib/types';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
@@ -113,23 +112,23 @@ export function OrderActions({ orders }: { orders: Order[] }) {
                                             <DropdownMenu>
                                                 <DropdownMenuTrigger asChild>
                                                     <Button aria-haspopup="true" size="icon" variant="ghost">
-                                                        <MoreHorizontal className="h-4 w-4" />
+                                                        ...
                                                         <span className="sr-only">Toggle menu</span>
                                                     </Button>
                                                 </DropdownMenuTrigger>
                                                 <DropdownMenuContent align="end">
                                                     <DropdownMenuLabel>Change Status</DropdownMenuLabel>
                                                     <DropdownMenuItem onClick={() => handleStatusChange(order.id, 'processing')}>
-                                                        <CircleAlert className="mr-2 h-4 w-4" /> Processing
+                                                        Processing
                                                     </DropdownMenuItem>
                                                     <DropdownMenuItem onClick={() => handleStatusChange(order.id, 'shipped')}>
-                                                        <Truck className="mr-2 h-4 w-4" /> Shipped
+                                                        Shipped
                                                     </DropdownMenuItem>
                                                     <DropdownMenuItem onClick={() => handleStatusChange(order.id, 'delivered')}>
-                                                        <PackageCheck className="mr-2 h-4 w-4" /> Delivered
+                                                        Delivered
                                                     </DropdownMenuItem>
                                                     <DropdownMenuItem className="text-red-500" onClick={() => handleStatusChange(order.id, 'cancelled')}>
-                                                        <XCircle className="mr-2 h-4 w-4" /> Cancelled
+                                                        Cancelled
                                                     </DropdownMenuItem>
                                                 </DropdownMenuContent>
                                             </DropdownMenu>
@@ -149,7 +148,6 @@ export function OrderActions({ orders }: { orders: Order[] }) {
                                             <li key={item.productId} className='flex justify-between items-center text-sm gap-2'>
                                                 <Link href={`/admin/products/${item.productId}/edit`} className="flex items-center gap-2 hover:underline">
                                                     <span>{item.name} (x{item.quantity})</span>
-                                                    <ExternalLink className="h-3 w-3 text-muted-foreground"/>
                                                 </Link>
                                                 <span>₹{((item.price || 0) * item.quantity).toFixed(2)}</span>
                                             </li>

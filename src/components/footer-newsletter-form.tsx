@@ -4,7 +4,6 @@
 import { useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Send, Loader2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { addSubscriber } from '@/services/subscriberService';
 
@@ -51,7 +50,7 @@ export function FooterNewsletterForm() {
         required
       />
       <Button type="submit" size="icon" aria-label="Subscribe" disabled={loading}>
-        {loading ? <Loader2 className="h-5 w-5 animate-spin" /> : <Send className="h-5 w-5" />}
+        {loading ? "..." : "Send"}
       </Button>
     </form>
   );

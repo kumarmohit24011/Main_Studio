@@ -28,7 +28,6 @@ import {
 } from "@/components/ui/alert-dialog"
 
 import { Button } from '@/components/ui/button';
-import { MoreHorizontal, Pencil, Trash2, TrendingUp, Sparkles, Eye, EyeOff } from 'lucide-react';
 import type { Product } from '@/lib/types';
 import Image from 'next/image';
 import { Badge } from '@/components/ui/badge';
@@ -157,7 +156,7 @@ export function ProductTable({ products, selectedProducts, setSelectedProducts }
                                         }
                                     }} 
                                 />
-                                <Label htmlFor={`published-${product.id}`} className="text-xs flex items-center gap-1">{product.isPublished ? <Eye className="h-3 w-3"/> : <EyeOff className="h-3 w-3"/>} Published</Label>
+                                <Label htmlFor={`published-${product.id}`} className="text-xs flex items-center gap-1">Published</Label>
                             </div>
                             <div className="flex items-center space-x-2">
                                 <Switch 
@@ -171,7 +170,7 @@ export function ProductTable({ products, selectedProducts, setSelectedProducts }
                                         }
                                     }}
                                 />
-                                <Label htmlFor={`new-${product.id}`} className="text-xs flex items-center gap-1"><Sparkles className="h-3 w-3"/> New</Label>
+                                <Label htmlFor={`new-${product.id}`} className="text-xs flex items-center gap-1">New</Label>
                             </div>
                            <div className="flex items-center space-x-2">
                                 <Switch 
@@ -185,7 +184,7 @@ export function ProductTable({ products, selectedProducts, setSelectedProducts }
                                         }
                                     }}
                                 />
-                                <Label htmlFor={`trending-${product.id}`} className="text-xs flex items-center gap-1"><TrendingUp className="h-3 w-3"/> Trending</Label>
+                                <Label htmlFor={`trending-${product.id}`} className="text-xs flex items-center gap-1">Trending</Label>
                             </div>
                         </div>
                     </TableCell>
@@ -193,7 +192,7 @@ export function ProductTable({ products, selectedProducts, setSelectedProducts }
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                         <Button aria-haspopup="true" size="icon" variant="ghost">
-                            <MoreHorizontal className="h-4 w-4" />
+                            ...
                             <span className="sr-only">Toggle menu</span>
                         </Button>
                         </DropdownMenuTrigger>
@@ -201,13 +200,12 @@ export function ProductTable({ products, selectedProducts, setSelectedProducts }
                         <DropdownMenuLabel>Actions</DropdownMenuLabel>
                         <DropdownMenuItem asChild>
                            <Link href={`/admin/products/${product.id}/edit`}>
-                             <Pencil className="mr-2 h-4 w-4"/>Edit
+                             Edit
                            </Link>
                         </DropdownMenuItem>
                         <AlertDialog>
                             <AlertDialogTrigger asChild>
                                 <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
-                                    <Trash2 className="mr-2 h-4 w-4 text-red-500"/>
                                     <span className="text-red-500">Delete</span>
                                 </DropdownMenuItem>
                             </AlertDialogTrigger>
