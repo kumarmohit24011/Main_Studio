@@ -99,7 +99,6 @@ export function Header({ categories = [] }: HeaderProps) {
             key={category.id} 
             href={`/products?category=${category.name}`} 
             className="hover:text-primary transition-colors"
-            prefetch={true}
         >
             {category.name}
         </Link>

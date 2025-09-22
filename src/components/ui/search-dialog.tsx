@@ -10,6 +10,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
+  DialogDescription
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -92,7 +93,9 @@ export function SearchDialog({ children }: SearchDialogProps) {
       <DialogContent className="max-w-2xl">
         <DialogHeader>
           <DialogTitle>Search</DialogTitle>
-          <div className="sr-only">Search for products and categories</div>
+          <DialogDescription>
+            Search for products and categories. You can also use the search bar below to search for products and categories.
+          </DialogDescription>
         </DialogHeader>
         <div className="space-y-4">
           <div className="relative">
