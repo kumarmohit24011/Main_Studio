@@ -13,7 +13,6 @@ import {
   DialogClose
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
-import { Plus, MoreHorizontal, Trash2, Pencil, Upload, X } from 'lucide-react';
 import {
   Table,
   TableBody,
@@ -213,7 +212,6 @@ export function CategoryActions({ categories: initialCategories }: { categories:
         <Dialog open={isDialogOpen} onOpenChange={setDialogOpen}>
           <DialogTrigger asChild>
             <Button size="sm" className="h-8 gap-1" onClick={() => handleDialogOpen()}>
-              <Plus className="h-3.5 w-3.5" />
               <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">Add Category</span>
             </Button>
           </DialogTrigger>
@@ -271,13 +269,12 @@ export function CategoryActions({ categories: initialCategories }: { categories:
                                   className="h-7 w-7"
                                   onClick={handleRemoveImage}
                                 >
-                                  <X className="h-4 w-4" />
+                                  X
                                 </Button>
                               </div>
                             </div>
                           )}
                           <div className="relative w-full border-2 border-dashed border-muted-foreground/50 rounded-lg p-4 text-center hover:bg-muted/50 transition-colors">
-                            <Upload className="mx-auto h-12 w-12 text-muted-foreground" />
                             <p className="mt-2 text-sm text-muted-foreground">Upload category image</p>
                             <Input 
                               type="file" 
@@ -361,20 +358,18 @@ export function CategoryActions({ categories: initialCategories }: { categories:
                           <DropdownMenu>
                             <DropdownMenuTrigger asChild>
                               <Button aria-haspopup="true" size="icon" variant="ghost">
-                                <MoreHorizontal className="h-4 w-4" />
+                                ...
                                 <span className="sr-only">Toggle menu</span>
                               </Button>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="end">
                               <DropdownMenuLabel>Actions</DropdownMenuLabel>
                               <DropdownMenuItem onClick={() => handleDialogOpen(category)}>
-                                  <Pencil className="mr-2 h-4 w-4"/>
                                   Edit
                               </DropdownMenuItem>
                               <AlertDialog>
                                   <AlertDialogTrigger asChild>
                                       <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
-                                          <Trash2 className="mr-2 h-4 w-4 text-red-500"/>
                                           <span className="text-red-500">Delete</span>
                                       </DropdownMenuItem>
                                   </AlertDialogTrigger>

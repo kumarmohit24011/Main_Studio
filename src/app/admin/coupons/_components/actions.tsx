@@ -13,7 +13,6 @@ import {
   DialogClose
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
-import { Plus, MoreHorizontal, Trash2, Pencil, Pause, Play } from 'lucide-react';
 import {
   Table,
   TableBody,
@@ -149,7 +148,6 @@ export function CouponActions({ coupons }: { coupons: Coupon[] }) {
         <Dialog open={isDialogOpen} onOpenChange={setDialogOpen}>
           <DialogTrigger asChild>
             <Button size="sm" className="h-8 gap-1" onClick={() => handleDialogOpen()}>
-              <Plus className="h-3.5 w-3.5" />
               <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">Add Coupon</span>
             </Button>
           </DialogTrigger>
@@ -272,24 +270,21 @@ export function CouponActions({ coupons }: { coupons: Coupon[] }) {
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Button aria-haspopup="true" size="icon" variant="ghost">
-                      <MoreHorizontal className="h-4 w-4" />
+                      ...
                       <span className="sr-only">Toggle menu</span>
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end">
                     <DropdownMenuLabel>Actions</DropdownMenuLabel>
                     <DropdownMenuItem onClick={() => handleDialogOpen(coupon)}>
-                        <Pencil className="mr-2 h-4 w-4"/>
                         Edit
                     </DropdownMenuItem>
                     <DropdownMenuItem onClick={() => handleToggleActive(coupon)}>
-                        {coupon.isActive ? <Pause className="mr-2 h-4 w-4" /> : <Play className="mr-2 h-4 w-4" />}
                         {coupon.isActive ? 'Deactivate' : 'Activate'}
                     </DropdownMenuItem>
                     <AlertDialog>
                         <AlertDialogTrigger asChild>
                             <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
-                                <Trash2 className="mr-2 h-4 w-4 text-red-500"/>
                                 <span className="text-red-500">Delete</span>
                             </DropdownMenuItem>
                         </AlertDialogTrigger>
@@ -303,7 +298,7 @@ export function CouponActions({ coupons }: { coupons: Coupon[] }) {
                             <AlertDialogFooter>
                             <AlertDialogCancel>Cancel</AlertDialogCancel>
                             <AlertDialogAction onClick={() => handleDelete(coupon.id)}>Continue</AlertDialogAction>
-                            </footer AlertDialogFooter>
+                            </AlertDialogFooter>
                         </AlertDialogContent>
                     </AlertDialog>
                   </DropdownMenuContent>

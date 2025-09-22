@@ -6,7 +6,6 @@ import { getUserProfile } from "@/services/userService";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { OrderHistory } from "@/app/account/_components/order-history";
-import { Home, Loader2 } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { getOrdersByUserId } from "@/services/orderService";
@@ -84,7 +83,7 @@ export function CustomerDetailClient({ customerId }: CustomerDetailClientProps) 
     if (authLoading) {
         return (
             <div className="flex items-center justify-center min-h-[200px]">
-                <Loader2 className="h-8 w-8 animate-spin" />
+                <p>...</p>
             </div>
         );
     }
@@ -98,7 +97,7 @@ export function CustomerDetailClient({ customerId }: CustomerDetailClientProps) 
     if (loading) {
         return (
             <div className="flex items-center justify-center min-h-[200px]">
-                <Loader2 className="h-8 w-8 animate-spin" />
+                <p>...</p>
                 <span className="ml-2">Loading customer details...</span>
             </div>
         );
@@ -192,7 +191,6 @@ export function CustomerDetailClient({ customerId }: CustomerDetailClientProps) 
                                 ))
                             ) : (
                                 <div className="text-center py-8 text-muted-foreground text-sm">
-                                    <Home className="mx-auto h-8 w-8 mb-2" />
                                     <p>No saved addresses.</p>
                                 </div>
                             )}

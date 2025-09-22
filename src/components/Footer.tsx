@@ -1,7 +1,6 @@
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Instagram, Send, Gem, Mail, Phone } from "lucide-react";
 import Link from "next/link";
 import { FooterNewsletterForm } from "./footer-newsletter-form";
 
@@ -30,7 +29,6 @@ export function Footer() {
         <div className="py-12 grid grid-cols-1 md:grid-cols-2 gap-8 text-sm">
           <div className="col-span-2 md:col-span-1">
              <Link href="/" className="text-2xl font-headline font-bold text-primary tracking-wider mb-4 flex items-center gap-2">
-                <Gem />
                 REDBOW
             </Link>
             <p className="text-muted-foreground pr-4 mb-4">
@@ -38,10 +36,10 @@ export function Footer() {
             </p>
             <div className="space-y-2 text-muted-foreground">
                 <a href="mailto:support@redbow.com" className="flex items-center gap-2 hover:text-primary transition-colors">
-                    <Mail className="h-4 w-4" /> support@redbow.com
+                    support@redbow.com
                 </a>
                 <a href="tel:+919876543210" className="flex items-center gap-2 hover:text-primary transition-colors">
-                    <Phone className="h-4 w-4" /> +91 987 654 3210
+                    +91 987 654 3210
                 </a>
             </div>
           </div>
@@ -61,7 +59,6 @@ export function Footer() {
         <div className="py-8 flex flex-col md:flex-row items-center justify-between gap-6 border-t border-border/60">
              <div className="flex space-x-4">
                 <Link href="https://www.instagram.com/redbow.jewels" aria-label="Instagram" className="text-muted-foreground hover:text-primary transition-colors flex items-center gap-2">
-                  <Instagram />
                   <span>Follow Us on Instagram</span>
                 </Link>
             </div>
