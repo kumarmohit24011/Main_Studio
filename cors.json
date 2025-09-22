@@ -1,0 +1,22 @@
+
+[
+  {
+    "origin": ["https://studio--redbow-24723.us-central1.hosted.app", "https://studio--redbow-24723.us-central1.hosted.app/"],
+    "method": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    "responseHeader": [
+      "Content-Type",
+      "Authorization",
+      "Content-Length",
+      "User-Agent",
+      "x-firebase-gmpid",
+      "X-Goog-Upload-Command",
+      "X-Goog-Upload-Content-Length",
+      "X-Goog-Upload-Content-Type",
+      "X-Goog-Upload-File-Name",
+      "X-Goog-Upload-Offset",
+      "X-Goog-Upload-Protocol",
+      "X-Goog-Upload-Status"
+    ],
+    "maxAgeSeconds": 3600
+  }
+]

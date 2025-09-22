@@ -1,0 +1,74 @@
+declare module 'lucide-react' {
+  import { FC } from 'react';
+  
+  interface IconProps {
+    color?: string;
+    size?: string | number;
+    strokeWidth?: string | number;
+    className?: string;
+  }
+
+  export const Bell: FC<IconProps>;
+  export const CircleUser: FC<IconProps>;
+  export const Home: FC<IconProps>;
+  export const LineChart: FC<IconProps>;
+  export const Menu: FC<IconProps>;
+  export const Package: FC<IconProps>;
+  export const Package2: FC<IconProps>;
+  export const ShoppingCart: FC<IconProps>;
+  export const Users: FC<IconProps>;
+  export const Settings: FC<IconProps>;
+  export const LayoutGrid: FC<IconProps>;
+  export const Tag: FC<IconProps>;
+  export const Presentation: FC<IconProps>;
+  export const Megaphone: FC<IconProps>;
+  export const DollarSign: FC<IconProps>;
+  export const Search: FC<IconProps>;
+  export const ChevronDown: FC<IconProps>;
+  export const Filter: FC<IconProps>;
+  export const Plus: FC<IconProps>;
+  export const Pencil: FC<IconProps>;
+  export const Trash2: FC<IconProps>;
+  export const Eye: FC<IconProps>;
+  export const Edit: FC<IconProps>;
+  export const X: FC<IconProps>;
+  export const ChevronLeft: FC<IconProps>;
+  export const ChevronRight: FC<IconProps>;
+  export const Star: FC<IconProps>;
+  export const Heart: FC<IconProps>;
+  export const Share2: FC<IconProps>;
+  export const ShoppingBag: FC<IconProps>;
+  export const Minus: FC<IconProps>;
+  export const Check: FC<IconProps>;
+  export const AlertCircle: FC<IconProps>;
+  export const Info: FC<IconProps>;
+  export const XCircle: FC<IconProps>;
+  export const CheckCircle: FC<IconProps>;
+  export const Upload: FC<IconProps>;
+  export const Download: FC<IconProps>;
+  export const Calendar: FC<IconProps>;
+  export const Clock: FC<IconProps>;
+  export const MapPin: FC<IconProps>;
+  export const Phone: FC<IconProps>;
+  export const Mail: FC<IconProps>;
+  export const Globe: FC<IconProps>;
+  export const Facebook: FC<IconProps>;
+  export const Twitter: FC<IconProps>;
+  export const Instagram: FC<IconProps>;
+  export const Youtube: FC<IconProps>;
+  export const Linkedin: FC<IconProps>;
+  export const Github: FC<IconProps>;
+  export const ExternalLink: FC<IconProps>;
+  export const ArrowRight: FC<IconProps>;
+  export const ArrowLeft: FC<IconProps>;
+  export const ArrowUp: FC<IconProps>;
+  export const ArrowDown: FC<IconProps>;
+  export const MoreHorizontal: FC<IconProps>;
+  export const MoreVertical: FC<IconProps>;
+  export const Copy: FC<IconProps>;
+  export const Image: FC<IconProps>;
+  export const FileText: FC<IconProps>;
+  export const Loader2: FC<IconProps>;
+  export const Save: FC<IconProps>;
+  export const RefreshCw: FC<IconProps>;
+}
