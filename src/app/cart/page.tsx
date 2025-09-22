@@ -18,8 +18,8 @@ export default function CartPage() {
 
   if (cartLoading) {
     return (
-       <div className="container mx-auto px-4 py-12">
-            <h1 className="text-3xl font-headline font-bold mb-8">Your Cart</h1>
+       <div className="container mx-auto px-4 py-8 md:py-12">
+            <h1 className="text-2xl md:text-3xl font-headline font-bold mb-6 md:mb-8">Your Cart</h1>
             <div className="grid md:grid-cols-3 gap-8 items-start">
                 <div className="md:col-span-2">
                     <Card>
@@ -52,8 +52,8 @@ export default function CartPage() {
   if (cart.length === 0) {
     return (
       <div className="container mx-auto px-4 py-12 text-center">
-        <ShoppingCart className="mx-auto h-24 w-24 text-muted-foreground" />
-        <h1 className="mt-6 text-3xl font-headline font-bold">Your Cart is Empty</h1>
+        <ShoppingCart className="mx-auto h-20 w-20 md:h-24 md:w-24 text-muted-foreground" />
+        <h1 className="mt-6 text-2xl md:text-3xl font-headline font-bold">Your Cart is Empty</h1>
         <p className="mt-2 text-muted-foreground">Looks like you haven't added anything to your cart yet.</p>
         <Button asChild className="mt-6">
           <Link href="/products">Continue Shopping</Link>
@@ -63,35 +63,38 @@ export default function CartPage() {
   }
 
   return (
-    <div className="container mx-auto px-4 py-12">
-      <h1 className="text-3xl font-headline font-bold mb-8">Your Cart</h1>
+    <div className="container mx-auto px-4 py-8 md:py-12">
+      <h1 className="text-2xl md:text-3xl font-headline font-bold mb-6 md:mb-8">Your Cart</h1>
       <div className="grid lg:grid-cols-3 gap-8 items-start">
         <div className="lg:col-span-2">
           <Card>
             <CardHeader>
-              <CardTitle>Cart Items ({cart.length})</CardTitle>
+              <CardTitle className="text-xl md:text-2xl">Cart Items ({cart.length})</CardTitle>
             </CardHeader>
-            <CardContent>
-              <div className="space-y-6">
-                {cart.map((item) => (
-                  <div key={item.productId} className="flex items-center gap-4">
-                    <div className="relative h-20 w-20 md:h-24 md:w-24 rounded-md overflow-hidden flex-shrink-0">
+            <CardContent className="divide-y divide-border">
+              {cart.map((item) => (
+                <div key={item.productId} className="py-4 grid grid-cols-12 gap-4 items-center">
+                  <div className="col-span-3 sm:col-span-2">
+                    <div className="relative h-20 w-20 rounded-md overflow-hidden">
                       <Image
                         src={item.imageUrl || "https://picsum.photos/100/100"}
                         alt={item.name || "Product image"}
                         fill
                         className="object-cover"
+                        sizes="(max-width: 640px) 80px, 120px"
                       />
                     </div>
-                    <div className="flex-1 min-w-0">
-                      <h3 className="font-semibold truncate">{item.name}</h3>
+                  </div>
+                  <div className="col-span-9 sm:col-span-10 grid grid-cols-12 gap-4 items-center">
+                    <div className="col-span-12 sm:col-span-5">
+                      <h3 className="font-semibold truncate text-base">{item.name}</h3>
                       <p className="text-muted-foreground text-sm">₹{item.price?.toFixed(2)}</p>
                     </div>
-                    <div className="flex items-center gap-1 md:gap-2">
+                    <div className="col-span-8 sm:col-span-4 flex items-center gap-1">
                        <Button 
                             variant="outline" 
                             size="icon" 
-                            className="h-8 w-8"
+                            className="h-8 w-8 flex-shrink-0"
                             onClick={() => updateQuantity(item.productId, item.quantity - 1)}
                         >
                            <Minus className="h-4 w-4" />
@@ -100,28 +103,30 @@ export default function CartPage() {
                        <Button 
                             variant="outline" 
                             size="icon" 
-                            className="h-8 w-8"
+                            className="h-8 w-8 flex-shrink-0"
                             onClick={() => updateQuantity(item.productId, item.quantity + 1)}
                         >
                            <Plus className="h-4 w-4" />
                        </Button>
                     </div>
-                    <p className="font-semibold w-20 text-right hidden sm:block">
-                      ₹{((item.price || 0) * item.quantity).toFixed(2)}
-                    </p>
-                    <Button variant="ghost" size="icon" onClick={() => removeFromCart(item.productId)}>
-                      <Trash2 className="h-5 w-5 text-muted-foreground" />
-                    </Button>
+                    <div className="col-span-4 sm:col-span-3 flex items-center justify-end gap-2">
+                      <p className="font-semibold text-right text-base">
+                        ₹{((item.price || 0) * item.quantity).toFixed(2)}
+                      </p>
+                      <Button variant="ghost" size="icon" className="text-muted-foreground hover:text-destructive" onClick={() => removeFromCart(item.productId)}>
+                        <Trash2 className="h-5 w-5" />
+                      </Button>
+                    </div>
                   </div>
-                ))}
-              </div>
+                </div>
+              ))}
             </CardContent>
           </Card>
         </div>
-        <div>
-          <Card className="sticky top-24">
+        <div className="lg:sticky top-24">
+          <Card>
             <CardHeader>
-              <CardTitle>Order Summary</CardTitle>
+              <CardTitle className="text-xl md:text-2xl">Order Summary</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="flex justify-between">
@@ -139,7 +144,7 @@ export default function CartPage() {
               </div>
             </CardContent>
             <CardFooter>
-              <Button className="w-full" asChild>
+              <Button className="w-full" size="lg" asChild>
                 <Link href="/checkout">Proceed to Checkout</Link>
               </Button>
             </CardFooter>

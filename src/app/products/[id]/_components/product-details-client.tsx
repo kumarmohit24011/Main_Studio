@@ -5,14 +5,13 @@ import { useState } from "react";
 import type { Product } from "@/lib/types";
 import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { AddToCartButton } from "@/components/shared/add-to-cart-button";
 import { AddToWishlistButton } from "./add-to-wishlist-button";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { Separator } from "@/components/ui/separator";
 
-export function ProductDetailsClient({ product, relatedProducts }: { product: Product, relatedProducts: Product[] }) {
+export function ProductDetailsClient({ product }: { product: Product }) {
   const allImages = [product.imageUrl, ...(product.imageUrls || [])].filter(
     (url, index, self) => url && self.indexOf(url) === index
   ) as string[];
@@ -20,9 +19,9 @@ export function ProductDetailsClient({ product, relatedProducts }: { product: Pr
   const [mainImage, setMainImage] = useState<string>(allImages[0] || "https://picsum.photos/600/600");
 
   return (
-    <div className="grid md:grid-cols-2 gap-8 lg:gap-12 items-start">
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12 items-start">
       {/* Image Gallery */}
-      <div className="flex flex-col-reverse md:flex-row gap-4 sticky top-24">
+      <div className="flex flex-col-reverse md:flex-row gap-4 md:sticky top-24">
         {allImages.length > 1 && (
              <div className="flex md:flex-col gap-3 overflow-x-auto md:overflow-x-visible pb-2 md:pb-0">
                 {allImages.map((img, index) => (
@@ -76,10 +75,6 @@ export function ProductDetailsClient({ product, relatedProducts }: { product: Pr
 
         <p className="text-2xl md:text-3xl font-semibold text-primary">₹{product.price.toFixed(2)}</p>
         
-        <p className="text-muted-foreground text-base leading-relaxed">{product.description}</p>
-        
-        <Separator />
-
         <div className="flex flex-col sm:flex-row items-stretch gap-3">
           <AddToCartButton product={product} className="w-full sm:w-auto flex-grow"/>
           <AddToWishlistButton product={product} />
@@ -94,6 +89,11 @@ export function ProductDetailsClient({ product, relatedProducts }: { product: Pr
           </p>
           {product.sku && <p>SKU: {product.sku}</p>}
         </div>
+
+        <Separator />
+
+        <p className="text-muted-foreground text-base leading-relaxed">{product.description}</p>
+        
       </div>
     </div>
   );

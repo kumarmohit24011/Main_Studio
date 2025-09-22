@@ -5,7 +5,7 @@ import type { Product } from "@/lib/types";
 import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Heart, ShoppingCart } from "lucide-react";
+import { Heart } from "lucide-react";
 import { useWishlist } from "@/hooks/use-wishlist";
 import { AddToCartButton } from "@/components/shared/add-to-cart-button";
 
@@ -23,37 +23,58 @@ export function ProductCard({ product }: { product: Product }) {
     }
   };
 
+  const showDiscount = product.originalPrice && product.originalPrice > product.price;
+
   return (
-    <Card className="overflow-hidden group border bg-card hover:shadow-lg transition-shadow duration-300 flex flex-col">
-      <Link href={`/products/${product.id}`} className="block flex flex-col h-full">
+    <Card className="overflow-hidden group border bg-card hover:shadow-lg transition-shadow duration-300 flex flex-col justify-between h-full">
+      <div>
         <div className="relative w-full aspect-square overflow-hidden">
-            <Image
-              src={product.imageUrl || "https://picsum.photos/400/400"}
-              alt={product.name}
-              data-ai-hint="jewelry product"
-              fill
-              className="object-cover transition-transform duration-300 group-hover:scale-105"
-            />
-            <div className="absolute top-2 right-2 z-10 flex flex-col gap-2">
-                <Button 
-                    variant="secondary" 
-                    size="icon" 
-                    onClick={handleToggleWishlist} 
-                    className="rounded-full h-9 w-9 bg-background/60 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity duration-200 hover:bg-background"
-                    aria-label="Toggle Wishlist"
-                >
-                    <Heart className={`w-4 h-4 ${inWishlist ? 'text-red-500 fill-red-500' : 'text-foreground'}`}/>
-                </Button>
-            </div>
-             <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/20 via-black/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                <AddToCartButton product={product} size="sm" variant="secondary" className="w-full" />
-            </div>
+          <Link href={`/products/${product.id}`} className="block">
+              <Image
+                src={product.imageUrl || "https://picsum.photos/400/400"}
+                alt={product.name}
+                data-ai-hint="jewelry product"
+                fill
+                className="object-cover transition-transform duration-300 group-hover:scale-105"
+              />
+          </Link>
+          
+          {product.tags?.includes('popular') && (
+            <Badge className="absolute top-3 left-3 bg-rose-500 text-rose-50 hover:bg-rose-600 border-none">
+              Hot Selling
+            </Badge>
+          )}
+
+          <Button 
+              variant="secondary" 
+              size="icon" 
+              onClick={handleToggleWishlist} 
+              className="absolute top-3 right-3 rounded-full h-9 w-9 bg-background/60 backdrop-blur-sm hover:bg-background"
+              aria-label="Toggle Wishlist"
+          >
+              <Heart className={`w-4 h-4 ${inWishlist ? 'text-red-500 fill-red-500' : 'text-foreground'}`}/>
+          </Button>
         </div>
-        <CardContent className="p-4 flex-grow flex flex-col">
-            <h3 className="font-semibold text-base text-foreground truncate flex-grow">{product.name}</h3>
-            <p className="text-primary font-bold text-lg mt-2">₹{product.price.toFixed(2)}</p>
+        <CardContent className="p-4">
+            <Link href={`/products/${product.id}`}>
+                <h3 className="font-semibold text-base text-foreground truncate min-h-[2em]">{product.name}</h3>
+            </Link>
+            <div className="flex items-baseline gap-2 mt-2">
+                <p className="text-primary font-bold text-lg">
+                    ₹{product.price.toFixed(2)}
+                </p>
+                {showDiscount && (
+                    <p className="text-muted-foreground text-sm line-through">
+                        ₹{product.originalPrice.toFixed(2)}
+                    </p>
+                )}
+            </div>
         </CardContent>
-      </Link>
+      </div>
+
+      <div className="p-4 pt-0">
+        <AddToCartButton product={product} variant="default" className="w-full" />
+      </div>
     </Card>
   );
 }

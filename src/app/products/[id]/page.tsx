@@ -23,7 +23,7 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
 
   return (
     <div className="container mx-auto px-4 py-8 md:py-12">
-        <ProductDetailsClient product={product} relatedProducts={relatedProducts} />
+        <ProductDetailsClient product={product} />
         
         {relatedProducts.length > 0 && (
             <div className="mt-16 md:mt-24">

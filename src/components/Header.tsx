@@ -128,7 +128,7 @@ export function Header({ categories = [] }: HeaderProps) {
               </Button>
             </SearchDialog>
           </div>
-           <Button variant="ghost" size="icon" asChild className="hidden md:inline-flex">
+           <Button variant="ghost" size="icon" asChild>
               <Link href="/account?tab=wishlist" className="relative" prefetch={true}>
                 <Heart className="h-4 w-4" />
                 {isClient && wishlistItemCount > 0 && <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-xs text-primary-foreground">{wishlistItemCount}</span>}
@@ -154,17 +154,17 @@ export function Header({ categories = [] }: HeaderProps) {
                 <span className="sr-only">Open menu</span>
               </Button>
             </SheetTrigger>
-            <SheetContent side="left" className="w-full max-w-sm p-0 flex flex-col bg-background">
+            <SheetContent side="left" className="w-1/2 p-0 flex flex-col bg-background">
                 <div className="flex justify-between items-center p-4 border-b">
                      <Link href="/" className="text-2xl font-headline font-bold text-primary tracking-wider" onClick={() => setMobileMenuOpen(false)}>
                         REDBOW
                     </Link>
                 </div>
                 <div className="p-4">
-                  <SearchDialog>
+                  <SearchDialog onResultClick={() => setMobileMenuOpen(false)}>
                     <Button variant="outline" className="w-full justify-start">
                       <Search className="h-4 w-4 mr-2" />
-                      Search products & categories...
+                      Search products...
                     </Button>
                   </SearchDialog>
                 </div>

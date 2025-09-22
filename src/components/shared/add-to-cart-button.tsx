@@ -4,6 +4,7 @@ import { useCart } from "@/hooks/use-cart";
 import { useToast } from "@/hooks/use-toast";
 import type { Product } from "@/lib/types";
 import { cn } from "@/lib/utils";
+import { ShoppingCart } from "lucide-react";
 
 interface AddToCartButtonProps {
     product: Product;
@@ -23,7 +24,7 @@ export function AddToCartButton({ product, className, size = "lg", variant = "de
 
   return (
     <Button onClick={handleAddToCart} size={size} variant={variant} className={cn("flex items-center justify-center", className)} aria-label="Add to cart">
-        <span className={cn({"mr-2": size !== 'icon'})}>+</span>
+        <ShoppingCart className={cn("h-4 w-4", {"mr-2": size !== 'icon'})} />
         {size !== 'icon' && <span>Add to Cart</span>}
     </Button>
   );
