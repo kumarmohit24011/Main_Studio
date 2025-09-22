@@ -1,0 +1,504 @@
+[debug] [2025-09-22T13:42:27.460Z] ----------------------------------------------------------------------
+[debug] [2025-09-22T13:42:27.463Z] Command:       /nix/store/ws50yvm6vzlzf7jzz6n7xh4szddrack1-nodejs-20.19.1/bin/node /nix/store/wma3rvxxva78rqvnpja82nx5b3mclpxg-firebase-tools-14.15.2/lib/node_modules/firebase-tools/lib/bin/firebase.js deploy --only hosting,storage
+[debug] [2025-09-22T13:42:27.464Z] CLI Version:   14.15.2
+[debug] [2025-09-22T13:42:27.464Z] Platform:      linux
+[debug] [2025-09-22T13:42:27.464Z] Node Version:  v20.19.1
+[debug] [2025-09-22T13:42:27.464Z] Time:          Mon Sep 22 2025 13:42:27 GMT+0000 (Coordinated Universal Time)
+[debug] [2025-09-22T13:42:27.465Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2025-09-22T13:42:27.957Z] No OAuth tokens found
+[debug] [2025-09-22T13:42:27.957Z] No OAuth tokens found
+[error] Failed to fetch Firebase Project from current Studio Workspace: Unable to refresh auth: not yet authenticated.
+[debug] [2025-09-22T13:42:27.963Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/userinfo.email"]
+[debug] [2025-09-22T13:42:27.964Z] > authorizing via signed-in user (kumarmohit24011@gmail.com)
+[debug] [2025-09-22T13:42:27.964Z] [iam] checking project redbow-24723 for permissions ["firebase.projects.get","firebasehosting.sites.update","firebaserules.releases.create","firebaserules.releases.update","firebaserules.rulesets.create"]
+[debug] [2025-09-22T13:42:27.965Z] No OAuth tokens found
+[debug] [2025-09-22T13:42:27.965Z] No OAuth tokens found
+[debug] [2025-09-22T13:42:27.965Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/userinfo.email"]
+[debug] [2025-09-22T13:42:27.965Z] > authorizing via signed-in user (kumarmohit24011@gmail.com)
+[debug] [2025-09-22T13:42:27.967Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/redbow-24723:testIamPermissions [none]
+[debug] [2025-09-22T13:42:27.967Z] >>> [apiv2][(partial)header] POST https://cloudresourcemanager.googleapis.com/v1/projects/redbow-24723:testIamPermissions x-goog-quota-user=projects/redbow-24723
+[debug] [2025-09-22T13:42:27.967Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/redbow-24723:testIamPermissions {"permissions":["firebase.projects.get","firebasehosting.sites.update","firebaserules.releases.create","firebaserules.releases.update","firebaserules.rulesets.create"]}
+[debug] [2025-09-22T13:42:28.795Z] <<< [apiv2][status] POST https://cloudresourcemanager.googleapis.com/v1/projects/redbow-24723:testIamPermissions 200
+[debug] [2025-09-22T13:42:28.796Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/redbow-24723:testIamPermissions {"permissions":["firebase.projects.get","firebasehosting.sites.update","firebaserules.releases.create","firebaserules.releases.update","firebaserules.rulesets.create"]}
+[debug] [2025-09-22T13:42:28.797Z] No OAuth tokens found
+[debug] [2025-09-22T13:42:28.798Z] No OAuth tokens found
+[debug] [2025-09-22T13:42:28.798Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/userinfo.email"]
+[debug] [2025-09-22T13:42:28.798Z] > authorizing via signed-in user (kumarmohit24011@gmail.com)
+[debug] [2025-09-22T13:42:28.798Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/redbow-24723 [none]
+[debug] [2025-09-22T13:42:29.070Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/redbow-24723 200
+[debug] [2025-09-22T13:42:29.070Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/redbow-24723 {"projectId":"redbow-24723","projectNumber":"322692287326","displayName":"Redbow","name":"projects/redbow-24723","resources":{"hostingSite":"redbow-24723"},"state":"ACTIVE","etag":"1_874b01d0-9968-41a6-a66e-9ee5c1840029"}
+[debug] [2025-09-22T13:42:34.262Z] defaultcredentials: no credential available.
+[debug] [2025-09-22T13:42:34.263Z] No OAuth tokens found
+[debug] [2025-09-22T13:42:34.263Z] No OAuth tokens found
+[debug] [2025-09-22T13:42:34.263Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/userinfo.email"]
+[debug] [2025-09-22T13:42:34.264Z] > authorizing via signed-in user (kumarmohit24011@gmail.com)
+[debug] [2025-09-22T13:42:34.264Z] >>> [apiv2][query] GET https://firebasehosting.googleapis.com/v1beta1/projects/redbow-24723/sites pageToken=&pageSize=10
+[debug] [2025-09-22T13:42:34.766Z] <<< [apiv2][status] GET https://firebasehosting.googleapis.com/v1beta1/projects/redbow-24723/sites 200
+[debug] [2025-09-22T13:42:34.767Z] <<< [apiv2][body] GET https://firebasehosting.googleapis.com/v1beta1/projects/redbow-24723/sites {"sites":[{"name":"projects/redbow-24723/sites/redbow-24723","defaultUrl":"https://redbow-24723.web.app","type":"DEFAULT_SITE"}]}
+[debug] [2025-09-22T13:42:34.770Z] No OAuth tokens found
+[debug] [2025-09-22T13:42:34.771Z] No OAuth tokens found
+[debug] [2025-09-22T13:42:34.771Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/userinfo.email"]
+[debug] [2025-09-22T13:42:34.771Z] > authorizing via signed-in user (kumarmohit24011@gmail.com)
+[debug] [2025-09-22T13:42:34.771Z] >>> [apiv2][query] GET https://firebasehosting.googleapis.com/v1beta1/projects/redbow-24723/sites 
+[debug] [2025-09-22T13:42:35.137Z] <<< [apiv2][status] GET https://firebasehosting.googleapis.com/v1beta1/projects/redbow-24723/sites 200
+[debug] [2025-09-22T13:42:35.139Z] <<< [apiv2][body] GET https://firebasehosting.googleapis.com/v1beta1/projects/redbow-24723/sites {"sites":[{"name":"projects/redbow-24723/sites/redbow-24723","defaultUrl":"https://redbow-24723.web.app","type":"DEFAULT_SITE"}]}
+[debug] [2025-09-22T13:42:35.140Z] No OAuth tokens found
+[debug] [2025-09-22T13:42:35.140Z] No OAuth tokens found
+[debug] [2025-09-22T13:42:35.140Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/userinfo.email"]
+[debug] [2025-09-22T13:42:35.143Z] > authorizing via signed-in user (kumarmohit24011@gmail.com)
+[debug] [2025-09-22T13:42:35.143Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/redbow-24723/webApps/-/config [none]
+[debug] [2025-09-22T13:42:35.911Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/redbow-24723/webApps/-/config 200
+[debug] [2025-09-22T13:42:35.912Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/redbow-24723/webApps/-/config {"projectId":"redbow-24723","storageBucket":"redbow-24723.firebasestorage.app","apiKey":"AIzaSyDmt1LTc3f_CBB8pd3viCJLHlQtKVhMEU8","authDomain":"redbow-24723.firebaseapp.com","messagingSenderId":"322692287326"}
+[info] 
+   Thank you for trying our early preview of Next.js support on Firebase Hosting.
+   During the preview, support is best-effort and breaking changes can be expected. Proceed with caution.
+   The integration is known to work with Next.js version 12 - 15.0. You may encounter errors.
+
+   Documentation: https://firebase.google.com/docs/hosting/frameworks/nextjs
+   File a bug: https://github.com/firebase/firebase-tools/issues/new?template=bug_report.md
+   Submit a feature request: https://github.com/firebase/firebase-tools/issues/new?template=feature_request.md
+
+   We'd love to learn from you. Express your interest in helping us shape the future of Firebase Hosting: https://goo.gle/41enW5X
+
+[debug] [2025-09-22T13:42:47.526Z] No OAuth tokens found
+[debug] [2025-09-22T13:42:47.527Z] No OAuth tokens found
+[debug] [2025-09-22T13:42:47.528Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/userinfo.email"]
+[debug] [2025-09-22T13:42:47.528Z] > authorizing via signed-in user (kumarmohit24011@gmail.com)
+[debug] [2025-09-22T13:42:47.528Z] >>> [apiv2][query] GET https://firebasehosting.googleapis.com/v1beta1/projects/redbow-24723/sites/redbow-24723 [none]
+[debug] [2025-09-22T13:42:47.884Z] <<< [apiv2][status] GET https://firebasehosting.googleapis.com/v1beta1/projects/redbow-24723/sites/redbow-24723 200
+[debug] [2025-09-22T13:42:47.885Z] <<< [apiv2][body] GET https://firebasehosting.googleapis.com/v1beta1/projects/redbow-24723/sites/redbow-24723 {"name":"projects/redbow-24723/sites/redbow-24723","defaultUrl":"https://redbow-24723.web.app","type":"DEFAULT_SITE"}
+[info]    ▲ Next.js 15.3.3
+
+[info]    - Environments: .env.production
+
+[info] 
+
+[info]    Creating an optimized production build ...
+
+[info]  ✓ Compiled successfully in 68s
+
+[info]    Linting and checking validity of types ...
+
+[info] Failed to compile.
+
+./src/app/admin/categories/_components/actions.tsx:16:48
+Type error: Module '"lucide-react"' has no exported member 'Grip'.
+
+  14 | } from '@/components/ui/dialog';
+  15 | import { Input } from '@/components/ui/input';
+> 16 | import { Plus, MoreHorizontal, Trash2, Pencil, Grip, Upload, X } from 'lucide-react';
+     |                                                ^
+  17 | import {
+  18 |   Table,
+  19 |   TableBody,
+
+[info] Next.js build worker exited with code: 1 and signal: null
+
+[debug] [2025-09-22T13:44:34.438Z] Error: ENOENT: no such file or directory, open '/home/user/Main_Studio/.next/export-marker.json'
+[error] 
+[error] Error: An unexpected error has occurred.
+[debug] [2025-09-22T13:45:37.378Z] ----------------------------------------------------------------------
+[debug] [2025-09-22T13:45:37.381Z] Command:       /nix/store/ws50yvm6vzlzf7jzz6n7xh4szddrack1-nodejs-20.19.1/bin/node /nix/store/wma3rvxxva78rqvnpja82nx5b3mclpxg-firebase-tools-14.15.2/lib/node_modules/firebase-tools/lib/bin/firebase.js deploy --only hosting,storage
+[debug] [2025-09-22T13:45:37.382Z] CLI Version:   14.15.2
+[debug] [2025-09-22T13:45:37.382Z] Platform:      linux
+[debug] [2025-09-22T13:45:37.382Z] Node Version:  v20.19.1
+[debug] [2025-09-22T13:45:37.382Z] Time:          Mon Sep 22 2025 13:45:37 GMT+0000 (Coordinated Universal Time)
+[debug] [2025-09-22T13:45:37.383Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2025-09-22T13:45:37.950Z] No OAuth tokens found
+[debug] [2025-09-22T13:45:37.951Z] No OAuth tokens found
+[error] Failed to fetch Firebase Project from current Studio Workspace: Unable to refresh auth: not yet authenticated.
+[debug] [2025-09-22T13:45:37.957Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/userinfo.email"]
+[debug] [2025-09-22T13:45:37.958Z] > authorizing via signed-in user (kumarmohit24011@gmail.com)
+[debug] [2025-09-22T13:45:37.958Z] [iam] checking project redbow-24723 for permissions ["firebase.projects.get","firebasehosting.sites.update","firebaserules.releases.create","firebaserules.releases.update","firebaserules.rulesets.create"]
+[debug] [2025-09-22T13:45:37.959Z] No OAuth tokens found
+[debug] [2025-09-22T13:45:37.959Z] No OAuth tokens found
+[debug] [2025-09-22T13:45:37.959Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/userinfo.email"]
+[debug] [2025-09-22T13:45:37.959Z] > authorizing via signed-in user (kumarmohit24011@gmail.com)
+[debug] [2025-09-22T13:45:37.961Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/redbow-24723:testIamPermissions [none]
+[debug] [2025-09-22T13:45:37.961Z] >>> [apiv2][(partial)header] POST https://cloudresourcemanager.googleapis.com/v1/projects/redbow-24723:testIamPermissions x-goog-quota-user=projects/redbow-24723
+[debug] [2025-09-22T13:45:37.961Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/redbow-24723:testIamPermissions {"permissions":["firebase.projects.get","firebasehosting.sites.update","firebaserules.releases.create","firebaserules.releases.update","firebaserules.rulesets.create"]}
+[debug] [2025-09-22T13:45:38.824Z] <<< [apiv2][status] POST https://cloudresourcemanager.googleapis.com/v1/projects/redbow-24723:testIamPermissions 200
+[debug] [2025-09-22T13:45:38.825Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/redbow-24723:testIamPermissions {"permissions":["firebase.projects.get","firebasehosting.sites.update","firebaserules.releases.create","firebaserules.releases.update","firebaserules.rulesets.create"]}
+[debug] [2025-09-22T13:45:38.826Z] No OAuth tokens found
+[debug] [2025-09-22T13:45:38.826Z] No OAuth tokens found
+[debug] [2025-09-22T13:45:38.827Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/userinfo.email"]
+[debug] [2025-09-22T13:45:38.827Z] > authorizing via signed-in user (kumarmohit24011@gmail.com)
+[debug] [2025-09-22T13:45:38.827Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/redbow-24723 [none]
+[debug] [2025-09-22T13:45:39.106Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/redbow-24723 200
+[debug] [2025-09-22T13:45:39.106Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/redbow-24723 {"projectId":"redbow-24723","projectNumber":"322692287326","displayName":"Redbow","name":"projects/redbow-24723","resources":{"hostingSite":"redbow-24723"},"state":"ACTIVE","etag":"1_874b01d0-9968-41a6-a66e-9ee5c1840029"}
+[debug] [2025-09-22T13:45:47.520Z] defaultcredentials: no credential available.
+[debug] [2025-09-22T13:45:47.523Z] No OAuth tokens found
+[debug] [2025-09-22T13:45:47.523Z] No OAuth tokens found
+[debug] [2025-09-22T13:45:47.523Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/userinfo.email"]
+[debug] [2025-09-22T13:45:47.524Z] > authorizing via signed-in user (kumarmohit24011@gmail.com)
+[debug] [2025-09-22T13:45:47.526Z] >>> [apiv2][query] GET https://firebasehosting.googleapis.com/v1beta1/projects/redbow-24723/sites pageToken=&pageSize=10
+[debug] [2025-09-22T13:45:48.037Z] <<< [apiv2][status] GET https://firebasehosting.googleapis.com/v1beta1/projects/redbow-24723/sites 200
+[debug] [2025-09-22T13:45:48.043Z] <<< [apiv2][body] GET https://firebasehosting.googleapis.com/v1beta1/projects/redbow-24723/sites {"sites":[{"name":"projects/redbow-24723/sites/redbow-24723","defaultUrl":"https://redbow-24723.web.app","type":"DEFAULT_SITE"}]}
+[debug] [2025-09-22T13:45:48.045Z] No OAuth tokens found
+[debug] [2025-09-22T13:45:48.052Z] No OAuth tokens found
+[debug] [2025-09-22T13:45:48.052Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/userinfo.email"]
+[debug] [2025-09-22T13:45:48.052Z] > authorizing via signed-in user (kumarmohit24011@gmail.com)
+[debug] [2025-09-22T13:45:48.058Z] >>> [apiv2][query] GET https://firebasehosting.googleapis.com/v1beta1/projects/redbow-24723/sites 
+[debug] [2025-09-22T13:45:48.470Z] <<< [apiv2][status] GET https://firebasehosting.googleapis.com/v1beta1/projects/redbow-24723/sites 200
+[debug] [2025-09-22T13:45:48.471Z] <<< [apiv2][body] GET https://firebasehosting.googleapis.com/v1beta1/projects/redbow-24723/sites {"sites":[{"name":"projects/redbow-24723/sites/redbow-24723","defaultUrl":"https://redbow-24723.web.app","type":"DEFAULT_SITE"}]}
+[debug] [2025-09-22T13:45:48.472Z] No OAuth tokens found
+[debug] [2025-09-22T13:45:48.472Z] No OAuth tokens found
+[debug] [2025-09-22T13:45:48.472Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/userinfo.email"]
+[debug] [2025-09-22T13:45:48.472Z] > authorizing via signed-in user (kumarmohit24011@gmail.com)
+[debug] [2025-09-22T13:45:48.474Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/redbow-24723/webApps/-/config [none]
+[debug] [2025-09-22T13:45:49.303Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/redbow-24723/webApps/-/config 200
+[debug] [2025-09-22T13:45:49.304Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/redbow-24723/webApps/-/config {"projectId":"redbow-24723","storageBucket":"redbow-24723.firebasestorage.app","apiKey":"AIzaSyDmt1LTc3f_CBB8pd3viCJLHlQtKVhMEU8","authDomain":"redbow-24723.firebaseapp.com","messagingSenderId":"322692287326"}
+[info] 
+   Thank you for trying our early preview of Next.js support on Firebase Hosting.
+   During the preview, support is best-effort and breaking changes can be expected. Proceed with caution.
+   The integration is known to work with Next.js version 12 - 15.0. You may encounter errors.
+
+   Documentation: https://firebase.google.com/docs/hosting/frameworks/nextjs
+   File a bug: https://github.com/firebase/firebase-tools/issues/new?template=bug_report.md
+   Submit a feature request: https://github.com/firebase/firebase-tools/issues/new?template=feature_request.md
+
+   We'd love to learn from you. Express your interest in helping us shape the future of Firebase Hosting: https://goo.gle/41enW5X
+
+[debug] [2025-09-22T13:46:01.163Z] No OAuth tokens found
+[debug] [2025-09-22T13:46:01.166Z] No OAuth tokens found
+[debug] [2025-09-22T13:46:01.166Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/userinfo.email"]
+[debug] [2025-09-22T13:46:01.166Z] > authorizing via signed-in user (kumarmohit24011@gmail.com)
+[debug] [2025-09-22T13:46:01.169Z] >>> [apiv2][query] GET https://firebasehosting.googleapis.com/v1beta1/projects/redbow-24723/sites/redbow-24723 [none]
+[debug] [2025-09-22T13:46:01.508Z] <<< [apiv2][status] GET https://firebasehosting.googleapis.com/v1beta1/projects/redbow-24723/sites/redbow-24723 200
+[debug] [2025-09-22T13:46:01.510Z] <<< [apiv2][body] GET https://firebasehosting.googleapis.com/v1beta1/projects/redbow-24723/sites/redbow-24723 {"name":"projects/redbow-24723/sites/redbow-24723","defaultUrl":"https://redbow-24723.web.app","type":"DEFAULT_SITE"}
+[info]    ▲ Next.js 15.3.3
+
+[info]    - Environments: .env.production
+
+[info] 
+
+[info]    Creating an optimized production build ...
+
+[info]  ✓ Compiled successfully in 28.0s
+
+[info]    Linting and checking validity of types ...
+
+[info] Failed to compile.
+
+./src/app/admin/categories/_components/actions.tsx:16:48
+Type error: Module '"lucide-react"' has no exported member 'GripVertical'.
+
+  14 | } from '@/components/ui/dialog';
+  15 | import { Input } from '@/components/ui/input';
+> 16 | import { Plus, MoreHorizontal, Trash2, Pencil, GripVertical, Upload, X } from 'lucide-react';
+     |                                                ^
+  17 | import {
+  18 |   Table,
+  19 |   TableBody,
+
+[info] Next.js build worker exited with code: 1 and signal: null
+
+[debug] [2025-09-22T13:47:08.862Z] Error: ENOENT: no such file or directory, open '/home/user/Main_Studio/.next/export-marker.json'
+[error] 
+[error] Error: An unexpected error has occurred.
+[debug] [2025-09-22T13:48:12.234Z] ----------------------------------------------------------------------
+[debug] [2025-09-22T13:48:12.237Z] Command:       /nix/store/ws50yvm6vzlzf7jzz6n7xh4szddrack1-nodejs-20.19.1/bin/node /nix/store/wma3rvxxva78rqvnpja82nx5b3mclpxg-firebase-tools-14.15.2/lib/node_modules/firebase-tools/lib/bin/firebase.js deploy --only hosting,storage
+[debug] [2025-09-22T13:48:12.238Z] CLI Version:   14.15.2
+[debug] [2025-09-22T13:48:12.238Z] Platform:      linux
+[debug] [2025-09-22T13:48:12.238Z] Node Version:  v20.19.1
+[debug] [2025-09-22T13:48:12.238Z] Time:          Mon Sep 22 2025 13:48:12 GMT+0000 (Coordinated Universal Time)
+[debug] [2025-09-22T13:48:12.238Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2025-09-22T13:48:12.721Z] No OAuth tokens found
+[debug] [2025-09-22T13:48:12.722Z] No OAuth tokens found
+[error] Failed to fetch Firebase Project from current Studio Workspace: Unable to refresh auth: not yet authenticated.
+[debug] [2025-09-22T13:48:12.730Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/userinfo.email"]
+[debug] [2025-09-22T13:48:12.731Z] > authorizing via signed-in user (kumarmohit24011@gmail.com)
+[debug] [2025-09-22T13:48:12.732Z] [iam] checking project redbow-24723 for permissions ["firebase.projects.get","firebasehosting.sites.update","firebaserules.releases.create","firebaserules.releases.update","firebaserules.rulesets.create"]
+[debug] [2025-09-22T13:48:12.732Z] No OAuth tokens found
+[debug] [2025-09-22T13:48:12.733Z] No OAuth tokens found
+[debug] [2025-09-22T13:48:12.733Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/userinfo.email"]
+[debug] [2025-09-22T13:48:12.733Z] > authorizing via signed-in user (kumarmohit24011@gmail.com)
+[debug] [2025-09-22T13:48:12.735Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/redbow-24723:testIamPermissions [none]
+[debug] [2025-09-22T13:48:12.735Z] >>> [apiv2][(partial)header] POST https://cloudresourcemanager.googleapis.com/v1/projects/redbow-24723:testIamPermissions x-goog-quota-user=projects/redbow-24723
+[debug] [2025-09-22T13:48:12.735Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/redbow-24723:testIamPermissions {"permissions":["firebase.projects.get","firebasehosting.sites.update","firebaserules.releases.create","firebaserules.releases.update","firebaserules.rulesets.create"]}
+[debug] [2025-09-22T13:48:13.580Z] <<< [apiv2][status] POST https://cloudresourcemanager.googleapis.com/v1/projects/redbow-24723:testIamPermissions 200
+[debug] [2025-09-22T13:48:13.581Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/redbow-24723:testIamPermissions {"permissions":["firebase.projects.get","firebasehosting.sites.update","firebaserules.releases.create","firebaserules.releases.update","firebaserules.rulesets.create"]}
+[debug] [2025-09-22T13:48:13.585Z] No OAuth tokens found
+[debug] [2025-09-22T13:48:13.585Z] No OAuth tokens found
+[debug] [2025-09-22T13:48:13.585Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/userinfo.email"]
+[debug] [2025-09-22T13:48:13.585Z] > authorizing via signed-in user (kumarmohit24011@gmail.com)
+[debug] [2025-09-22T13:48:13.588Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/redbow-24723 [none]
+[debug] [2025-09-22T13:48:13.861Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/redbow-24723 200
+[debug] [2025-09-22T13:48:13.861Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/redbow-24723 {"projectId":"redbow-24723","projectNumber":"322692287326","displayName":"Redbow","name":"projects/redbow-24723","resources":{"hostingSite":"redbow-24723"},"state":"ACTIVE","etag":"1_874b01d0-9968-41a6-a66e-9ee5c1840029"}
+[debug] [2025-09-22T13:48:19.902Z] defaultcredentials: no credential available.
+[debug] [2025-09-22T13:48:19.903Z] No OAuth tokens found
+[debug] [2025-09-22T13:48:19.904Z] No OAuth tokens found
+[debug] [2025-09-22T13:48:19.904Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/userinfo.email"]
+[debug] [2025-09-22T13:48:19.904Z] > authorizing via signed-in user (kumarmohit24011@gmail.com)
+[debug] [2025-09-22T13:48:19.906Z] >>> [apiv2][query] GET https://firebasehosting.googleapis.com/v1beta1/projects/redbow-24723/sites pageToken=&pageSize=10
+[debug] [2025-09-22T13:48:20.348Z] <<< [apiv2][status] GET https://firebasehosting.googleapis.com/v1beta1/projects/redbow-24723/sites 200
+[debug] [2025-09-22T13:48:20.351Z] <<< [apiv2][body] GET https://firebasehosting.googleapis.com/v1beta1/projects/redbow-24723/sites {"sites":[{"name":"projects/redbow-24723/sites/redbow-24723","defaultUrl":"https://redbow-24723.web.app","type":"DEFAULT_SITE"}]}
+[debug] [2025-09-22T13:48:20.353Z] No OAuth tokens found
+[debug] [2025-09-22T13:48:20.354Z] No OAuth tokens found
+[debug] [2025-09-22T13:48:20.354Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/userinfo.email"]
+[debug] [2025-09-22T13:48:20.354Z] > authorizing via signed-in user (kumarmohit24011@gmail.com)
+[debug] [2025-09-22T13:48:20.354Z] >>> [apiv2][query] GET https://firebasehosting.googleapis.com/v1beta1/projects/redbow-24723/sites 
+[debug] [2025-09-22T13:48:20.777Z] <<< [apiv2][status] GET https://firebasehosting.googleapis.com/v1beta1/projects/redbow-24723/sites 200
+[debug] [2025-09-22T13:48:20.781Z] <<< [apiv2][body] GET https://firebasehosting.googleapis.com/v1beta1/projects/redbow-24723/sites {"sites":[{"name":"projects/redbow-24723/sites/redbow-24723","defaultUrl":"https://redbow-24723.web.app","type":"DEFAULT_SITE"}]}
+[debug] [2025-09-22T13:48:20.781Z] No OAuth tokens found
+[debug] [2025-09-22T13:48:20.781Z] No OAuth tokens found
+[debug] [2025-09-22T13:48:20.781Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/userinfo.email"]
+[debug] [2025-09-22T13:48:20.782Z] > authorizing via signed-in user (kumarmohit24011@gmail.com)
+[debug] [2025-09-22T13:48:20.782Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/redbow-24723/webApps/-/config [none]
+[debug] [2025-09-22T13:48:21.575Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/redbow-24723/webApps/-/config 200
+[debug] [2025-09-22T13:48:21.580Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/redbow-24723/webApps/-/config {"projectId":"redbow-24723","storageBucket":"redbow-24723.firebasestorage.app","apiKey":"AIzaSyDmt1LTc3f_CBB8pd3viCJLHlQtKVhMEU8","authDomain":"redbow-24723.firebaseapp.com","messagingSenderId":"322692287326"}
+[info] 
+   Thank you for trying our early preview of Next.js support on Firebase Hosting.
+   During the preview, support is best-effort and breaking changes can be expected. Proceed with caution.
+   The integration is known to work with Next.js version 12 - 15.0. You may encounter errors.
+
+   Documentation: https://firebase.google.com/docs/hosting/frameworks/nextjs
+   File a bug: https://github.com/firebase/firebase-tools/issues/new?template=bug_report.md
+   Submit a feature request: https://github.com/firebase/firebase-tools/issues/new?template=feature_request.md
+
+   We'd love to learn from you. Express your interest in helping us shape the future of Firebase Hosting: https://goo.gle/41enW5X
+
+[debug] [2025-09-22T13:48:35.743Z] No OAuth tokens found
+[debug] [2025-09-22T13:48:35.743Z] No OAuth tokens found
+[debug] [2025-09-22T13:48:35.746Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/userinfo.email"]
+[debug] [2025-09-22T13:48:35.746Z] > authorizing via signed-in user (kumarmohit24011@gmail.com)
+[debug] [2025-09-22T13:48:35.747Z] >>> [apiv2][query] GET https://firebasehosting.googleapis.com/v1beta1/projects/redbow-24723/sites/redbow-24723 [none]
+[debug] [2025-09-22T13:48:36.059Z] <<< [apiv2][status] GET https://firebasehosting.googleapis.com/v1beta1/projects/redbow-24723/sites/redbow-24723 200
+[debug] [2025-09-22T13:48:36.059Z] <<< [apiv2][body] GET https://firebasehosting.googleapis.com/v1beta1/projects/redbow-24723/sites/redbow-24723 {"name":"projects/redbow-24723/sites/redbow-24723","defaultUrl":"https://redbow-24723.web.app","type":"DEFAULT_SITE"}
+[info]    ▲ Next.js 15.3.3
+
+[info]    - Environments: .env.production
+
+
+[info]    Creating an optimized production build ...
+
+[info]  ✓ Compiled successfully in 25.0s
+
+[info]    Linting and checking validity of types ...
+
+[info] Failed to compile.
+
+./src/app/admin/coupons/_components/actions.tsx:16:10
+Type error: Module '"lucide-react"' has no exported member 'PlusCircle'.
+
+  14 | } from '@/components/ui/dialog';
+  15 | import { Input } from '@/components/ui/input';
+> 16 | import { PlusCircle, MoreHorizontal, Trash2, Pencil, ToggleLeft, ToggleRight } from 'lucide-react';
+     |          ^
+  17 | import {
+  18 |   Table,
+  19 |   TableBody,
+
+[info] Next.js build worker exited with code: 1 and signal: null
+
+[debug] [2025-09-22T13:50:03.703Z] Error: ENOENT: no such file or directory, open '/home/user/Main_Studio/.next/export-marker.json'
+[error] 
+[error] Error: An unexpected error has occurred.
+[debug] [2025-09-22T13:51:20.691Z] ----------------------------------------------------------------------
+[debug] [2025-09-22T13:51:20.696Z] Command:       /nix/store/ws50yvm6vzlzf7jzz6n7xh4szddrack1-nodejs-20.19.1/bin/node /nix/store/wma3rvxxva78rqvnpja82nx5b3mclpxg-firebase-tools-14.15.2/lib/node_modules/firebase-tools/lib/bin/firebase.js deploy --only hosting,storage
+[debug] [2025-09-22T13:51:20.698Z] CLI Version:   14.15.2
+[debug] [2025-09-22T13:51:20.698Z] Platform:      linux
+[debug] [2025-09-22T13:51:20.699Z] Node Version:  v20.19.1
+[debug] [2025-09-22T13:51:20.699Z] Time:          Mon Sep 22 2025 13:51:20 GMT+0000 (Coordinated Universal Time)
+[debug] [2025-09-22T13:51:20.699Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2025-09-22T13:51:21.178Z] No OAuth tokens found
+[debug] [2025-09-22T13:51:21.179Z] No OAuth tokens found
+[error] Failed to fetch Firebase Project from current Studio Workspace: Unable to refresh auth: not yet authenticated.
+[debug] [2025-09-22T13:51:21.184Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/userinfo.email"]
+[debug] [2025-09-22T13:51:21.185Z] > authorizing via signed-in user (kumarmohit24011@gmail.com)
+[debug] [2025-09-22T13:51:21.185Z] [iam] checking project redbow-24723 for permissions ["firebase.projects.get","firebasehosting.sites.update","firebaserules.releases.create","firebaserules.releases.update","firebaserules.rulesets.create"]
+[debug] [2025-09-22T13:51:21.186Z] No OAuth tokens found
+[debug] [2025-09-22T13:51:21.186Z] No OAuth tokens found
+[debug] [2025-09-22T13:51:21.186Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/userinfo.email"]
+[debug] [2025-09-22T13:51:21.186Z] > authorizing via signed-in user (kumarmohit24011@gmail.com)
+[debug] [2025-09-22T13:51:21.188Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/redbow-24723:testIamPermissions [none]
+[debug] [2025-09-22T13:51:21.188Z] >>> [apiv2][(partial)header] POST https://cloudresourcemanager.googleapis.com/v1/projects/redbow-24723:testIamPermissions x-goog-quota-user=projects/redbow-24723
+[debug] [2025-09-22T13:51:21.188Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/redbow-24723:testIamPermissions {"permissions":["firebase.projects.get","firebasehosting.sites.update","firebaserules.releases.create","firebaserules.releases.update","firebaserules.rulesets.create"]}
+[debug] [2025-09-22T13:51:22.033Z] <<< [apiv2][status] POST https://cloudresourcemanager.googleapis.com/v1/projects/redbow-24723:testIamPermissions 200
+[debug] [2025-09-22T13:51:22.034Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/redbow-24723:testIamPermissions {"permissions":["firebase.projects.get","firebasehosting.sites.update","firebaserules.releases.create","firebaserules.releases.update","firebaserules.rulesets.create"]}
+[debug] [2025-09-22T13:51:22.037Z] No OAuth tokens found
+[debug] [2025-09-22T13:51:22.038Z] No OAuth tokens found
+[debug] [2025-09-22T13:51:22.038Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/userinfo.email"]
+[debug] [2025-09-22T13:51:22.038Z] > authorizing via signed-in user (kumarmohit24011@gmail.com)
+[debug] [2025-09-22T13:51:22.041Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/redbow-24723 [none]
+[debug] [2025-09-22T13:51:22.317Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/redbow-24723 200
+[debug] [2025-09-22T13:51:22.317Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/redbow-24723 {"projectId":"redbow-24723","projectNumber":"322692287326","displayName":"Redbow","name":"projects/redbow-24723","resources":{"hostingSite":"redbow-24723"},"state":"ACTIVE","etag":"1_874b01d0-9968-41a6-a66e-9ee5c1840029"}
+[debug] [2025-09-22T13:51:31.599Z] defaultcredentials: no credential available.
+[debug] [2025-09-22T13:51:31.602Z] No OAuth tokens found
+[debug] [2025-09-22T13:51:31.603Z] No OAuth tokens found
+[debug] [2025-09-22T13:51:31.603Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/userinfo.email"]
+[debug] [2025-09-22T13:51:31.603Z] > authorizing via signed-in user (kumarmohit24011@gmail.com)
+[debug] [2025-09-22T13:51:31.609Z] >>> [apiv2][query] GET https://firebasehosting.googleapis.com/v1beta1/projects/redbow-24723/sites pageToken=&pageSize=10
+[debug] [2025-09-22T13:51:32.070Z] <<< [apiv2][status] GET https://firebasehosting.googleapis.com/v1beta1/projects/redbow-24723/sites 200
+[debug] [2025-09-22T13:51:32.071Z] <<< [apiv2][body] GET https://firebasehosting.googleapis.com/v1beta1/projects/redbow-24723/sites {"sites":[{"name":"projects/redbow-24723/sites/redbow-24723","defaultUrl":"https://redbow-24723.web.app","type":"DEFAULT_SITE"}]}
+[debug] [2025-09-22T13:51:32.073Z] No OAuth tokens found
+[debug] [2025-09-22T13:51:32.079Z] No OAuth tokens found
+[debug] [2025-09-22T13:51:32.079Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/userinfo.email"]
+[debug] [2025-09-22T13:51:32.079Z] > authorizing via signed-in user (kumarmohit24011@gmail.com)
+[debug] [2025-09-22T13:51:32.079Z] >>> [apiv2][query] GET https://firebasehosting.googleapis.com/v1beta1/projects/redbow-24723/sites 
+[debug] [2025-09-22T13:51:32.506Z] <<< [apiv2][status] GET https://firebasehosting.googleapis.com/v1beta1/projects/redbow-24723/sites 200
+[debug] [2025-09-22T13:51:32.506Z] <<< [apiv2][body] GET https://firebasehosting.googleapis.com/v1beta1/projects/redbow-24723/sites {"sites":[{"name":"projects/redbow-24723/sites/redbow-24723","defaultUrl":"https://redbow-24723.web.app","type":"DEFAULT_SITE"}]}
+[debug] [2025-09-22T13:51:32.507Z] No OAuth tokens found
+[debug] [2025-09-22T13:51:32.507Z] No OAuth tokens found
+[debug] [2025-09-22T13:51:32.507Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/userinfo.email"]
+[debug] [2025-09-22T13:51:32.507Z] > authorizing via signed-in user (kumarmohit24011@gmail.com)
+[debug] [2025-09-22T13:51:32.518Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/redbow-24723/webApps/-/config [none]
+[debug] [2025-09-22T13:51:33.193Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/redbow-24723/webApps/-/config 200
+[debug] [2025-09-22T13:51:33.196Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/redbow-24723/webApps/-/config {"projectId":"redbow-24723","storageBucket":"redbow-24723.firebasestorage.app","apiKey":"AIzaSyDmt1LTc3f_CBB8pd3viCJLHlQtKVhMEU8","authDomain":"redbow-24723.firebaseapp.com","messagingSenderId":"322692287326"}
+[info] 
+   Thank you for trying our early preview of Next.js support on Firebase Hosting.
+   During the preview, support is best-effort and breaking changes can be expected. Proceed with caution.
+   The integration is known to work with Next.js version 12 - 15.0. You may encounter errors.
+
+   Documentation: https://firebase.google.com/docs/hosting/frameworks/nextjs
+   File a bug: https://github.com/firebase/firebase-tools/issues/new?template=bug_report.md
+   Submit a feature request: https://github.com/firebase/firebase-tools/issues/new?template=feature_request.md
+
+   We'd love to learn from you. Express your interest in helping us shape the future of Firebase Hosting: https://goo.gle/41enW5X
+
+[debug] [2025-09-22T13:51:57.426Z] No OAuth tokens found
+[debug] [2025-09-22T13:51:57.439Z] No OAuth tokens found
+[debug] [2025-09-22T13:51:57.439Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/userinfo.email"]
+[debug] [2025-09-22T13:51:57.442Z] > authorizing via signed-in user (kumarmohit24011@gmail.com)
+[debug] [2025-09-22T13:51:57.442Z] >>> [apiv2][query] GET https://firebasehosting.googleapis.com/v1beta1/projects/redbow-24723/sites/redbow-24723 [none]
+[debug] [2025-09-22T13:51:57.828Z] <<< [apiv2][status] GET https://firebasehosting.googleapis.com/v1beta1/projects/redbow-24723/sites/redbow-24723 200
+[debug] [2025-09-22T13:51:57.831Z] <<< [apiv2][body] GET https://firebasehosting.googleapis.com/v1beta1/projects/redbow-24723/sites/redbow-24723 {"name":"projects/redbow-24723/sites/redbow-24723","defaultUrl":"https://redbow-24723.web.app","type":"DEFAULT_SITE"}
+[info]    ▲ Next.js 15.3.3
+
+[info]    - Environments: .env.production
+
+
+[info]    Creating an optimized production build ...
+
+[info]  ✓ Compiled successfully in 46s
+
+[info]    Linting and checking validity of types ...
+
+[info] Failed to compile.
+
+./src/app/admin/coupons/_components/actions.tsx:16:48
+Type error: Module '"lucide-react"' has no exported member 'ToggleLeft'.
+
+  14 | } from '@/components/ui/dialog';
+  15 | import { Input } from '@/components/ui/input';
+> 16 | import { Plus, MoreHorizontal, Trash2, Pencil, ToggleLeft, ToggleRight } from 'lucide-react';
+     |                                                ^
+  17 | import {
+  18 |   Table,
+  19 |   TableBody,
+
+[info] Next.js build worker exited with code: 1 and signal: null
+
+[debug] [2025-09-22T13:53:59.252Z] Error: ENOENT: no such file or directory, open '/home/user/Main_Studio/.next/export-marker.json'
+[error] 
+[error] Error: An unexpected error has occurred.
+[debug] [2025-09-22T13:56:47.322Z] ----------------------------------------------------------------------
+[debug] [2025-09-22T13:56:47.331Z] Command:       /nix/store/ws50yvm6vzlzf7jzz6n7xh4szddrack1-nodejs-20.19.1/bin/node /nix/store/wma3rvxxva78rqvnpja82nx5b3mclpxg-firebase-tools-14.15.2/lib/node_modules/firebase-tools/lib/bin/firebase.js deploy --only hosting,storage
+[debug] [2025-09-22T13:56:47.341Z] CLI Version:   14.15.2
+[debug] [2025-09-22T13:56:47.341Z] Platform:      linux
+[debug] [2025-09-22T13:56:47.342Z] Node Version:  v20.19.1
+[debug] [2025-09-22T13:56:47.342Z] Time:          Mon Sep 22 2025 13:56:47 GMT+0000 (Coordinated Universal Time)
+[debug] [2025-09-22T13:56:47.342Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2025-09-22T13:56:48.859Z] No OAuth tokens found
+[debug] [2025-09-22T13:56:48.860Z] No OAuth tokens found
+[error] Failed to fetch Firebase Project from current Studio Workspace: Unable to refresh auth: not yet authenticated.
+[debug] [2025-09-22T13:56:48.867Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/userinfo.email"]
+[debug] [2025-09-22T13:56:48.868Z] > authorizing via signed-in user (kumarmohit24011@gmail.com)
+[debug] [2025-09-22T13:56:48.868Z] [iam] checking project redbow-24723 for permissions ["firebase.projects.get","firebasehosting.sites.update","firebaserules.releases.create","firebaserules.releases.update","firebaserules.rulesets.create"]
+[debug] [2025-09-22T13:56:48.870Z] No OAuth tokens found
+[debug] [2025-09-22T13:56:48.870Z] No OAuth tokens found
+[debug] [2025-09-22T13:56:48.870Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/userinfo.email"]
+[debug] [2025-09-22T13:56:48.870Z] > authorizing via signed-in user (kumarmohit24011@gmail.com)
+[debug] [2025-09-22T13:56:48.872Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/redbow-24723:testIamPermissions [none]
+[debug] [2025-09-22T13:56:48.873Z] >>> [apiv2][(partial)header] POST https://cloudresourcemanager.googleapis.com/v1/projects/redbow-24723:testIamPermissions x-goog-quota-user=projects/redbow-24723
+[debug] [2025-09-22T13:56:48.873Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/redbow-24723:testIamPermissions {"permissions":["firebase.projects.get","firebasehosting.sites.update","firebaserules.releases.create","firebaserules.releases.update","firebaserules.rulesets.create"]}
+[debug] [2025-09-22T13:56:49.854Z] <<< [apiv2][status] POST https://cloudresourcemanager.googleapis.com/v1/projects/redbow-24723:testIamPermissions 200
+[debug] [2025-09-22T13:56:49.859Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/redbow-24723:testIamPermissions {"permissions":["firebase.projects.get","firebasehosting.sites.update","firebaserules.releases.create","firebaserules.releases.update","firebaserules.rulesets.create"]}
+[debug] [2025-09-22T13:56:49.860Z] No OAuth tokens found
+[debug] [2025-09-22T13:56:49.860Z] No OAuth tokens found
+[debug] [2025-09-22T13:56:49.860Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/userinfo.email"]
+[debug] [2025-09-22T13:56:49.861Z] > authorizing via signed-in user (kumarmohit24011@gmail.com)
+[debug] [2025-09-22T13:56:49.861Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/redbow-24723 [none]
+[debug] [2025-09-22T13:56:50.177Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/redbow-24723 200
+[debug] [2025-09-22T13:56:50.178Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/redbow-24723 {"projectId":"redbow-24723","projectNumber":"322692287326","displayName":"Redbow","name":"projects/redbow-24723","resources":{"hostingSite":"redbow-24723"},"state":"ACTIVE","etag":"1_874b01d0-9968-41a6-a66e-9ee5c1840029"}
+[debug] [2025-09-22T13:57:05.077Z] defaultcredentials: no credential available.
+[debug] [2025-09-22T13:57:05.080Z] No OAuth tokens found
+[debug] [2025-09-22T13:57:05.081Z] No OAuth tokens found
+[debug] [2025-09-22T13:57:05.081Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/userinfo.email"]
+[debug] [2025-09-22T13:57:05.081Z] > authorizing via signed-in user (kumarmohit24011@gmail.com)
+[debug] [2025-09-22T13:57:05.084Z] >>> [apiv2][query] GET https://firebasehosting.googleapis.com/v1beta1/projects/redbow-24723/sites pageToken=&pageSize=10
+[debug] [2025-09-22T13:57:05.539Z] <<< [apiv2][status] GET https://firebasehosting.googleapis.com/v1beta1/projects/redbow-24723/sites 200
+[debug] [2025-09-22T13:57:05.540Z] <<< [apiv2][body] GET https://firebasehosting.googleapis.com/v1beta1/projects/redbow-24723/sites {"sites":[{"name":"projects/redbow-24723/sites/redbow-24723","defaultUrl":"https://redbow-24723.web.app","type":"DEFAULT_SITE"}]}
+[debug] [2025-09-22T13:57:05.543Z] No OAuth tokens found
+[debug] [2025-09-22T13:57:05.544Z] No OAuth tokens found
+[debug] [2025-09-22T13:57:05.544Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/userinfo.email"]
+[debug] [2025-09-22T13:57:05.544Z] > authorizing via signed-in user (kumarmohit24011@gmail.com)
+[debug] [2025-09-22T13:57:05.551Z] >>> [apiv2][query] GET https://firebasehosting.googleapis.com/v1beta1/projects/redbow-24723/sites 
+[debug] [2025-09-22T13:57:05.985Z] <<< [apiv2][status] GET https://firebasehosting.googleapis.com/v1beta1/projects/redbow-24723/sites 200
+[debug] [2025-09-22T13:57:05.985Z] <<< [apiv2][body] GET https://firebasehosting.googleapis.com/v1beta1/projects/redbow-24723/sites {"sites":[{"name":"projects/redbow-24723/sites/redbow-24723","defaultUrl":"https://redbow-24723.web.app","type":"DEFAULT_SITE"}]}
+[debug] [2025-09-22T13:57:05.986Z] No OAuth tokens found
+[debug] [2025-09-22T13:57:05.992Z] No OAuth tokens found
+[debug] [2025-09-22T13:57:05.993Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/userinfo.email"]
+[debug] [2025-09-22T13:57:05.993Z] > authorizing via signed-in user (kumarmohit24011@gmail.com)
+[debug] [2025-09-22T13:57:05.993Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/redbow-24723/webApps/-/config [none]
+[debug] [2025-09-22T13:57:06.747Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/redbow-24723/webApps/-/config 200
+[debug] [2025-09-22T13:57:06.749Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/redbow-24723/webApps/-/config {"projectId":"redbow-24723","storageBucket":"redbow-24723.firebasestorage.app","apiKey":"AIzaSyDmt1LTc3f_CBB8pd3viCJLHlQtKVhMEU8","authDomain":"redbow-24723.firebaseapp.com","messagingSenderId":"322692287326"}
+[info] 
+   Thank you for trying our early preview of Next.js support on Firebase Hosting.
+   During the preview, support is best-effort and breaking changes can be expected. Proceed with caution.
+   The integration is known to work with Next.js version 12 - 15.0. You may encounter errors.
+
+   Documentation: https://firebase.google.com/docs/hosting/frameworks/nextjs
+   File a bug: https://github.com/firebase/firebase-tools/issues/new?template=bug_report.md
+   Submit a feature request: https://github.com/firebase/firebase-tools/issues/new?template=feature_request.md
+
+   We'd love to learn from you. Express your interest in helping us shape the future of Firebase Hosting: https://goo.gle/41enW5X
+
+[debug] [2025-09-22T13:57:39.365Z] No OAuth tokens found
+[debug] [2025-09-22T13:57:39.365Z] No OAuth tokens found
+[debug] [2025-09-22T13:57:39.366Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/userinfo.email"]
+[debug] [2025-09-22T13:57:39.366Z] > authorizing via signed-in user (kumarmohit24011@gmail.com)
+[debug] [2025-09-22T13:57:39.366Z] >>> [apiv2][query] GET https://firebasehosting.googleapis.com/v1beta1/projects/redbow-24723/sites/redbow-24723 [none]
+[debug] [2025-09-22T13:57:39.715Z] <<< [apiv2][status] GET https://firebasehosting.googleapis.com/v1beta1/projects/redbow-24723/sites/redbow-24723 200
+[debug] [2025-09-22T13:57:39.715Z] <<< [apiv2][body] GET https://firebasehosting.googleapis.com/v1beta1/projects/redbow-24723/sites/redbow-24723 {"name":"projects/redbow-24723/sites/redbow-24723","defaultUrl":"https://redbow-24723.web.app","type":"DEFAULT_SITE"}
+[info]    ▲ Next.js 15.3.3
+
+[info]    - Environments: .env.production
+
+
+[info]    Creating an optimized production build ...
+
+[info] Failed to compile.
+
+./src/app/admin/coupons/_components/actions.tsx
+Error:   x Unexpected token `div`. Expected jsx identifier
+     ,-[/home/user/Main_Studio/src/app/admin/coupons/_components/actions.tsx:147:1]
+ 144 |   };
+ 145 | 
+ 146 |   return (
+ 147 |     <div>
+     :      ^^^
+ 148 |       <div className="flex justify-end mb-4">
+ 149 |         <Dialog open={isDialogOpen} onOpenChange={setDialogOpen}>
+ 150 |           <DialogTrigger asChild>
+     `----
+
+Caused by:
+    Syntax Error
+
+Import trace for requested module:
+./src/app/admin/coupons/_components/actions.tsx
+./src/app/admin/coupons/page.tsx
+
+
+[info] 
+> Build failed because of webpack errors
+
+[debug] [2025-09-22T13:58:30.558Z] Error: ENOENT: no such file or directory, open '/home/user/Main_Studio/.next/export-marker.json'
+[error] 
+[error] Error: An unexpected error has occurred.

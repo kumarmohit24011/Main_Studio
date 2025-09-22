@@ -13,7 +13,7 @@ import {
   DialogClose
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
-import { PlusCircle, MoreHorizontal, Trash2, Pencil, ToggleLeft, ToggleRight } from 'lucide-react';
+import { Plus, MoreHorizontal, Trash2, Pencil, Pause, Play } from 'lucide-react';
 import {
   Table,
   TableBody,
@@ -149,7 +149,7 @@ export function CouponActions({ coupons }: { coupons: Coupon[] }) {
         <Dialog open={isDialogOpen} onOpenChange={setDialogOpen}>
           <DialogTrigger asChild>
             <Button size="sm" className="h-8 gap-1" onClick={() => handleDialogOpen()}>
-              <PlusCircle className="h-3.5 w-3.5" />
+              <Plus className="h-3.5 w-3.5" />
               <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">Add Coupon</span>
             </Button>
           </DialogTrigger>
@@ -283,7 +283,7 @@ export function CouponActions({ coupons }: { coupons: Coupon[] }) {
                         Edit
                     </DropdownMenuItem>
                     <DropdownMenuItem onClick={() => handleToggleActive(coupon)}>
-                        {coupon.isActive ? <ToggleLeft className="mr-2 h-4 w-4" /> : <ToggleRight className="mr-2 h-4 w-4" />}
+                        {coupon.isActive ? <Pause className="mr-2 h-4 w-4" /> : <Play className="mr-2 h-4 w-4" />}
                         {coupon.isActive ? 'Deactivate' : 'Activate'}
                     </DropdownMenuItem>
                     <AlertDialog>
@@ -303,7 +303,7 @@ export function CouponActions({ coupons }: { coupons: Coupon[] }) {
                             <AlertDialogFooter>
                             <AlertDialogCancel>Cancel</AlertDialogCancel>
                             <AlertDialogAction onClick={() => handleDelete(coupon.id)}>Continue</AlertDialogAction>
-                            </AlertDialogFooter>
+                            </footer AlertDialogFooter>
                         </AlertDialogContent>
                     </AlertDialog>
                   </DropdownMenuContent>

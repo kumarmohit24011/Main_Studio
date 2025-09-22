@@ -13,7 +13,7 @@ import {
   DialogClose
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
-import { Plus, MoreHorizontal, Trash2, Pencil, Grip, Upload, X } from 'lucide-react';
+import { Plus, MoreHorizontal, Trash2, Pencil, Upload, X } from 'lucide-react';
 import {
   Table,
   TableBody,
@@ -347,7 +347,6 @@ export function CategoryActions({ categories: initialCategories }: { categories:
                     {(provided) => (
                       <TableRow ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
                         <TableCell>
-                          <Grip className="h-5 w-5 text-muted-foreground" />
                         </TableCell>
                         <TableCell className="font-medium">{category.name}</TableCell>
                         <TableCell>{category.description}</TableCell>
