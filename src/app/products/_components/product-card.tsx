@@ -23,7 +23,7 @@ export function ProductCard({ product }: { product: Product }) {
     }
   };
 
-  const showDiscount = product.originalPrice && product.originalPrice > product.price;
+  const showDiscount = product.salePrice && product.salePrice < product.price;
 
   return (
     <Card className="overflow-hidden group border bg-card hover:shadow-lg transition-shadow duration-300 flex flex-col justify-between h-full">
@@ -61,11 +61,11 @@ export function ProductCard({ product }: { product: Product }) {
             </Link>
             <div className="flex items-baseline gap-2 mt-2">
                 <p className="text-primary font-bold text-lg">
-                    ₹{product.price.toFixed(2)}
+                    ₹{showDiscount ? product.salePrice?.toFixed(2) : product.price.toFixed(2)}
                 </p>
                 {showDiscount && (
                     <p className="text-muted-foreground text-sm line-through">
-                        ₹{product.originalPrice.toFixed(2)}
+                        ₹{product.price.toFixed(2)}
                     </p>
                 )}
             </div>

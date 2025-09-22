@@ -5,6 +5,7 @@ export interface Product {
     name: string;
     description: string;
     price: number;
+    salePrice?: number;
     category: string;
     sku?: string;
     imageUrl?: string; // Primary image
@@ -25,6 +26,7 @@ export interface Category {
     imageUrl?: string; // Category image for display
     isFeatured?: boolean;
     order?: number;
+    productCount?: number;
     createdAt: any | string; // Firestore Timestamp or ISO string
 }
 
