@@ -69,8 +69,10 @@ service cloud.firestore {
     }
 
     match /subscribers/{subscriberId} {
+      allow get: if true;
+      allow list: if isAdmin();
       allow create: if true;
-      allow read, update, delete: if isAdmin();
+      allow update, delete: if isAdmin();
     }
 
     match /carts/{userId} {

@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -19,7 +20,7 @@ import { useEffect, useState } from 'react';
 import { shippingSchema } from '@/lib/schemas';
 import { updateUserProfile } from '@/services/userService';
 import { useToast } from '@/hooks/use-toast';
-import { CheckCircle, Home, Plus, MapPin } from 'lucide-react';
+import { CheckCircle, MapPin, Plus } from 'lucide-react';
 import { Switch } from '@/components/ui/switch';
 import type { StoredAddress } from '@/lib/types';
 import { cn } from '@/lib/utils';
@@ -64,7 +65,8 @@ export function ShippingForm({ onFormSubmit }: ShippingFormProps) {
         handleAddressSelection(defaultAddress.id);
       }
     } else if (addresses.length === 0) {
-      // Don't automatically show form. Wait for user click.
+        // Automatically show the form if no addresses are saved
+        setShowNewAddressForm(true);
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userProfile?.addresses, showNewAddressForm]); 
@@ -87,18 +89,17 @@ export function ShippingForm({ onFormSubmit }: ShippingFormProps) {
         name: userProfile?.name || '',
         phone: userProfile?.phone || '',
         street: '', city: '', state: '', zipCode: '', country: 'India',
-        saveAddress: true, isDefault: false,
+        saveAddress: true, isDefault: userProfile?.addresses?.length === 0,
     });
   }
 
   const onSubmit = async (data: z.infer<typeof newAddressSchema>) => {
     onFormSubmit(data);
     
-    // Always save the address if the user is logged in
-    if (user) {
+    if (user && data.saveAddress) {
         try {
             const newAddress: StoredAddress = {
-                id: `addr_${Date.now()}`, // simple unique id
+                id: `addr_${Date.now()}`,
                 name: data.name,
                 street: data.street,
                 city: data.city,
@@ -106,11 +107,27 @@ export function ShippingForm({ onFormSubmit }: ShippingFormProps) {
                 zipCode: data.zipCode,
                 country: data.country,
                 phone: data.phone,
-                // Make it default if it's the first address
-                isDefault: (userProfile?.addresses?.length || 0) === 0 ? true : data.isDefault,
+                isDefault: (userProfile?.addresses?.length || 0) === 0 || data.isDefault,
             };
+            
             const existingAddresses = userProfile?.addresses || [];
             
+            // Prevent adding a duplicate address
+            const addressExists = existingAddresses.some(addr => 
+                addr.street.toLowerCase() === newAddress.street.toLowerCase() &&
+                addr.city.toLowerCase() === newAddress.city.toLowerCase() &&
+                addr.zipCode === newAddress.zipCode &&
+                addr.name.toLowerCase() === newAddress.name.toLowerCase()
+            );
+
+            if (addressExists) {
+                toast({
+                    title: "Address Already Saved",
+                    description: "This address is already in your address book.",
+                });
+                return;
+            }
+
             let finalAddresses = [...existingAddresses];
             if (newAddress.isDefault) {
                 finalAddresses = finalAddresses.map(addr => ({ ...addr, isDefault: false }));
@@ -118,17 +135,23 @@ export function ShippingForm({ onFormSubmit }: ShippingFormProps) {
             finalAddresses.push(newAddress);
 
             await updateUserProfile(user.uid, { addresses: finalAddresses });
+            
              toast({
                 title: "Address Saved",
                 description: "Your new shipping address has been saved.",
             });
+
+            // Post-save UI updates
             setShowNewAddressForm(false);
             setSelectedAddressId(newAddress.id);
+            onFormSubmit(newAddress); // Ensure parent has the new address
+
         } catch (error) {
+             const errorMessage = error instanceof Error ? error.message : "An unknown error occurred.";
              toast({
                 variant: 'destructive',
                 title: "Save Failed",
-                description: "Could not save your new shipping address.",
+                description: `Could not save your new shipping address: ${errorMessage}`,
             });
         }
     } else {
@@ -164,23 +187,25 @@ export function ShippingForm({ onFormSubmit }: ShippingFormProps) {
                             <p className="text-muted-foreground text-sm mt-2">{addr.phone}</p>
                          </Card>
                     ))}
+                     <Button
+                        type="button"
+                        variant="outline"
+                        className="w-full h-full min-h-[120px] items-center justify-center flex-col gap-2 border-dashed"
+                        onClick={handleAddNewClick}
+                        >
+                        <Plus className="h-6 w-6" />
+                        <span>Add a new address</span>
+                    </Button>
                 </div>
             ) : (
-                 <div className="text-center py-8 text-muted-foreground text-sm rounded-lg border border-dashed">
-                    <MapPin className="mx-auto h-8 w-8 mb-2" />
-                    <p>You have no saved addresses yet.</p>
-                    <p>Add an address below to get started.</p>
-                </div>
+                showNewAddressForm ? null : (
+                    <div className="text-center py-8 text-muted-foreground text-sm rounded-lg border border-dashed">
+                        <MapPin className="mx-auto h-8 w-8 mb-2" />
+                        <p>You have no saved addresses yet.</p>
+                        <Button type='button' variant='link' onClick={handleAddNewClick}>Add one to get started</Button>
+                    </div>
+                )
             )}
-             <Button
-                type="button"
-                variant="outline"
-                className="w-full"
-                onClick={handleAddNewClick}
-                >
-                <Plus className="mr-2 h-4 w-4" />
-                Add a new address
-            </Button>
         </div>
 
         {showNewAddressForm && (
@@ -281,8 +306,49 @@ export function ShippingForm({ onFormSubmit }: ShippingFormProps) {
                         </FormItem>
                     )}
                 />
-                 <Button type="submit" className="w-full" disabled={form.formState.isSubmitting}>
-                     {form.formState.isSubmitting ? "Saving..." : "Save"}
+                 {user && (
+                    <div className='space-y-4'>
+                        <FormField
+                            control={form.control}
+                            name="saveAddress"
+                            render={({ field }) => (
+                                <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
+                                <div className="space-y-0.5">
+                                    <FormLabel>Save this address</FormLabel>
+                                </div>
+                                <FormControl>
+                                    <Switch
+                                    checked={field.value}
+                                    onCheckedChange={field.onChange}
+                                    />
+                                </FormControl>
+                                </FormItem>
+                            )}
+                        />
+                        {form.watch('saveAddress') && (
+                            <FormField
+                                control={form.control}
+                                name="isDefault"
+                                render={({ field }) => (
+                                    <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
+                                    <div className="space-y-0.5">
+                                        <FormLabel>Make this my default address</FormLabel>
+                                    </div>
+                                    <FormControl>
+                                        <Switch
+                                        checked={field.value}
+                                        onCheckedChange={field.onChange}
+                                        disabled={!form.getValues('saveAddress')}
+                                        />
+                                    </FormControl>
+                                    </FormItem>
+                                )}
+                            />
+                        )}
+                    </div>
+                )}
+                 <Button type="submit" className="w-full" disabled={form.formState.isSubmitting || !form.formState.isValid}>
+                     {form.formState.isSubmitting ? "Saving..." : "Use this Address"}
                 </Button>
             </div>
         )}
