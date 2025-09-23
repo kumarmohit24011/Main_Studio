@@ -90,6 +90,10 @@ export function CartProvider({ children }: { children: ReactNode }) {
   };
 
   const addToCart = (product: Product, quantity = 1) => {
+    if (cartLoading) {
+      toast({ title: "Please wait", description: "Syncing your data, please try again shortly.", variant: "destructive" });
+      return;
+    }
     const newCart = [...cart];
     const existingItemIndex = newCart.findIndex(item => item.productId === product.id);
 
@@ -112,11 +116,13 @@ export function CartProvider({ children }: { children: ReactNode }) {
   };
 
   const removeFromCart = (productId: string) => {
+    if (cartLoading) return;
     const newCart = cart.filter(item => item.productId !== productId);
     updateCart(newCart);
   };
 
   const updateQuantity = (productId: string, quantity: number) => {
+    if (cartLoading) return;
     if (quantity <= 0) {
       removeFromCart(productId);
       return;
@@ -128,6 +134,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
   };
 
   const clearCart = () => {
+    if (cartLoading) return;
     updateCart([]);
   };
 

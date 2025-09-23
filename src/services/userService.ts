@@ -13,6 +13,24 @@ const toPlainObject = (user: any): UserProfile => {
     return plain;
 };
 
+const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+
+const createUserProfileWithRetry = async (userRef: any, userProfile: UserProfile, retries = 3, delayMs = 500): Promise<void> => {
+    for (let i = 0; i < retries; i++) {
+        try {
+            await setDoc(userRef, userProfile);
+            return;
+        } catch (error: any) {
+            if (error.code === 'permission-denied' && i < retries - 1) {
+                console.warn(`Attempt ${i + 1} failed. Retrying in ${delayMs}ms...`);
+                await delay(delayMs);
+            } else {
+                throw error;
+            }
+        }
+    }
+};
+
 export const createUserProfile = async (uid: string, email: string, name: string, photoURL?: string): Promise<UserProfile> => {
     const userRef = doc(db, 'users', uid);
     const docSnap = await getDoc(userRef);
@@ -39,9 +57,7 @@ export const createUserProfile = async (uid: string, email: string, name: string
     };
     
     try {
-        await setDoc(userRef, userProfile);
-        // We can't return userProfile directly because createdAt is a serverTimestamp
-        // A full-fledged solution might re-fetch, but for our case, this is sufficient for the client state
+        await createUserProfileWithRetry(userRef, userProfile);
         const profile = await getUserProfile(uid);
         return profile!;
 

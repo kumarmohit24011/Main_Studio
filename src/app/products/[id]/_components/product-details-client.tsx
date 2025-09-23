@@ -1,100 +1,105 @@
 
 'use client';
 
-import { useState } from "react";
-import type { Product } from "@/lib/types";
-import Image from "next/image";
-import { Badge } from "@/components/ui/badge";
-import { AddToCartButton } from "@/components/shared/add-to-cart-button";
-import { AddToWishlistButton } from "./add-to-wishlist-button";
-import Link from "next/link";
-import { cn } from "@/lib/utils";
-import { Separator } from "@/components/ui/separator";
+import { useState } from 'react';
+import Image from 'next/image';
+import { Star } from 'lucide-react';
 
-export function ProductDetailsClient({ product }: { product: Product }) {
-  const allImages = [product.imageUrl, ...(product.imageUrls || [])].filter(
-    (url, index, self) => url && self.indexOf(url) === index
-  ) as string[];
+import { cn } from '@/lib/utils';
+import { Product } from '@/lib/types';
+import { AddToCartButton } from '@/components/shared/add-to-cart-button';
+import { Button } from '@/components/ui/button';
+import { Heart } from 'lucide-react';
+import { useWishlist } from '@/hooks/use-wishlist';
 
-  const [mainImage, setMainImage] = useState<string>(allImages[0] || "https://picsum.photos/600/600");
-
-  return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12 items-start">
-      {/* Image Gallery */}
-      <div className="flex flex-col-reverse md:flex-row gap-4 md:sticky top-24">
-        {allImages.length > 1 && (
-             <div className="flex md:flex-col gap-3 overflow-x-auto md:overflow-x-visible pb-2 md:pb-0">
-                {allImages.map((img, index) => (
-                    <button 
-                        key={index} 
-                        onClick={() => setMainImage(img)} 
-                        className={cn(
-                            "relative aspect-square rounded-lg overflow-hidden border-2 w-16 h-16 md:w-24 md:h-24 flex-shrink-0",
-                            mainImage === img ? 'border-primary' : 'border-transparent hover:border-muted-foreground/50 transition-colors'
-                        )}
-                    >
-                        <Image
-                            src={img}
-                            alt={`${product.name} thumbnail ${index + 1}`}
-                            fill
-                            className="object-cover"
-                            sizes="(max-width: 768px) 20vw, 10vw"
-                        />
-                    </button>
-                ))}
-            </div>
-        )}
-        <div className="relative aspect-square w-full rounded-lg overflow-hidden border">
-            <Image
-                src={mainImage}
-                alt={product.name}
-                data-ai-hint="jewelry product"
-                fill
-                className="object-cover"
-                sizes="(max-width: 768px) 100vw, 50vw"
-                priority
-            />
-        </div>
-      </div>
-
-      {/* Product Information */}
-      <div className="flex flex-col gap-4">
-        <div>
-          <div className="flex items-center gap-2 mb-2 flex-wrap">
-            <Link href={`/products?category=${product.category}`}>
-              <Badge variant="outline">{product.category}</Badge>
-            </Link>
-            {product.tags?.map(tag => (
-                tag === 'new' ? <Badge key={tag}>New Arrival</Badge> : 
-                tag === 'popular' ? <Badge variant="secondary" key={tag}>Trending</Badge> : 
-                null
-            ))}
-          </div>
-          <h1 className="text-3xl md:text-4xl font-headline font-bold">{product.name}</h1>
-        </div>
-
-        <p className="text-2xl md:text-3xl font-semibold text-primary">₹{product.price.toFixed(2)}</p>
-        
-        <div className="flex flex-col sm:flex-row items-stretch gap-3">
-          <AddToCartButton product={product} className="w-full sm:w-auto flex-grow"/>
-          <AddToWishlistButton product={product} />
-        </div>
-
-        <div className="mt-1 text-sm text-muted-foreground">
-          <p>
-            In Stock: {product.stock > 0 
-                ? (product.stock < 10 ? `Only ${product.stock} units left!` : 'Available') 
-                : 'Out of Stock'
-            }
-          </p>
-          {product.sku && <p>SKU: {product.sku}</p>}
-        </div>
-
-        <Separator />
-
-        <p className="text-muted-foreground text-base leading-relaxed">{product.description}</p>
-        
-      </div>
-    </div>
-  );
+interface ProductDetailsClientProps {
+    product: Product;
 }
+
+const ProductDetailsClient: React.FC<ProductDetailsClientProps> = ({ product }) => {
+    const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlist();
+    const inWishlist = isInWishlist(product.id);
+    const allImages = [product.imageUrl, ...(product.imageUrls || [])].filter(Boolean) as string[];
+    const [mainImage, setMainImage] = useState(allImages[0]);
+
+    const handleToggleWishlist = (e: React.MouseEvent) => {
+        e.preventDefault();
+        e.stopPropagation();
+        if (inWishlist) {
+            removeFromWishlist(product.id);
+        } else {
+            addToWishlist(product);
+        }
+    };
+
+    const showDiscount = product.salePrice && product.salePrice < product.price;
+
+    if (!product) return null;
+
+    return (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12 items-start">
+          {/* Image Gallery */}
+          <div className="flex flex-col-reverse md:flex-row gap-4 md:sticky top-24">
+            {allImages.length > 1 && (
+                 <div className="grid grid-cols-5 gap-2 pb-2 md:flex md:flex-col md:gap-3 md:pb-0">
+                    {allImages.map((img, index) => (
+                        <button 
+                            key={index} 
+                            onClick={() => setMainImage(img)} 
+                            className={cn(
+                                'relative aspect-square rounded-lg overflow-hidden border-2 md:w-24 md:h-24',
+                                mainImage === img ? 'border-primary' : 'border-transparent hover:border-muted-foreground/50 transition-colors'
+                            )}
+                        >
+                            <Image
+                                src={img}
+                                alt={`${product.name} thumbnail ${index + 1}`}
+                                fill
+                                className="object-cover"
+                                sizes="(max-width: 768px) 20vw, 10vw"
+                            />
+                        </button>
+                    ))}
+                </div>
+            )}
+            <div className="relative aspect-square w-full rounded-lg overflow-hidden border">
+                <Image
+                    src={mainImage}
+                    alt={product.name}
+                    data-ai-hint="jewelry product"
+                    fill
+                    className="object-cover"
+                    sizes="(max-width: 768px) 100vw, 50vw"
+                    priority
+                />
+            </div>
+          </div>
+
+          {/* Product Info */}
+          <div className="flex flex-col gap-6">
+            <div>
+                <h1 className="text-3xl md:text-4xl font-bold font-headline text-primary">{product.name}</h1>
+                <div className="flex items-baseline gap-2 mt-4">
+                    <p className="text-3xl text-primary font-bold">
+                        ₹{showDiscount ? product.salePrice?.toFixed(2) : product.price.toFixed(2)}
+                    </p>
+                    {showDiscount && (
+                        <p className="text-xl text-muted-foreground line-through">
+                            ₹{product.price.toFixed(2)}
+                        </p>
+                    )}
+                </div>
+            </div>
+            <p className="text-muted-foreground leading-relaxed">{product.description}</p>
+            <div className="flex items-center gap-4">
+                <AddToCartButton product={product} className="flex-grow" />
+                <Button variant="outline" size="icon" onClick={handleToggleWishlist}>
+                    <Heart className={`w-5 h-5 ${inWishlist ? 'text-red-500 fill-red-500' : 'text-foreground'}`} />
+                </Button>
+            </div>
+          </div>
+        </div>
+    );
+};
+
+export default ProductDetailsClient;

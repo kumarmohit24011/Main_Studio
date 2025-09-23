@@ -101,5 +101,6 @@ export interface Coupon {
     discountType: 'percentage' | 'fixed';
     discountValue: number;
     isActive: boolean;
+    minimumSpend?: number;
     createdAt: any; // Firestore Timestamp
 }

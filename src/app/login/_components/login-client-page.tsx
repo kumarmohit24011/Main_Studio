@@ -167,7 +167,7 @@ export default function LoginClientPage({ redirectUrl }: LoginClientPageProps) {
                                 name="name"
                                 render={({ field }) => (
                                     <FormItem>
-                                    <FormLabel>Display Name</FormLabel>
+                                    <FormLabel>Full Name</FormLabel>
                                     <FormControl>
                                         <Input placeholder="Your Name" {...field} />
                                     </FormControl>

@@ -2,7 +2,7 @@
 import { getProductById, getProductsByCategory } from "@/services/productService";
 import { notFound } from "next/navigation";
 import type { Product } from "@/lib/types";
-import { ProductDetailsClient } from "./_components/product-details-client";
+import ProductDetailsClient from "./_components/product-details-client";
 import { Separator } from "@/components/ui/separator";
 import { ProductCard } from "../_components/product-card";
 

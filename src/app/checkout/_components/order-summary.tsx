@@ -4,7 +4,6 @@ import { Separator } from "@/components/ui/separator";
 import { useCart } from "@/hooks/use-cart";
 import type { Coupon } from "@/lib/types";
 import Image from "next/image";
-import { CouponForm } from "./coupon-form";
 import { Badge } from "@/components/ui/badge";
 
 interface OrderSummaryProps {
@@ -13,11 +12,9 @@ interface OrderSummaryProps {
     total: number;
     discount: number;
     appliedCoupon: Coupon | null;
-    applyCoupon: (coupon: Coupon) => void;
-    removeCoupon: () => void;
 }
 
-export function OrderSummary({ subtotal, shippingCost, total, discount, appliedCoupon, applyCoupon, removeCoupon }: OrderSummaryProps) {
+export function OrderSummary({ subtotal, shippingCost, total, discount, appliedCoupon }: OrderSummaryProps) {
     const { cart } = useCart();
 
     return (
@@ -47,17 +44,6 @@ export function OrderSummary({ subtotal, shippingCost, total, discount, appliedC
             
             <Separator />
 
-            {!appliedCoupon ? (
-                <CouponForm applyCoupon={applyCoupon} />
-            ) : (
-                <div className="flex justify-between items-center text-sm">
-                    <div className="font-medium text-primary">Coupon Applied: <Badge variant="secondary" className="ml-2">{appliedCoupon.code}</Badge></div>
-                    <button onClick={removeCoupon} className="font-semibold text-xs text-muted-foreground hover:text-foreground uppercase tracking-wider">Remove</button>
-                </div>
-            )}
-
-            <Separator />
-
             <div className="space-y-2 text-sm">
                 <div className="flex justify-between">
                     <span className="text-muted-foreground">Subtotal</span>
@@ -68,7 +54,7 @@ export function OrderSummary({ subtotal, shippingCost, total, discount, appliedC
                     <span className="font-medium">{shippingCost === 0 ? 'Free' : `₹${shippingCost.toFixed(2)}`}</span>
                 </div>
                  {appliedCoupon && (
-                    <div className="flex justify-between text-primary font-medium">
+                    <div className="flex justify-between font-medium">
                         <span className="text-muted-foreground">Discount</span>
                         <span>- ₹{discount.toFixed(2)}</span>
                     </div>

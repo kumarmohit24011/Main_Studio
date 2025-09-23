@@ -43,7 +43,7 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "embla-carousel-react": "^8.1.7",
-    "firebase": "^10.12.4",
+    "firebase": "^10.14.1",
     "firebase-admin": "^13.5.0",
     "genkit": "^1.14.1",
     "lucide-react": "^0.544.0",

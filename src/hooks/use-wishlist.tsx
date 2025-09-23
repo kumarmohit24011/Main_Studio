@@ -1,5 +1,4 @@
 
-
 'use client';
 
 import React, { createContext, useContext, useState, ReactNode, useEffect, useCallback } from 'react';
@@ -81,6 +80,10 @@ export function WishlistProvider({ children }: { children: ReactNode }) {
   };
 
   const addToWishlist = (product: Product) => {
+    if (wishlistLoading) {
+      toast({ title: "Please wait", description: "Syncing your data, please try again shortly.", variant: "destructive" });
+      return;
+    }
     if (wishlist.includes(product.id)) return;
     const newWishlist = [...wishlist, product.id];
     updateWishlist(newWishlist);
@@ -88,6 +91,10 @@ export function WishlistProvider({ children }: { children: ReactNode }) {
   };
 
   const removeFromWishlist = (productId: string) => {
+    if (wishlistLoading) {
+      toast({ title: "Please wait", description: "Syncing your data, please try again shortly.", variant: "destructive" });
+      return;
+    }
     const newWishlist = wishlist.filter(id => id !== productId);
     updateWishlist(newWishlist);
     toast({ title: "Removed from Wishlist", description: `Item has been removed from your wishlist.` });

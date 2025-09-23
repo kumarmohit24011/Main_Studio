@@ -2,12 +2,11 @@
 'use client';
 
 import React, { createContext, useContext, useEffect, useState, ReactNode, useCallback } from 'react';
-import { onAuthStateChanged, User, signOut, GoogleAuthProvider, signInWithPopup, createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile } from 'firebase/auth';
+import { onAuthStateChanged, User, signOut, GoogleAuthProvider, createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile, signInWithRedirect, getRedirectResult } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
 import { createUserProfile, getUserProfile } from '@/services/userService';
 import type { UserProfile } from '@/lib/types';
 import { useRouter } from 'next/navigation';
-import { FirebaseError } from 'firebase/app';
 
 interface AuthContextType {
   user: User | null;
@@ -43,9 +42,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setUser(user);
         let profile = await getUserProfile(user.uid);
         if (!profile) {
-            // This can happen if a user signs in but their profile creation was interrupted.
-            // We create it here to be safe.
-            profile = await createUserProfile(user.uid, user.email!, user.displayName || 'New User', user.photoURL || undefined);
+            try {
+                profile = await createUserProfile(user.uid, user.email!, user.displayName || 'New User', user.photoURL || undefined);
+            } catch (error) {
+                console.error("Failed to create user profile after multiple retries.", error);
+                // You might want to sign out the user or show a more specific error message
+            }
         }
         setUserProfile(profile);
       } else {
@@ -58,7 +60,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return () => unsubscribe();
   }, []);
 
-  // This base context value is minimal, the real implementation is in the `useAuth` hook
   const value = {
     user,
     userProfile,
@@ -81,6 +82,25 @@ export function useAuth(redirectUrl?: string) {
     throw new Error('useAuth must be used within an AuthProvider');
   }
 
+  useEffect(() => {
+    const processRedirectResult = async () => {
+        try {
+            const result = await getRedirectResult(auth);
+            if (result) {
+                // The onAuthStateChanged listener will handle profile creation.
+                // We just need to handle the successful redirect.
+                const profile = await getUserProfile(result.user.uid);
+                handleAuthSuccess(profile);
+            }
+        } catch (error) {
+            console.error("Google sign-in redirect failed", error);
+        }
+    };
+    if (!context.authLoading) {
+        processRedirectResult();
+    }
+  }, [context.authLoading]);
+
   const handleAuthSuccess = (profile: UserProfile | null) => {
     const finalRedirectUrl = redirectUrl || (profile?.isAdmin ? '/admin' : '/');
     router.push(finalRedirectUrl);
@@ -94,18 +114,8 @@ export function useAuth(redirectUrl?: string) {
   const signInWithGoogle = async () => {
     const provider = new GoogleAuthProvider();
     try {
-      const result = await signInWithPopup(auth, provider);
-      const { uid, email, displayName, photoURL } = result.user;
-      
-      // Check if user profile exists, if not, create it
-      let profile = await getUserProfile(uid);
-      if (!profile) {
-        profile = await createUserProfile(uid, email!, displayName || 'New User', photoURL || undefined);
-      }
-      
-      handleAuthSuccess(profile);
+      await signInWithRedirect(auth, provider);
     } catch (error) {
-      // Don't re-throw the error here to avoid unhandled promise rejections on the client
       console.error("Google sign-in failed", error);
     }
   };
@@ -113,6 +123,7 @@ export function useAuth(redirectUrl?: string) {
   const signInWithEmail = async (email: string, password: string) => {
     try {
       const result = await signInWithEmailAndPassword(auth, email, password);
+      // onAuthStateChanged will handle the rest
       const profile = await getUserProfile(result.user.uid);
       handleAuthSuccess(profile);
     } catch (error) {
@@ -124,8 +135,8 @@ export function useAuth(redirectUrl?: string) {
     try {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       await updateProfile(userCredential.user, { displayName });
-      const newProfile = await createUserProfile(userCredential.user.uid, email, displayName);
-      handleAuthSuccess(newProfile);
+      // onAuthStateChanged will handle profile creation. We can just redirect.
+      handleAuthSuccess(null); // Redirect to a default page, the listener will fetch the right role
     } catch (error) {
        handleAuthError(error);
     }
@@ -140,6 +151,5 @@ export function useAuth(redirectUrl?: string) {
     }
   };
 
-  // Return the original context spread with our new methods
   return { ...context, signInWithGoogle, signInWithEmail, signUpWithEmail, signOutUser };
 }

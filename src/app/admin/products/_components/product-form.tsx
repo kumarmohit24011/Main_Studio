@@ -24,6 +24,7 @@ const productSchema = z.object({
   name: z.string().min(3, 'Product name must be at least 3 characters.'),
   description: z.string().min(10, 'Description must be at least 10 characters.'),
   price: z.coerce.number().min(0, 'Price must be a positive number.'),
+  salePrice: z.coerce.number().min(0, 'Sale price must be a positive number.').optional(),
   stock: z.coerce.number().int().min(0, 'Stock must be a non-negative integer.'),
   category: z.string().min(1, 'Please select a category.'),
   sku: z.string().optional(),
@@ -51,6 +52,7 @@ export function ProductForm({ product, categories }: ProductFormProps) {
       name: product?.name || '',
       description: product?.description || '',
       price: product?.price || 0,
+      salePrice: product?.salePrice,
       stock: product?.stock || 0,
       category: product?.category || '',
       sku: product?.sku || '',
@@ -183,7 +185,7 @@ export function ProductForm({ product, categories }: ProductFormProps) {
                     <CardTitle>Pricing & Inventory</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-6">
-                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <FormField
                             control={form.control}
                             name="price"
@@ -193,6 +195,20 @@ export function ProductForm({ product, categories }: ProductFormProps) {
                                     <FormControl>
                                         <Input type="number" placeholder="e.g. 1200" {...field} />
                                     </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        <FormField
+                            control={form.control}
+                            name="salePrice"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Sale Price (₹)</FormLabel>
+                                    <FormControl>
+                                        <Input type="number" placeholder="e.g. 900" {...field} value={field.value ?? ''} />
+                                    </FormControl>
+                                    <FormDescription>Leave blank if not on sale.</FormDescription>
                                     <FormMessage />
                                 </FormItem>
                             )}

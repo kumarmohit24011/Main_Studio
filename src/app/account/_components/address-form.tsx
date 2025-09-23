@@ -137,7 +137,7 @@ export function AddressForm({ address, onSuccess }: AddressFormProps) {
             name="zipCode"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Zip Code</FormLabel>
+                <FormLabel>Pin Code</FormLabel>
                 <FormControl>
                   <Input placeholder="400001" {...field} />
                 </FormControl>

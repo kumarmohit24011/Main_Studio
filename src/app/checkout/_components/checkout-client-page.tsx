@@ -4,7 +4,7 @@
 import { useCart } from "@/hooks/use-cart";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/use-auth";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState, useMemo } from "react";
 import { ShippingForm } from "./shipping-form";
 import { OrderSummary } from "./order-summary";
@@ -14,19 +14,21 @@ import { shippingSchema } from "@/lib/schemas";
 import { useToast } from "@/hooks/use-toast";
 import { Skeleton } from "@/components/ui/skeleton";
 import type { Coupon } from "@/lib/types";
-import { Separator } from "@/components/ui/separator";
 import { getSiteContent, type SiteContent } from "@/services/siteContentService";
+import { getCouponByCode } from "@/services/couponService";
 
 export function CheckoutClientPage() {
   const { cart, cartLoading } = useCart();
   const { user, userProfile, authLoading } = useAuth();
   const router = useRouter();
+  const searchParams = useSearchParams();
   const { toast } = useToast();
   const { processPayment, isReady } = useRazorpay();
   const [shippingAddress, setShippingAddress] = useState<z.infer<typeof shippingSchema> | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [appliedCoupon, setAppliedCoupon] = useState<Coupon | null>(null);
   const [shippingSettings, setShippingSettings] = useState<SiteContent['shippingSettings'] | null>(null);
+  const [couponLoading, setCouponLoading] = useState(true);
 
   useEffect(() => {
     if (!authLoading && !user) {
@@ -37,7 +39,20 @@ export function CheckoutClientPage() {
         setShippingSettings(content.shippingSettings);
     };
     fetchSettings();
-  }, [authLoading, user, router]);
+
+    const couponCode = searchParams.get('coupon');
+    if (couponCode) {
+      getCouponByCode(couponCode).then(coupon => {
+        if (coupon) {
+          setAppliedCoupon(coupon);
+        }
+        setCouponLoading(false);
+      });
+    } else {
+      setCouponLoading(false);
+    }
+
+  }, [authLoading, user, router, searchParams]);
 
   useEffect(() => {
     if (cart.length === 0 && !cartLoading) {
@@ -48,7 +63,7 @@ export function CheckoutClientPage() {
   const subtotal = useMemo(() => cart.reduce((acc, item) => acc + (item.price || 0) * item.quantity, 0), [cart]);
 
   const shippingCost = useMemo(() => {
-    if (!shippingSettings) return 0; // Default to free if settings not loaded
+    if (!shippingSettings) return 0; 
     if (shippingSettings.freeShippingThreshold > 0 && subtotal >= shippingSettings.freeShippingThreshold) {
         return 0;
     }
@@ -61,7 +76,7 @@ export function CheckoutClientPage() {
     if (appliedCoupon.discountType === 'percentage') {
         return subtotal * (appliedCoupon.discountValue / 100);
     } else {
-        return Math.min(subtotal, appliedCoupon.discountValue); // Ensure fixed discount isn't more than subtotal
+        return Math.min(subtotal, appliedCoupon.discountValue);
     }
   }, [subtotal, appliedCoupon]);
 
@@ -69,11 +84,6 @@ export function CheckoutClientPage() {
       const calculatedTotal = subtotal + shippingCost - discount;
       return calculatedTotal > 0 ? calculatedTotal : 0;
   }, [subtotal, shippingCost, discount]);
-
-  const removeCoupon = () => {
-    setAppliedCoupon(null);
-    toast({ title: "Coupon Removed", description: "The discount has been removed from your order." });
-  }
 
   const handlePayment = async () => {
     if (!shippingAddress) {
@@ -93,7 +103,7 @@ export function CheckoutClientPage() {
     setIsSubmitting(false);
   }
 
-  if (authLoading || cartLoading || !userProfile || (cart.length === 0 && !cartLoading) || !shippingSettings) {
+  if (authLoading || cartLoading || !userProfile || (cart.length === 0 && !cartLoading) || !shippingSettings || couponLoading) {
     return (
         <div className="container mx-auto px-4 py-12">
             <div className="grid lg:grid-cols-2 gap-12">
@@ -133,8 +143,6 @@ export function CheckoutClientPage() {
                         discount={discount}
                         total={total}
                         appliedCoupon={appliedCoupon}
-                        applyCoupon={setAppliedCoupon}
-                        removeCoupon={removeCoupon}
                     />
                      <Button 
                         className="w-full mt-6" 
