@@ -40,8 +40,8 @@ export function ProductCard({ product }: { product: Product }) {
           </Link>
           
           {product.tags?.includes('popular') && (
-            <Badge className="absolute top-3 left-3 bg-rose-500 text-rose-50 hover:bg-rose-600 border-none">
-              Hot Selling
+            <Badge className="absolute top-2 left-2 bg-rose-500 text-rose-50 hover:bg-rose-600 border-none text-xs px-1.5 py-0.5">
+              Hot
             </Badge>
           )}
 
@@ -49,32 +49,29 @@ export function ProductCard({ product }: { product: Product }) {
               variant="secondary" 
               size="icon" 
               onClick={handleToggleWishlist} 
-              className="absolute top-3 right-3 rounded-full h-9 w-9 bg-background/60 backdrop-blur-sm hover:bg-background"
+              className="absolute top-2 right-2 rounded-full h-8 w-8 bg-background/60 backdrop-blur-sm hover:bg-background"
               aria-label="Toggle Wishlist"
           >
               <Heart className={`w-4 h-4 ${inWishlist ? 'text-red-500 fill-red-500' : 'text-foreground'}`}/>
           </Button>
         </div>
-        <CardContent className="p-4">
+        <CardContent className="p-2 sm:p-4 pb-2 sm:pb-3">
             <Link href={`/products/${product.id}`}>
-                <h3 className="font-semibold text-base text-foreground truncate min-h-[2em]">{product.name}</h3>
+                <h3 className="font-semibold text-sm sm:text-base text-foreground truncate min-h-[2.5em] sm:min-h-[2em]">{product.name}</h3>
             </Link>
-            <div className="flex items-baseline gap-2 mt-2">
-                <p className="text-primary font-bold text-lg">
+            <div className="flex items-baseline gap-2 mt-1 sm:mt-2">
+                <p className="text-primary font-bold text-base sm:text-lg">
                     ₹{showDiscount ? product.salePrice?.toFixed(2) : product.price.toFixed(2)}
                 </p>
                 {showDiscount && (
-                    <p className="text-muted-foreground text-sm line-through">
+                    <p className="text-muted-foreground text-xs sm:text-sm line-through">
                         ₹{product.price.toFixed(2)}
                     </p>
                 )}
             </div>
         </CardContent>
       </div>
-
-      <div className="p-4 pt-0">
-        <AddToCartButton product={product} variant="default" className="w-full" />
-      </div>
+      <AddToCartButton product={product} size="sm" className="w-full rounded-none" />
     </Card>
   );
 }

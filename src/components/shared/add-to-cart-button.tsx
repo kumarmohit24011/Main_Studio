@@ -24,8 +24,9 @@ export function AddToCartButton({ product, className, size = "lg", variant = "de
 
   return (
     <Button onClick={handleAddToCart} size={size} variant={variant} className={cn("flex items-center justify-center", className)} aria-label="Add to cart">
-        <ShoppingCart className={cn("h-4 w-4", {"mr-2": size !== 'icon'})} />
-        {size !== 'icon' && <span>Add to Cart</span>}
+        <ShoppingCart className="h-4 w-4 mr-2" />
+        <span className="sm:hidden">Add</span>
+        <span className="hidden sm:inline">Add to Cart</span>
     </Button>
   );
 }
