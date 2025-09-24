@@ -10,7 +10,8 @@ import {
     createUserWithEmailAndPassword, 
     signInWithEmailAndPassword, 
     updateProfile, 
-    signInWithPopup,
+    signInWithRedirect,
+    getRedirectResult,
     UserCredential
 } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
@@ -51,7 +52,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       if (user) {
         setUser(user);
         const profile = await getUserProfile(user.uid);
-        setUserProfile(profile); // This might be null initially
+        setUserProfile(profile);
       } else {
         setUser(null);
         setUserProfile(null);
@@ -83,32 +84,50 @@ export function useAuth(redirectUrl?: string) {
     throw new Error('useAuth must be used within an AuthProvider');
   }
 
-  const handleAuthSuccess = (profile: UserProfile | null) => {
+  const handleAuthError = useCallback((error: any) => {
+    console.error("Authentication error: ", error);
+    // Potentially show a toast notification to the user
+    throw error;
+  }, []);
+
+  const handleAuthSuccess = useCallback((profile: UserProfile | null) => {
     const finalRedirectUrl = redirectUrl || (profile?.isAdmin ? '/admin' : '/');
     router.push(finalRedirectUrl);
-  };
+  }, [redirectUrl, router]);
 
-  const handleAuthError = (error: any) => {
-    console.error("Authentication error: ", error);
-    throw error;
-  };
-
-  const forceRefresh = async (user: User) => {
-    // Force a refresh of the user profile from the server
-    const token = await user.getIdToken(true);
+  const forceRefresh = useCallback(async (user: User) => {
+    await user.getIdToken(true);
     await context.refreshUserProfile(user);
-  };
+  }, [context]);
+
+  useEffect(() => {
+    const handleRedirectResult = async () => {
+      try {
+        const result = await getRedirectResult(auth);
+        if (result) {
+          let profile = await getUserProfile(result.user.uid);
+          if (!profile) {
+            profile = await createUserProfile(result.user.uid, result.user.email!, result.user.displayName || 'New User', result.user.photoURL || undefined);
+          }
+          await forceRefresh(result.user);
+          handleAuthSuccess(profile);
+        }
+      } catch (error) {
+        if ((error as any).code !== 'auth/redirect-cancelled') {
+            handleAuthError(error);
+        }
+      }
+    };
+
+    if (!context.authLoading) {
+        handleRedirectResult();
+    }
+  }, [context.authLoading, forceRefresh, handleAuthSuccess, handleAuthError]);
 
   const signInWithGoogle = async () => {
     const provider = new GoogleAuthProvider();
     try {
-      const result = await signInWithPopup(auth, provider);
-      let profile = await getUserProfile(result.user.uid);
-      if (!profile) {
-        profile = await createUserProfile(result.user.uid, result.user.email!, result.user.displayName || 'New User', result.user.photoURL || undefined);
-      }
-      await forceRefresh(result.user);
-      handleAuthSuccess(profile);
+      await signInWithRedirect(auth, provider);
     } catch (error) {
       handleAuthError(error);
     }
