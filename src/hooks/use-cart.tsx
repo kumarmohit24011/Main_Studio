@@ -49,17 +49,14 @@ export function CartProvider({ children }: { children: ReactNode }) {
     }
 
     if (user && userProfile) {
-      // User is logged in, use Firestore cart from userProfile
       const firestoreCart = userProfile.cart || [];
       const localCart = getLocalCart();
 
       if (localCart.length > 0) {
-        // Merge local cart with Firestore cart
         const mergedCart = [...firestoreCart];
         localCart.forEach((localItem: CartItem) => {
           const existingItemIndex = mergedCart.findIndex(item => item.productId === localItem.productId);
           if (existingItemIndex > -1) {
-            // If item exists, update its quantity (or you can choose other logic, like summing)
              mergedCart[existingItemIndex].quantity = localItem.quantity;
           } else {
             mergedCart.push(localItem);
@@ -67,12 +64,11 @@ export function CartProvider({ children }: { children: ReactNode }) {
         });
         setCart(mergedCart);
         updateUserProfile(user.uid, { cart: mergedCart });
-        localStorage.removeItem(CART_LOCALSTORAGE_KEY); // Clear local cart after merging
+        localStorage.removeItem(CART_LOCALSTORAGE_KEY); 
       } else {
         setCart(firestoreCart);
       }
     } else {
-      // User is logged out, use local storage
       setCart(getLocalCart());
     }
     setCartLoading(false);
@@ -94,18 +90,34 @@ export function CartProvider({ children }: { children: ReactNode }) {
       toast({ title: "Please wait", description: "Syncing your data, please try again shortly.", variant: "destructive" });
       return;
     }
+
+    if (product.stock < 1) {
+        toast({ title: "Out of Stock", description: `Sorry, ${product.name} is currently out of stock.`, variant: "destructive" });
+        return;
+    }
+
     const newCart = [...cart];
     const existingItemIndex = newCart.findIndex(item => item.productId === product.id);
 
     if (existingItemIndex > -1) {
-      newCart[existingItemIndex].quantity += quantity;
+        const newQuantity = newCart[existingItemIndex].quantity + quantity;
+        if (newQuantity > product.stock) {
+            toast({ title: "Stock Limit Exceeded", description: `You can only add up to ${product.stock} units of ${product.name}.`, variant: "destructive" });
+            return;
+        }
+        newCart[existingItemIndex].quantity = newQuantity;
     } else {
+        if (quantity > product.stock) {
+            toast({ title: "Stock Limit Exceeded", description: `You can only add up to ${product.stock} units of ${product.name}.`, variant: "destructive" });
+            return;
+        }
       newCart.push({ 
           productId: product.id, 
           quantity,
           name: product.name,
           price: product.price,
-          imageUrl: product.imageUrl
+          imageUrl: product.imageUrl,
+          stock: product.stock
       });
     }
     updateCart(newCart);
@@ -123,10 +135,20 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
   const updateQuantity = (productId: string, quantity: number) => {
     if (cartLoading) return;
+
+    const itemToUpdate = cart.find(item => item.productId === productId);
+    if (!itemToUpdate) return;
+
     if (quantity <= 0) {
       removeFromCart(productId);
       return;
     }
+
+    if (itemToUpdate.stock && quantity > itemToUpdate.stock) {
+        toast({ title: "Stock Limit Exceeded", description: `You can only have up to ${itemToUpdate.stock} units.`, variant: "destructive" });
+        return;
+    }
+
     const newCart = cart.map(item =>
       item.productId === productId ? { ...item, quantity } : item
     );

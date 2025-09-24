@@ -111,24 +111,24 @@ export default function CartPage() {
             </CardHeader>
             <CardContent className="divide-y divide-border">
               {cart.map((item) => (
-                <div key={item.productId} className="py-4 grid grid-cols-12 gap-4 items-center">
-                  <div className="col-span-3 sm:col-span-2">
-                    <div className="relative h-20 w-20 rounded-md overflow-hidden">
+                <div key={item.productId} className="py-4 flex flex-col sm:flex-row items-start sm:items-center gap-4">
+                  <div className="flex-shrink-0">
+                    <div className="relative h-24 w-24 sm:h-20 sm:w-20 rounded-md overflow-hidden">
                       <Image
                         src={item.imageUrl || "https://picsum.photos/100/100"}
                         alt={item.name || "Product image"}
                         fill
                         className="object-cover"
-                        sizes="(max-width: 640px) 80px, 120px"
+                        sizes="(max-width: 640px) 96px, 80px"
                       />
                     </div>
                   </div>
-                  <div className="col-span-9 sm:col-span-10 grid grid-cols-12 gap-4 items-center">
+                  <div className="flex-grow grid grid-cols-12 gap-x-4 gap-y-2 items-center w-full">
                     <div className="col-span-12 sm:col-span-5">
                       <h3 className="font-semibold truncate text-base">{item.name}</h3>
                       <p className="text-muted-foreground text-sm">₹{item.price?.toFixed(2)}</p>
                     </div>
-                    <div className="col-span-8 sm:col-span-4 flex items-center gap-1">
+                    <div className="col-span-7 sm:col-span-4 flex items-center gap-1">
                       <Button
                         variant="outline"
                         size="icon"
@@ -143,15 +143,16 @@ export default function CartPage() {
                         size="icon"
                         className="h-8 w-8 flex-shrink-0"
                         onClick={() => updateQuantity(item.productId, item.quantity + 1)}
+                        disabled={item.quantity >= (item.stock || 1)}
                       >
                         <Plus className="h-4 w-4" />
                       </Button>
                     </div>
-                    <div className="col-span-4 sm:col-span-3 flex items-center justify-end gap-2">
-                      <p className="font-semibold text-right text-base">
+                    <div className="col-span-5 sm:col-span-3 flex items-center justify-end gap-2">
+                      <p className="font-semibold text-right text-base sm:text-right w-full">
                         ₹{((item.price || 0) * item.quantity).toFixed(2)}
                       </p>
-                      <Button variant="ghost" size="icon" className="text-muted-foreground hover:text-destructive" onClick={() => removeFromCart(item.productId)}>
+                      <Button variant="ghost" size="icon" className="text-muted-foreground hover:text-destructive -mr-2" onClick={() => removeFromCart(item.productId)}>
                         <Trash2 className="h-5 w-5" />
                       </Button>
                     </div>

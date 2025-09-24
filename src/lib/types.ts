@@ -1,5 +1,4 @@
 
-
 export interface Product {
     id: string;
     name: string;
@@ -8,11 +7,11 @@ export interface Product {
     salePrice?: number;
     category: string;
     sku?: string;
-    imageUrl?: string; // Primary image
-    imageUrls?: string[]; // Additional images
+    imageUrl?: string; 
+    imageUrls?: string[];
     stock: number;
     tags?: string[];
-    isPublished: boolean; // Controls visibility on the storefront
+    isPublished: boolean; 
     isNewArrival?: boolean;
     featured?: boolean;
     createdAt?: any | string;
@@ -23,20 +22,20 @@ export interface Category {
     id: string;
     name: string;
     description: string;
-    imageUrl?: string; // Category image for display
+    imageUrl?: string; 
     isFeatured?: boolean;
     order?: number;
     productCount?: number;
-    createdAt: any | string; // Firestore Timestamp or ISO string
+    createdAt: any | string; 
 }
 
 export interface CartItem { 
     productId: string; 
     quantity: number; 
-    // Optional: store product details to avoid extra lookups
     name?: string;
     price?: number;
     imageUrl?: string;
+    stock?: number;
 }
 
 export interface UserProfile {
@@ -47,14 +46,14 @@ export interface UserProfile {
     addresses?: StoredAddress[];
     photoURL?: string;
     isAdmin?: boolean;
-    createdAt: any; // Firestore Timestamp
-    wishlist: string[]; // Array of product IDs
+    createdAt: any; 
+    wishlist: string[];
     cart: CartItem[];
 }
 
 
 export interface StoredAddress {
-    id: string; // Use a unique ID for each address
+    id: string; 
     name: string;
     street: string;
     city: string;
@@ -91,8 +90,8 @@ export interface Order {
     razorpayPaymentId?: string;
     couponCode?: string;
     discountAmount?: number;
-    createdAt: any; // Firestore Timestamp
-    updatedAt: any; // Firestore Timestamp
+    createdAt: any; 
+    updatedAt: any; 
 }
 
 export interface Coupon {
@@ -102,5 +101,5 @@ export interface Coupon {
     discountValue: number;
     isActive: boolean;
     minimumSpend?: number;
-    createdAt: any; // Firestore Timestamp
+    createdAt: any; 
 }
