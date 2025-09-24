@@ -91,12 +91,12 @@ export function useAuth(redirectUrl?: string) {
       const result = await signInWithPopup(auth, provider);
       const user = result.user;
       
-      await context.refreshUserProfile(user); 
+      await context.refreshUserProfile(); 
 
       let profile = await getUserProfile(user.uid);
       if (!profile) {
         profile = await createUserProfile(user.uid, user.email!, user.displayName || 'New User', user.photoURL || undefined);
-        await context.refreshUserProfile(user);
+        await context.refreshUserProfile();
       }
       handleAuthSuccess(profile);
     } catch (error: any) {
