@@ -10,7 +10,8 @@ import {
     createUserWithEmailAndPassword, 
     signInWithEmailAndPassword, 
     updateProfile, 
-    signInWithPopup
+    signInWithPopup,
+    UserCredential
 } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
 import { createUserProfile, getUserProfile } from '@/services/userService';
@@ -35,36 +36,28 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [authLoading, setAuthLoading] = useState(true);
 
-  const refreshUserProfile = useCallback(async () => {
-    if (user) {
-        setAuthLoading(true);
-        const profile = await getUserProfile(user.uid);
-        setUserProfile(profile);
-        setAuthLoading(false);
+  const refreshUserProfile = useCallback(async (currentUser: User | null = auth.currentUser) => {
+    if (currentUser) {
+      setAuthLoading(true);
+      const profile = await getUserProfile(currentUser.uid);
+      setUserProfile(profile);
+      setAuthLoading(false);
     }
-  }, [user]);
+  }, []);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       setAuthLoading(true);
       if (user) {
         setUser(user);
-        let profile = await getUserProfile(user.uid);
-        if (!profile) {
-            try {
-                profile = await createUserProfile(user.uid, user.email!, user.displayName || 'New User', user.photoURL || undefined);
-            } catch (error) {
-                console.error("Failed to create user profile after multiple retries.", error);
-            }
-        }
-        setUserProfile(profile);
+        const profile = await getUserProfile(user.uid);
+        setUserProfile(profile); // This might be null initially
       } else {
         setUser(null);
         setUserProfile(null);
       }
       setAuthLoading(false);
     });
-
     return () => unsubscribe();
   }, []);
 
@@ -73,10 +66,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     userProfile,
     authLoading,
     refreshUserProfile,
-    signInWithGoogle: async () => {},
-    signInWithEmail: async () => {},
-    signUpWithEmail: async () => {},
-    signOutUser: async () => {},
+    signInWithGoogle: async () => { console.warn('signInWithGoogle not implemented'); },
+    signInWithEmail: async () => { console.warn('signInWithEmail not implemented'); },
+    signUpWithEmail: async () => { console.warn('signUpWithEmail not implemented'); },
+    signOutUser: async () => { console.warn('signOutUser not implemented'); },
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
@@ -93,18 +86,28 @@ export function useAuth(redirectUrl?: string) {
   const handleAuthSuccess = (profile: UserProfile | null) => {
     const finalRedirectUrl = redirectUrl || (profile?.isAdmin ? '/admin' : '/');
     router.push(finalRedirectUrl);
-  }
+  };
 
   const handleAuthError = (error: any) => {
     console.error("Authentication error: ", error);
     throw error;
-  }
+  };
+
+  const forceRefresh = async (user: User) => {
+    // Force a refresh of the user profile from the server
+    const token = await user.getIdToken(true);
+    await context.refreshUserProfile(user);
+  };
 
   const signInWithGoogle = async () => {
     const provider = new GoogleAuthProvider();
     try {
       const result = await signInWithPopup(auth, provider);
-      const profile = await getUserProfile(result.user.uid);
+      let profile = await getUserProfile(result.user.uid);
+      if (!profile) {
+        profile = await createUserProfile(result.user.uid, result.user.email!, result.user.displayName || 'New User', result.user.photoURL || undefined);
+      }
+      await forceRefresh(result.user);
       handleAuthSuccess(profile);
     } catch (error) {
       handleAuthError(error);
@@ -114,6 +117,7 @@ export function useAuth(redirectUrl?: string) {
   const signInWithEmail = async (email: string, password: string) => {
     try {
       const result = await signInWithEmailAndPassword(auth, email, password);
+      await forceRefresh(result.user);
       const profile = await getUserProfile(result.user.uid);
       handleAuthSuccess(profile);
     } catch (error) {
@@ -125,7 +129,9 @@ export function useAuth(redirectUrl?: string) {
     try {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       await updateProfile(userCredential.user, { displayName });
-      handleAuthSuccess(null);
+      const newUserProfile = await createUserProfile(userCredential.user.uid, email, displayName);
+      await forceRefresh(userCredential.user);
+      handleAuthSuccess(newUserProfile);
     } catch (error) {
        handleAuthError(error);
     }
