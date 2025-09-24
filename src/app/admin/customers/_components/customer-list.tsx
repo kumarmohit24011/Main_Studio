@@ -23,17 +23,15 @@ interface CustomerListProps {
 
 export function CustomerList({ customers }: CustomerListProps) {
     return (
-        <div>
+        <div className="border rounded-lg overflow-x-auto">
             <Table>
                 <TableHeader>
                     <TableRow>
                         <TableHead>Customer</TableHead>
-                        <TableHead>Email</TableHead>
-                        <TableHead>Role</TableHead>
-                        <TableHead>Joined</TableHead>
-                        <TableHead>
-                            <span className="sr-only">Actions</span>
-                        </TableHead>
+                        <TableHead className="hidden sm:table-cell">Email</TableHead>
+                        <TableHead className="hidden md:table-cell">Role</TableHead>
+                        <TableHead className="hidden lg:table-cell">Joined</TableHead>
+                        <TableHead className="text-right">Actions</TableHead>
                     </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -45,21 +43,21 @@ export function CustomerList({ customers }: CustomerListProps) {
                                         <AvatarImage src={customer.photoURL} alt={customer.name} />
                                         <AvatarFallback>{customer.name?.[0]}</AvatarFallback>
                                     </Avatar>
-                                    <div className="font-medium">{customer.name}</div>
+                                    <div className="font-medium truncate">{customer.name}</div>
                                 </div>
                             </TableCell>
-                            <TableCell>{customer.email}</TableCell>
-                            <TableCell>
+                            <TableCell className="hidden sm:table-cell truncate">{customer.email}</TableCell>
+                            <TableCell className="hidden md:table-cell">
                                 {customer.isAdmin ? (
                                     <Badge variant="destructive">Admin</Badge>
                                 ) : (
                                     <Badge variant="outline">Customer</Badge>
                                 )}
                             </TableCell>
-                            <TableCell>
+                            <TableCell className="hidden lg:table-cell">
                                 {new Date(customer.createdAt).toLocaleDateString()}
                             </TableCell>
-                            <TableCell>
+                            <TableCell className="text-right">
                                 <DropdownMenu>
                                     <DropdownMenuTrigger asChild>
                                         <Button aria-haspopup="true" size="icon" variant="ghost">

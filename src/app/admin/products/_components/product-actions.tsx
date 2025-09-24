@@ -86,7 +86,7 @@ export function ProductActions({ products, categories }: ProductActionsProps) {
 
     return (
         <div>
-            <div className="flex flex-col md:flex-row items-center gap-4 mb-6">
+            <div className="flex flex-col md:flex-row md:items-center gap-4 mb-6">
                 <div className="relative w-full md:flex-grow">
                     <Input 
                         placeholder="Search by name or SKU..."
@@ -95,7 +95,7 @@ export function ProductActions({ products, categories }: ProductActionsProps) {
                         className="pl-10 w-full"
                     />
                 </div>
-                <div className="flex items-center gap-4 w-full md:w-auto">
+                <div className="flex flex-col sm:flex-row items-center gap-4 w-full md:w-auto">
                     <Select value={categoryFilter} onValueChange={setCategoryFilter}>
                         <SelectTrigger className="w-full md:w-[180px]">
                             <SelectValue placeholder="Filter by category" />
@@ -119,11 +119,11 @@ export function ProductActions({ products, categories }: ProductActionsProps) {
                         </SelectContent>
                     </Select>
                 </div>
-                 <div className="w-full md:w-auto flex items-center gap-2">
+                 <div className="w-full md:w-auto flex flex-col sm:flex-row items-center gap-2">
                     {selectedProducts.length > 0 && (
                         <AlertDialog>
                             <AlertDialogTrigger asChild>
-                                <Button variant="destructive" size="sm" className="h-10">
+                                <Button variant="destructive" size="sm" className="h-10 w-full sm:w-auto">
                                     Delete ({selectedProducts.length})
                                 </Button>
                             </AlertDialogTrigger>
@@ -141,7 +141,7 @@ export function ProductActions({ products, categories }: ProductActionsProps) {
                             </AlertDialogContent>
                         </AlertDialog>
                     )}
-                    <Button size="sm" className="h-10 gap-1 w-full" asChild>
+                    <Button size="sm" className="h-10 gap-1 w-full sm:w-auto" asChild>
                         <Link href="/admin/products/new">
                             Add Product
                         </Link>

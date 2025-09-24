@@ -59,6 +59,7 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { Switch } from '@/components/ui/switch';
 import { DragDropContext, Droppable, Draggable, DropResult } from '@hello-pangea/dnd';
+import { MoreHorizontal, GripVertical } from 'lucide-react';
 
 const categorySchema = z.object({
   id: z.string().optional(),
@@ -79,7 +80,7 @@ export function CategoryActions({ categories: initialCategories }: { categories:
   const [preview, setPreview] = useState<string>('');
 
   useEffect(() => {
-    setCategories(initialCategories);
+    setCategories(initialCategories.sort((a, b) => a.order - b.order));
   }, [initialCategories]);
 
   const form = useForm<z.infer<typeof categorySchema>>({
@@ -114,10 +115,7 @@ export function CategoryActions({ categories: initialCategories }: { categories:
     try {
         await deleteCategory(id);
         toast({ title: "Success", description: "Category deleted successfully." });
-        // Wait a bit for cache revalidation to complete, then refresh
-        setTimeout(() => {
-          router.refresh();
-        }, 100);
+        router.refresh();
     } catch(error) {
         toast({ variant: "destructive", title: "Error", description: "Failed to delete category." });
     }
@@ -127,10 +125,7 @@ export function CategoryActions({ categories: initialCategories }: { categories:
     try {
       await updateCategory(category.id, { isFeatured: !category.isFeatured });
       toast({ title: "Success", description: `Category "${category.name}" has been ${!category.isFeatured ? 'featured' : 'unfeatured'}.` });
-      // Wait a bit for cache revalidation to complete, then refresh
-      setTimeout(() => {
-        router.refresh();
-      }, 100);
+      router.refresh();
     } catch (error) {
        toast({ variant: "destructive", title: "Error", description: "Failed to update category status." });
     }
@@ -165,10 +160,7 @@ export function CategoryActions({ categories: initialCategories }: { categories:
       setDialogOpen(false);
       setEditingCategory(null);
       setPreview('');
-      // Wait a bit for cache revalidation to complete, then refresh
-      setTimeout(() => {
-        router.refresh();
-      }, 100);
+      router.refresh();
     } catch (error) {
       toast({
         variant: 'destructive',
@@ -197,25 +189,24 @@ export function CategoryActions({ categories: initialCategories }: { categories:
     try {
       await updateCategoryOrder(updatedOrder);
       toast({ title: "Order Updated", description: "Category order saved successfully." });
-      // Wait a bit for cache revalidation to complete, then refresh
-      setTimeout(() => {
-        router.refresh();
-      }, 100);
+      router.refresh();
     } catch (error) {
       toast({ variant: "destructive", title: "Error", description: "Failed to save category order." });
+      // Revert state if API call fails
+      setCategories(initialCategories.sort((a, b) => a.order - b.order));
     }
   };
 
   return (
-    <div>
-      <div className="flex justify-end mb-4">
+    <div className="space-y-4">
+      <div className="flex justify-end">
         <Dialog open={isDialogOpen} onOpenChange={setDialogOpen}>
           <DialogTrigger asChild>
-            <Button size="sm" className="h-8 gap-1" onClick={() => handleDialogOpen()}>
-              <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">Add Category</span>
+            <Button size="sm" onClick={() => handleDialogOpen()}>
+              Add Category
             </Button>
           </DialogTrigger>
-          <DialogContent>
+          <DialogContent className="sm:max-w-[425px]">
             <DialogHeader>
               <DialogTitle>{editingCategory ? 'Edit Category' : 'Add New Category'}</DialogTitle>
               <DialogDescription>
@@ -224,7 +215,7 @@ export function CategoryActions({ categories: initialCategories }: { categories:
             </DialogHeader>
             <Form {...form}>
               <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-                <FormField
+                 <FormField
                   control={form.control}
                   name="name"
                   render={({ field }) => (
@@ -274,15 +265,11 @@ export function CategoryActions({ categories: initialCategories }: { categories:
                               </div>
                             </div>
                           )}
-                          <div className="relative w-full border-2 border-dashed border-muted-foreground/50 rounded-lg p-4 text-center hover:bg-muted/50 transition-colors">
-                            <p className="mt-2 text-sm text-muted-foreground">Upload category image</p>
-                            <Input 
-                              type="file" 
-                              accept="image/*" 
-                              onChange={onFileChange} 
-                              className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                            />
-                          </div>
+                          <Input 
+                            type="file" 
+                            accept="image/*" 
+                            onChange={onFileChange} 
+                          />
                         </div>
                       </FormControl>
                       <FormMessage />
@@ -323,83 +310,86 @@ export function CategoryActions({ categories: initialCategories }: { categories:
         </Dialog>
       </div>
 
-      <DragDropContext onDragEnd={onDragEnd}>
-        <Droppable droppableId="categories-table">
-          {(provided) => (
-            <Table {...provided.droppableProps} ref={provided.innerRef}>
-              <TableHeader>
-                <TableRow>
-                  <TableHead className="w-[50px]"></TableHead>
-                  <TableHead>Name</TableHead>
-                  <TableHead>Description</TableHead>
-                  <TableHead>Featured</TableHead>
-                  <TableHead>
-                    <span className="sr-only">Actions</span>
-                  </TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {categories.map((category, index) => (
-                  <Draggable key={category.id} draggableId={category.id} index={index}>
-                    {(provided) => (
-                      <TableRow ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
-                        <TableCell>
-                        </TableCell>
-                        <TableCell className="font-medium">{category.name}</TableCell>
-                        <TableCell>{category.description}</TableCell>
-                        <TableCell>
-                          <Switch
-                              checked={category.isFeatured}
-                              onCheckedChange={() => handleToggleFeatured(category)}
-                              aria-label="Toggle featured status"
-                            />
-                        </TableCell>
-                        <TableCell>
-                          <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                              <Button aria-haspopup="true" size="icon" variant="ghost">
-                                ...
-                                <span className="sr-only">Toggle menu</span>
-                              </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end">
-                              <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                              <DropdownMenuItem onClick={() => handleDialogOpen(category)}>
-                                  Edit
-                              </DropdownMenuItem>
-                              <AlertDialog>
-                                  <AlertDialogTrigger asChild>
-                                      <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
-                                          <span className="text-red-500">Delete</span>
-                                      </DropdownMenuItem>
-                                  </AlertDialogTrigger>
-                                  <AlertDialogContent>
-                                      <AlertDialogHeader>
-                                      <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-                                      <AlertDialogDescription>
-                                          This action cannot be undone. This will permanently delete the
-                                          category.
-                                      </AlertDialogDescription>
-                                      </AlertDialogHeader>
-                                      <AlertDialogFooter>
-                                      <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                      <AlertDialogAction onClick={() => handleDelete(category.id)}>Continue</AlertDialogAction>
-                                      </AlertDialogFooter>
-                                  </AlertDialogContent>
-                              </AlertDialog>
-                            </DropdownMenuContent>
-                          </DropdownMenu>
-                        </TableCell>
-                      </TableRow>
-                    )}
-                  </Draggable>
-                ))}
-                {provided.placeholder}
-              </TableBody>
-            </Table>
-          )}
-        </Droppable>
-      </DragDropContext>
+      <div className="border rounded-lg overflow-hidden">
+        <DragDropContext onDragEnd={onDragEnd}>
+          <Droppable droppableId="categories-table">
+            {(provided) => (
+              <Table {...provided.droppableProps} ref={provided.innerRef}>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead className="w-[50px] hidden sm:table-cell"></TableHead>
+                    <TableHead>Name</TableHead>
+                    <TableHead className="hidden md:table-cell">Description</TableHead>
+                    <TableHead className="hidden sm:table-cell">Featured</TableHead>
+                    <TableHead>
+                      <span className="sr-only">Actions</span>
+                    </TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {categories.map((category, index) => (
+                    <Draggable key={category.id} draggableId={category.id} index={index}>
+                      {(provided) => (
+                        <TableRow ref={provided.innerRef} {...provided.draggableProps}>
+                          <TableCell className="hidden sm:table-cell" {...provided.dragHandleProps}>
+                            <GripVertical className="h-5 w-5 text-muted-foreground" />
+                          </TableCell>
+                          <TableCell className="font-medium">{category.name}</TableCell>
+                          <TableCell className="hidden md:table-cell">{category.description}</TableCell>
+                          <TableCell className="hidden sm:table-cell">
+                            <Switch
+                                checked={category.isFeatured}
+                                onCheckedChange={() => handleToggleFeatured(category)}
+                                aria-label="Toggle featured status"
+                              />
+                          </TableCell>
+                          <TableCell>
+                            <DropdownMenu>
+                              <DropdownMenuTrigger asChild>
+                                <Button aria-haspopup="true" size="icon" variant="ghost">
+                                  <MoreHorizontal className="h-4 w-4" />
+                                  <span className="sr-only">Toggle menu</span>
+                                </Button>
+                              </DropdownMenuTrigger>
+                              <DropdownMenuContent align="end">
+                                <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                                <DropdownMenuItem onClick={() => handleDialogOpen(category)}>
+                                    Edit
+                                </DropdownMenuItem>
+                                <AlertDialog>
+                                    <AlertDialogTrigger asChild>
+                                        <DropdownMenuItem onSelect={(e) => e.preventDefault()} className="text-red-600 focus:text-red-600 focus:bg-red-50">
+                                            Delete
+                                        </DropdownMenuItem>
+                                    </AlertDialogTrigger>
+                                    <AlertDialogContent>
+                                        <AlertDialogHeader>
+                                        <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                                        <AlertDialogDescription>
+                                            This action cannot be undone. This will permanently delete the
+                                            category "{category.name}".
+                                        </AlertDialogDescription>
+                                        </AlertDialogHeader>
+                                        <AlertDialogFooter>
+                                        <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                        <AlertDialogAction onClick={() => handleDelete(category.id)} className="bg-red-600 hover:bg-red-700">Continue</AlertDialogAction>
+                                        </AlertDialogFooter>
+                                    </AlertDialogContent>
+                                </AlertDialog>
+                              </DropdownMenuContent>
+                            </DropdownMenu>
+                          </TableCell>
+                        </TableRow>
+                      )}
+                    </Draggable>
+                  ))}
+                  {provided.placeholder}
+                </TableBody>
+              </Table>
+            )}
+          </Droppable>
+        </DragDropContext>
+      </div>
        {categories.length === 0 && (
           <div className="text-center py-16 text-muted-foreground">
             <p>No categories found. Get started by adding a new one.</p>

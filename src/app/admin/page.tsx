@@ -21,7 +21,7 @@ function DashboardSkeleton() {
             <div className="flex items-center">
                 <h1 className="text-lg font-semibold md:text-2xl">Dashboard</h1>
             </div>
-            <div className="grid gap-4 grid-cols-2 md:grid-cols-2 lg:grid-cols-4">
+            <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
                 {Array.from({ length: 4 }).map((_, i) => (
                     <Card key={i}>
                         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -176,7 +176,7 @@ export default function AdminDashboard() {
             <div className="flex items-center">
                 <h1 className="text-lg font-semibold md:text-2xl">Dashboard</h1>
             </div>
-            <div className="grid gap-4 grid-cols-2 md:grid-cols-2 lg:grid-cols-4">
+            <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
                 <Card>
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                         <CardTitle className="text-sm font-medium">
@@ -256,7 +256,7 @@ export default function AdminDashboard() {
                                     <TableRow key={order.id}>
                                         <TableCell>
                                             <div className="font-medium">{order.shippingAddress.name}</div>
-                                            <div className="text-sm text-muted-foreground">Order #{order.id.slice(0,7)}</div>
+                                            <div className="hidden text-sm text-muted-foreground sm:inline">Order #{order.id.slice(0,7)}</div>
                                         </TableCell>
                                         <TableCell className="text-right">₹{order.totalAmount.toFixed(2)}</TableCell>
                                     </TableRow>
@@ -285,8 +285,8 @@ export default function AdminDashboard() {
                                     <AvatarFallback>{customer.name?.[0]}</AvatarFallback>
                                 </Avatar>
                                 <div className="grid gap-1">
-                                    <p className="text-sm font-medium leading-none">{customer.name}</p>
-                                    <p className="text-sm text-muted-foreground">
+                                    <p className="text-sm font-medium leading-none truncate">{customer.name}</p>
+                                    <p className="text-sm text-muted-foreground truncate">
                                         {customer.email}
                                     </p>
                                 </div>
@@ -321,7 +321,7 @@ export default function AdminDashboard() {
                                 <TableRow>
                                     <TableHead className="hidden w-[100px] sm:table-cell">Image</TableHead>
                                     <TableHead>Name</TableHead>
-                                    <TableHead>Category</TableHead>
+                                    <TableHead className="hidden md:table-cell">Category</TableHead>
                                     <TableHead className="text-right">Price</TableHead>
                                 </TableRow>
                             </TableHeader>
@@ -337,7 +337,7 @@ export default function AdminDashboard() {
                                         <TableCell>
                                             <div className="font-medium">{product.name}</div>
                                         </TableCell>
-                                         <TableCell>
+                                         <TableCell className="hidden md:table-cell">
                                             <div className="font-medium">{product.category}</div>
                                         </TableCell>
                                         <TableCell className="text-right">₹{product.price.toFixed(2)}</TableCell>

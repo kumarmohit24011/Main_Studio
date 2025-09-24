@@ -59,6 +59,7 @@ import { useToast } from '@/hooks/use-toast';
 import { addCoupon, updateCoupon, deleteCoupon } from '@/services/couponService';
 import { useRouter } from 'next/navigation';
 import { Switch } from '@/components/ui/switch';
+import { MoreHorizontal } from 'lucide-react';
 
 
 const couponSchema = z.object({
@@ -143,15 +144,15 @@ export function CouponActions({ coupons }: { coupons: Coupon[] }) {
   };
 
   return (
-    <div>
-      <div className="flex justify-end mb-4">
+    <div className='space-y-4'>
+      <div className="flex justify-end">
         <Dialog open={isDialogOpen} onOpenChange={setDialogOpen}>
           <DialogTrigger asChild>
-            <Button size="sm" className="h-8 gap-1" onClick={() => handleDialogOpen()}>
-              <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">Add Coupon</span>
+            <Button size="sm" onClick={() => handleDialogOpen()}>
+             Add Coupon
             </Button>
           </DialogTrigger>
-          <DialogContent>
+          <DialogContent className="sm:max-w-md">
             <DialogHeader>
               <DialogTitle>{editingCoupon ? 'Edit Coupon' : 'Add New Coupon'}</DialogTitle>
               <DialogDescription>
@@ -173,7 +174,7 @@ export function CouponActions({ coupons }: { coupons: Coupon[] }) {
                     </FormItem>
                   )}
                 />
-                 <div className="grid grid-cols-2 gap-4">
+                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <FormField
                     control={form.control}
                     name="discountType"
@@ -243,71 +244,69 @@ export function CouponActions({ coupons }: { coupons: Coupon[] }) {
         </Dialog>
       </div>
 
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>Code</TableHead>
-            <TableHead>Type</TableHead>
-            <TableHead>Value</TableHead>
-            <TableHead>Status</TableHead>
-            <TableHead>
-              <span className="sr-only">Actions</span>
-            </TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {coupons.map((coupon) => (
-            <TableRow key={coupon.id}>
-              <TableCell className="font-medium">{coupon.code}</TableCell>
-              <TableCell className="capitalize">{coupon.discountType}</TableCell>
-              <TableCell>{coupon.discountType === 'fixed' ? `₹${coupon.discountValue}` : `${coupon.discountValue}%`}</TableCell>
-               <TableCell>
-                    <Badge variant={coupon.isActive ? 'default' : 'secondary'}>
-                        {coupon.isActive ? 'Active' : 'Inactive'}
-                    </Badge>
-                </TableCell>
-              <TableCell>
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button aria-haspopup="true" size="icon" variant="ghost">
-                      ...
-                      <span className="sr-only">Toggle menu</span>
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end">
-                    <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                    <DropdownMenuItem onClick={() => handleDialogOpen(coupon)}>
-                        Edit
-                    </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => handleToggleActive(coupon)}>
-                        {coupon.isActive ? 'Deactivate' : 'Activate'}
-                    </DropdownMenuItem>
-                    <AlertDialog>
-                        <AlertDialogTrigger asChild>
-                            <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
-                                <span className="text-red-500">Delete</span>
-                            </DropdownMenuItem>
-                        </AlertDialogTrigger>
-                        <AlertDialogContent>
-                            <AlertDialogHeader>
-                            <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-                            <AlertDialogDescription>
-                                This action cannot be undone. This will permanently delete the coupon.
-                            </AlertDialogDescription>
-                            </AlertDialogHeader>
-                            <AlertDialogFooter>
-                            <AlertDialogCancel>Cancel</AlertDialogCancel>
-                            <AlertDialogAction onClick={() => handleDelete(coupon.id)}>Continue</AlertDialogAction>
-                            </AlertDialogFooter>
-                        </AlertDialogContent>
-                    </AlertDialog>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              </TableCell>
+      <div className="border rounded-lg overflow-x-auto">
+        <Table>
+            <TableHeader>
+            <TableRow>
+                <TableHead>Code</TableHead>
+                <TableHead>Value</TableHead>
+                <TableHead className="hidden sm:table-cell">Status</TableHead>
+                <TableHead className="text-right">Actions</TableHead>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+            </TableHeader>
+            <TableBody>
+            {coupons.map((coupon) => (
+                <TableRow key={coupon.id}>
+                <TableCell className="font-medium">{coupon.code}</TableCell>
+                <TableCell>{coupon.discountType === 'fixed' ? `₹${coupon.discountValue}` : `${coupon.discountValue}%`}</TableCell>
+                <TableCell className="hidden sm:table-cell">
+                        <Badge variant={coupon.isActive ? 'default' : 'secondary'}>
+                            {coupon.isActive ? 'Active' : 'Inactive'}
+                        </Badge>
+                    </TableCell>
+                <TableCell className='text-right'>
+                    <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                        <Button aria-haspopup="true" size="icon" variant="ghost">
+                        <MoreHorizontal className="h-4 w-4" />
+                        <span className="sr-only">Toggle menu</span>
+                        </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                        <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                        <DropdownMenuItem onClick={() => handleDialogOpen(coupon)}>
+                            Edit
+                        </DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => handleToggleActive(coupon)}>
+                            {coupon.isActive ? 'Deactivate' : 'Activate'}
+                        </DropdownMenuItem>
+                        <AlertDialog>
+                            <AlertDialogTrigger asChild>
+                                <DropdownMenuItem onSelect={(e) => e.preventDefault()} className="text-red-600 focus:text-red-600 focus:bg-red-50">
+                                    Delete
+                                </DropdownMenuItem>
+                            </AlertDialogTrigger>
+                            <AlertDialogContent>
+                                <AlertDialogHeader>
+                                <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                                <AlertDialogDescription>
+                                    This action cannot be undone. This will permanently delete the coupon "{coupon.code}".
+                                </AlertDialogDescription>
+                                </AlertDialogHeader>
+                                <AlertDialogFooter>
+                                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                <AlertDialogAction onClick={() => handleDelete(coupon.id)} className="bg-red-600 hover:bg-red-700">Continue</AlertDialogAction>
+                                </AlertDialogFooter>
+                            </AlertDialogContent>
+                        </AlertDialog>
+                    </DropdownMenuContent>
+                    </DropdownMenu>
+                </TableCell>
+                </TableRow>
+            ))}
+            </TableBody>
+        </Table>
+      </div>
        {coupons.length === 0 && (
           <div className="text-center py-16 text-muted-foreground">
             <p>No coupons found. Get started by adding a new one.</p>
