@@ -4,17 +4,14 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useAuth } from "@/hooks/use-auth";
-import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
-import { useRouter } from "next/navigation";
 import { FirebaseError } from "firebase/app";
 
 const loginSchema = z.object({
@@ -33,7 +30,11 @@ interface LoginClientPageProps {
 }
 
 export default function LoginClientPage({ redirectUrl }: LoginClientPageProps) {
-  const { signInWithGoogle, signInWithEmail, signUpWithEmail } = useAuth(redirectUrl);
+  const { 
+    signInWithGoogle, 
+    signInWithEmail, 
+    signUpWithEmail, 
+  } = useAuth(redirectUrl);
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
 
@@ -51,7 +52,6 @@ export default function LoginClientPage({ redirectUrl }: LoginClientPageProps) {
     setLoading(true);
     try {
       await signInWithEmail(values.email, values.password);
-      // The redirect is now handled by the useAuth hook
     } catch (error: any) {
       toast({
         variant: "destructive",
@@ -67,7 +67,6 @@ export default function LoginClientPage({ redirectUrl }: LoginClientPageProps) {
     setLoading(true);
     try {
       await signUpWithEmail(values.email, values.password, values.name);
-       // The redirect is now handled by the useAuth hook
     } catch (error: any) {
         if (error instanceof FirebaseError && error.code === 'auth/email-already-in-use') {
              toast({
@@ -87,6 +86,15 @@ export default function LoginClientPage({ redirectUrl }: LoginClientPageProps) {
     }
   };
   
+  const handleGoogleSignIn = async () => {
+    setLoading(true);
+    try {
+      await signInWithGoogle();
+    } finally {
+      setLoading(false);
+    }
+  }
+
   const GoogleIcon = () => (
     <svg className="mr-2 h-4 w-4" viewBox="0 0 24 24">
       <path
@@ -132,7 +140,7 @@ export default function LoginClientPage({ redirectUrl }: LoginClientPageProps) {
                         <FormItem>
                           <FormLabel>Email</FormLabel>
                           <FormControl>
-                            <Input placeholder="you@example.com" {...field} />
+                            <Input placeholder="you@example.com" {...field} autoComplete="email" />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -145,7 +153,7 @@ export default function LoginClientPage({ redirectUrl }: LoginClientPageProps) {
                         <FormItem>
                           <FormLabel>Password</FormLabel>
                           <FormControl>
-                            <Input type="password" placeholder="••••••••" {...field} />
+                            <Input type="password" placeholder="••••••••" {...field} autoComplete="current-password" />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -169,7 +177,7 @@ export default function LoginClientPage({ redirectUrl }: LoginClientPageProps) {
                                     <FormItem>
                                     <FormLabel>Full Name</FormLabel>
                                     <FormControl>
-                                        <Input placeholder="Your Name" {...field} />
+                                        <Input placeholder="Your Name" {...field} autoComplete="name" />
                                     </FormControl>
                                     <FormMessage />
                                     </FormItem>
@@ -182,7 +190,7 @@ export default function LoginClientPage({ redirectUrl }: LoginClientPageProps) {
                                     <FormItem>
                                     <FormLabel>Email</FormLabel>
                                     <FormControl>
-                                        <Input placeholder="you@example.com" {...field} />
+                                        <Input placeholder="you@example.com" {...field} autoComplete="email" />
                                     </FormControl>
                                     <FormMessage />
                                     </FormItem>
@@ -195,7 +203,7 @@ export default function LoginClientPage({ redirectUrl }: LoginClientPageProps) {
                                     <FormItem>
                                     <FormLabel>Password</FormLabel>
                                     <FormControl>
-                                        <Input type="password" placeholder="••••••••" {...field} />
+                                        <Input type="password" placeholder="••••••••" {...field} autoComplete="new-password" />
                                     </FormControl>
                                     <FormMessage />
                                     </FormItem>
@@ -221,7 +229,7 @@ export default function LoginClientPage({ redirectUrl }: LoginClientPageProps) {
             </div>
           </div>
           
-          <Button variant="outline" className="w-full" onClick={signInWithGoogle} disabled={loading}>
+          <Button variant="outline" className="w-full" onClick={handleGoogleSignIn} disabled={loading}>
             <GoogleIcon />
             Sign in with Google
           </Button>
