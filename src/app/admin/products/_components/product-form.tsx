@@ -1,5 +1,4 @@
 
-
 'use client';
 
 import { useForm } from 'react-hook-form';
@@ -9,7 +8,6 @@ import { Button } from '@/components/ui/button';
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
@@ -19,6 +17,8 @@ import { addProduct, updateProduct } from '@/services/productService';
 import { Badge } from '@/components/ui/badge';
 import { Switch } from '@/components/ui/switch';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuCheckboxItem, DropdownMenuLabel, DropdownMenuSeparator } from '@/components/ui/dropdown-menu';
+import { Checkbox } from '@/components/ui/checkbox';
 
 const productSchema = z.object({
   name: z.string().min(3, 'Product name must be at least 3 characters.'),
@@ -26,7 +26,7 @@ const productSchema = z.object({
   price: z.coerce.number().min(0, 'Price must be a positive number.'),
   salePrice: z.coerce.number().min(0, 'Sale price must be a positive number.').optional(),
   stock: z.coerce.number().int().min(0, 'Stock must be a non-negative integer.'),
-  category: z.string().min(1, 'Please select a category.'),
+  categories: z.array(z.string()).nonempty({ message: 'Please select at least one category.' }),
   sku: z.string().optional(),
   tags: z.array(z.string()).optional(),
   isNewArrival: z.boolean().optional(),
@@ -54,7 +54,7 @@ export function ProductForm({ product, categories }: ProductFormProps) {
       price: product?.price || 0,
       salePrice: product?.salePrice,
       stock: product?.stock || 0,
-      category: product?.category || '',
+      categories: product?.categories || [],
       sku: product?.sku || '',
       tags: product?.tags || [],
       isNewArrival: product?.isNewArrival || false,
@@ -250,22 +250,37 @@ export function ProductForm({ product, categories }: ProductFormProps) {
                 <CardContent className="space-y-6">
                      <FormField
                         control={form.control}
-                        name="category"
+                        name="categories"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel>Category</FormLabel>
-                                <Select onValueChange={field.onChange} defaultValue={field.value}>
-                                    <FormControl>
-                                    <SelectTrigger>
-                                        <SelectValue placeholder="Select a category for the product" />
-                                    </SelectTrigger>
-                                    </FormControl>
-                                    <SelectContent>
-                                        {categories.map((cat: Category) => (
-                                            <SelectItem key={cat.id} value={cat.name}>{cat.name}</SelectItem>
+                                <FormLabel>Categories</FormLabel>
+                                 <DropdownMenu>
+                                    <DropdownMenuTrigger asChild>
+                                        <Button variant="outline" className="w-full justify-start">
+                                            <span className="truncate">{field.value.length > 0 ? field.value.join(', ') : "Select categories"}</span>
+                                        </Button>
+                                    </DropdownMenuTrigger>
+                                    <DropdownMenuContent className="w-full">
+                                        <DropdownMenuLabel>Available Categories</DropdownMenuLabel>
+                                        <DropdownMenuSeparator />
+                                        {categories.map((cat) => (
+                                            <DropdownMenuCheckboxItem
+                                                key={cat.id}
+                                                checked={field.value.includes(cat.name)}
+                                                onCheckedChange={(checked) => {
+                                                    const currentCategories = field.value || [];
+                                                    if (checked) {
+                                                        field.onChange([...currentCategories, cat.name]);
+                                                    } else {
+                                                        field.onChange(currentCategories.filter(name => name !== cat.name));
+                                                    }
+                                                }}
+                                            >
+                                                {cat.name}
+                                            </DropdownMenuCheckboxItem>
                                         ))}
-                                    </SelectContent>
-                                </Select>
+                                    </DropdownMenuContent>
+                                </DropdownMenu>
                                 <FormMessage />
                             </FormItem>
                         )}

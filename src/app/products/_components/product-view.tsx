@@ -24,7 +24,7 @@ export function ProductView({ initialProducts, categories, initialCategory, init
 
     // Category filter
     if (filters.category && filters.category.toLowerCase() !== 'all') {
-      tempProducts = tempProducts.filter(p => p.category === filters.category);
+      tempProducts = tempProducts.filter(p => p.categories && p.categories.includes(filters.category));
     }
     
     // Sort

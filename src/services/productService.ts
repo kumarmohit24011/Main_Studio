@@ -130,7 +130,7 @@ export const getTrendingProducts = async (count: number): Promise<Product[]> => 
 export const getProductsByCategory = async (category: string): Promise<Product[]> => {
     try {
         const productsRef = collection(db, 'products');
-        const q = query(productsRef, where("category", "==", category), where("isPublished", "==", true));
+        const q = query(productsRef, where("categories", "array-contains", category), where("isPublished", "==", true));
         const snapshot = await getDocs(q);
         if (snapshot.empty) {
             return [];
@@ -307,7 +307,7 @@ export const searchProducts = async (searchTerm: string): Promise<Product[]> => 
         const filteredProducts = products.filter(product => {
             const nameMatch = product.name?.toLowerCase().includes(searchTermLower);
             const descriptionMatch = product.description?.toLowerCase().includes(searchTermLower);
-            const categoryMatch = product.category?.toLowerCase().includes(searchTermLower);
+            const categoryMatch = product.categories?.some(cat => cat.toLowerCase().includes(searchTermLower));
             const skuMatch = product.sku?.toLowerCase().includes(searchTermLower);
             const tagsMatch = product.tags?.some(tag => tag.toLowerCase().includes(searchTermLower));
             
