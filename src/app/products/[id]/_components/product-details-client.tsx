@@ -19,7 +19,7 @@ interface ProductDetailsClientProps {
 const ProductDetailsClient: React.FC<ProductDetailsClientProps> = ({ product }) => {
     const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlist();
     const inWishlist = isInWishlist(product.id);
-    const allImages = [product.imageUrl, ...(product.imageUrls || [])].filter(Boolean) as string[];
+    const allImages = [...(product.imageUrls || [])].filter(Boolean) as string[];
     const [mainImage, setMainImage] = useState(allImages[0]);
 
     const handleToggleWishlist = (e: React.MouseEvent) => {

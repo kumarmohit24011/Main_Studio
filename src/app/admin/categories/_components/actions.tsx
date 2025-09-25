@@ -206,7 +206,7 @@ export function CategoryActions({ categories: initialCategories }: { categories:
               Add Category
             </Button>
           </DialogTrigger>
-          <DialogContent className="sm:max-w-[425px]">
+          <DialogContent className="sm:max-w-[425px] overflow-y-auto max-h-screen">
             <DialogHeader>
               <DialogTitle>{editingCategory ? 'Edit Category' : 'Add New Category'}</DialogTitle>
               <DialogDescription>
