@@ -126,7 +126,7 @@ export default function AdminOrdersPage() {
             </div>
             <Card>
                 <CardHeader>
-                    <CardTitle className="font-headline">{title}</CardTitle>
+                    <CardTitle>{title}</CardTitle>
                     <CardDescription>{description}</CardDescription>
                 </CardHeader>
                 <CardContent>

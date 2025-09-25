@@ -9,26 +9,26 @@ import { Trash2, ShoppingCart, Plus, Minus } from "lucide-react";
 import Link from "next/link";
 import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
-import { getShippingFees } from "@/services/shippingService";
+import { getShippingSettings, type ShippingSettings } from "@/services/shippingService";
 import { useEffect, useState } from "react";
 import { CouponForm } from "./_components/coupon-form";
 import type { Coupon } from "@/lib/types";
 
 export default function CartPage() {
   const { cart, updateQuantity, removeFromCart, cartLoading } = useCart();
-  const [shippingFee, setShippingFee] = useState<number | null>(null);
+  const [shippingSettings, setShippingSettings] = useState<ShippingSettings | null>(null);
   const [loadingShipping, setLoadingShipping] = useState(true);
   const [appliedCoupon, setAppliedCoupon] = useState<Coupon | null>(null);
 
   useEffect(() => {
     async function fetchShipping() {
       try {
-        const fees = await getShippingFees();
-        const fee = fees.length > 0 ? fees[0].fee : 0;
-        setShippingFee(fee);
+        const settings = await getShippingSettings();
+        setShippingSettings(settings);
       } catch (error) {
-        console.error("Error fetching shipping fees:", error);
-        setShippingFee(0); // Default to 0 on error
+        console.error("Error fetching shipping settings:", error);
+        // Use default settings on error to avoid breaking the page
+        setShippingSettings({ fee: 50, threshold: 1000 });
       }
       setLoadingShipping(false);
     }
@@ -44,7 +44,9 @@ export default function CartPage() {
     : (subtotal * appliedCoupon.discountValue) / 100
   : 0;
 
-  const total = subtotal - discount + (shippingFee || 0);
+  const isFreeShipping = shippingSettings ? subtotal >= shippingSettings.threshold && shippingSettings.threshold > 0 : false;
+  const shippingFee = shippingSettings ? (isFreeShipping ? 0 : shippingSettings.fee) : 0;
+  const total = subtotal - discount + shippingFee;
 
   const handleApplyCoupon = (coupon: Coupon) => {
     setAppliedCoupon(coupon);
@@ -53,7 +55,7 @@ export default function CartPage() {
   const handleRemoveCoupon = () => {
     setAppliedCoupon(null);
   };
-
+  
   if (cartLoading || loadingShipping) {
     return (
       <div className="container mx-auto px-4 py-8 md:py-12">
@@ -92,7 +94,7 @@ export default function CartPage() {
       <div className="container mx-auto px-4 py-12 text-center">
         <ShoppingCart className="mx-auto h-20 w-20 md:h-24 md:w-24 text-muted-foreground" />
         <h1 className="mt-6 text-2xl md:text-3xl font-headline font-bold">Your Cart is Empty</h1>
-        <p className="mt-2 text-muted-foreground">Looks like you haven\'t added anything to your cart yet.</p>
+        <p className="mt-2 text-muted-foreground">Looks like you haven't added anything to your cart yet.</p>
         <Button asChild className="mt-6">
           <Link href="/products">Continue Shopping</Link>
         </Button>
@@ -168,40 +170,51 @@ export default function CartPage() {
               <CardTitle className="text-xl md:text-2xl">Order Summary</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="space-y-2">
-                <CouponForm 
-                    onApplyCoupon={handleApplyCoupon} 
-                    onRemoveCoupon={handleRemoveCoupon} 
-                    appliedCoupon={appliedCoupon}
-                    subtotal={subtotal}
-                />
-              </div>
-              <Separator />
-              <div className="flex justify-between">
-                <span>Subtotal</span>
-                <span>₹{subtotal.toFixed(2)}</span>
-              </div>
-              <div className="flex justify-between">
-                <span>Shipping</span>
-                <span>{shippingFee !== null ? `₹${shippingFee.toFixed(2)}` : 'Calculating...'}</span>
-              </div>
-              {appliedCoupon && (
-                <div className="flex justify-between text-destructive">
-                  <span>Discount</span>
-                  <span>-₹{discount.toFixed(2)}</span>
+                <div className="space-y-2">
+                    <CouponForm 
+                        onApplyCoupon={handleApplyCoupon} 
+                        onRemoveCoupon={handleRemoveCoupon} 
+                        appliedCoupon={appliedCoupon}
+                        subtotal={subtotal}
+                    />
                 </div>
-              )}
-              <Separator />
-              <div className="flex justify-between font-bold text-lg">
-                <span>Total</span>
-                <span>₹{total.toFixed(2)}</span>
-              </div>
+                <Separator />
+                <div className="space-y-2">
+                    <div className="flex justify-between">
+                        <span>Subtotal</span>
+                        <span>₹{subtotal.toFixed(2)}</span>
+                    </div>
+                    {appliedCoupon && (
+                    <div className="flex justify-between text-destructive">
+                        <span>Discount</span>
+                        <span>-₹{discount.toFixed(2)}</span>
+                    </div>
+                    )}
+                    <div className="flex justify-between">
+                        <span>Shipping</span>
+                        {isFreeShipping ? (
+                            <span className="font-semibold text-emerald-600">FREE</span>
+                        ) : (
+                            <span>₹{shippingFee.toFixed(2)}</span>
+                        )}
+                    </div>
+                     {shippingSettings && shippingSettings.threshold > 0 && subtotal < shippingSettings.threshold && (
+                        <p className="text-xs text-muted-foreground text-center pt-1">
+                           Add ₹{(shippingSettings.threshold - subtotal).toFixed(2)} more to your cart for FREE shipping!
+                        </p>
+                    )}
+                </div>
+                <Separator />
+                <div className="flex justify-between font-bold text-lg">
+                    <span>Total</span>
+                    <span>₹{total.toFixed(2)}</span>
+                </div>
             </CardContent>
             <CardFooter>
                 <Button asChild className="w-full" size="lg">
                     <Link href={{
                         pathname: '/checkout',
-                        query: appliedCoupon ? { coupon: appliedCoupon.code } : {},
+                        query: { ...(appliedCoupon && { coupon: appliedCoupon.code }) }
                     }}>
                         Proceed to Checkout
                     </Link>

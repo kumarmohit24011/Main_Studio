@@ -177,11 +177,22 @@ export const updatePromoBanner = async (bannerId: 'promoBanner1' | 'promoBanner2
 
 export const updateShippingSettings = async (data: Omit<ShippingSettingsData, 'updatedAt'>): Promise<void> => {
     try {
-        const updateData = {
-            ...data,
+        const siteContentUpdate = {
+            shippingSettings: {
+                freeShippingThreshold: data.freeShippingThreshold,
+                updatedAt: serverTimestamp()
+            }
+        };
+        await setDoc(siteContentRef, siteContentUpdate, { merge: true });
+
+        const shippingOptionRef = doc(db, 'siteContent/global/shipping', 'standard');
+        const shippingOptionData = {
+            name: 'Standard Shipping',
+            fee: data.defaultFee,
             updatedAt: serverTimestamp()
         };
-        await setDoc(siteContentRef, { shippingSettings: updateData }, { merge: true });
+        await setDoc(shippingOptionRef, shippingOptionData, { merge: true });
+
         await triggerCacheRevalidation('site-content');
     } catch (error) {
         console.error("Error updating shipping settings:", error);

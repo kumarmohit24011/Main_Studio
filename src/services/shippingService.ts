@@ -2,32 +2,33 @@
 import { db } from '@/lib/firebase';
 import { doc, getDoc } from 'firebase/firestore';
 
-export interface ShippingFee {
-  id: string;
-  name: string;
+export interface ShippingSettings {
   fee: number;
+  threshold: number;
 }
 
-export async function getShippingFees(): Promise<ShippingFee[]> {
+export async function getShippingSettings(): Promise<ShippingSettings> {
   try {
-    const shippingRef = doc(db, 'siteContent', 'global', 'shipping', 'defaultFee');
-    const docSnap = await getDoc(shippingRef);
+    const siteContentRef = doc(db, 'siteContent', 'global');
+    const docSnap = await getDoc(siteContentRef);
 
-    if (!docSnap.exists()) {
-      console.log('No default shipping fee found in the database.');
-      return [];
+    if (docSnap.exists()) {
+        const settings = docSnap.data()?.shippingSettings;
+        // Provide default values if the settings are not configured in the DB
+        if (settings) {
+            return {
+                fee: settings.defaultFee ?? 50, 
+                threshold: settings.freeShippingThreshold ?? 1000 
+            };
+        }
     }
-
-    const data = docSnap.data();
-    const fee: ShippingFee = {
-        id: docSnap.id,
-        name: data.name || 'Standard Shipping',
-        fee: data.fee || 0
-    };
     
-    return [fee];
+    // Return default values if the document or settings object don't exist
+    return { fee: 50, threshold: 1000 };
+
   } catch (error) {
-    console.error("Error fetching shipping fees from Firestore:", error);
-    throw new Error('Failed to fetch shipping fees.');
+    console.error("Error fetching shipping settings from Firestore:", error);
+    // On error, return default values so the cart doesn't break
+    return { fee: 50, threshold: 1000 };
   }
 }

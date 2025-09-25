@@ -16,6 +16,7 @@ import { updateOrderStatus } from '@/services/orderService';
 import { OrderDetails } from './order-details';
 import { OrderSummaryRow } from './order-summary-row';
 import { OrderTableHeader } from './order-table-header';
+import { ChevronDown } from 'lucide-react';
 
 type OrderStatus = Order['orderStatus'];
 
@@ -61,9 +62,12 @@ export function OrderActions({ orders }: { orders: Order[] }) {
             <Accordion type="single" collapsible className="w-full">
                 {filteredOrders.map((order: Order) => (
                     <AccordionItem value={order.id} key={order.id}>
-                        <AccordionTrigger className="hover:no-underline data-[state=open]:bg-muted/50 rounded-t-lg">
+                        <div className="flex items-center w-full hover:bg-muted/50 rounded-t-lg">
                             <OrderSummaryRow order={order} onStatusChange={handleStatusChange} />
-                        </AccordionTrigger>
+                            <AccordionTrigger className="p-4">
+                                <ChevronDown className="h-4 w-4 transition-transform duration-200" />
+                            </AccordionTrigger>
+                        </div>
                         <AccordionContent>
                             <OrderDetails order={order}/>
                         </AccordionContent>

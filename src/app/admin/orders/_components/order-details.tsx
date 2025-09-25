@@ -13,8 +13,8 @@ export const OrderDetails = ({ order }: OrderDetailsProps) => {
         <div className="p-4 bg-muted/50 rounded-md">
             <div className="grid md:grid-cols-2 gap-6">
                 <div>
-                    <h4 className="font-semibold mb-2 font-headline">Order Items</h4>
-                    <ul className="space-y-2 font-body">
+                    <h4 className="font-semibold mb-2">Order Items</h4>
+                    <ul className="space-y-2">
                         {order.items.map((item: any) => (
                             <li key={item.productId} className='flex justify-between items-center text-sm gap-2'>
                                 <Link href={`/admin/products/${item.productId}/edit`} className="flex items-center gap-2 hover:underline">
@@ -46,7 +46,7 @@ export const OrderDetails = ({ order }: OrderDetailsProps) => {
                     </div>
                 </div>
                 <div>
-                    <h4 className="font-semibold mb-2 font-headline">Shipping To</h4>
+                    <h4 className="font-semibold mb-2">Shipping To</h4>
                     <div className="text-sm text-muted-foreground">
                         <p className='font-medium text-foreground'>{order.shippingAddress.name}</p>
                         <p>{order.shippingAddress.street}, {order.shippingAddress.city}</p>
@@ -55,7 +55,7 @@ export const OrderDetails = ({ order }: OrderDetailsProps) => {
                         <p>{order.shippingAddress.phone}</p>
                     </div>
                      <Separator className="my-4" />
-                    <h4 className="font-semibold mb-2 font-headline">Payment Details</h4>
+                    <h4 className="font-semibold mb-2">Payment Details</h4>
                     <div className="text-sm">
                         <p>Payment ID: <span className="font-mono text-xs bg-muted p-1 rounded">{order.razorpayPaymentId}</span></p>
                         <p>Method: Online</p>

@@ -31,6 +31,12 @@ service cloud.firestore {
     match /siteContent/{contentId} {
       allow read: if true;
       allow write: if isAdmin();
+      
+      // Allow public read access to the shipping subcollection
+      match /shipping/{shippingId} {
+          allow read: if true;
+          allow write: if isAdmin();
+      }
     }
 
     match /users/{userId} {
