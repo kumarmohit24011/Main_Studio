@@ -1,5 +1,4 @@
 
-
 import type { Order } from '@/lib/types';
 import { Separator } from '@/components/ui/separator';
 import Link from 'next/link';
@@ -18,7 +17,7 @@ export const OrderDetails = ({ order }: OrderDetailsProps) => {
                         {order.items.map((item: any) => (
                             <li key={item.productId} className='flex justify-between items-center text-sm gap-2'>
                                 <Link href={`/admin/products/${item.productId}/edit`} className="flex items-center gap-2 hover:underline">
-                                    <span>{item.name} (x{item.quantity})</span>
+                                    <span>{item.name} (x{item.quantity})<br/><span className="text-xs text-muted-foreground">SKU: {item.sku || 'N/A'}</span></span>
                                 </Link>
                                 <span>₹{((item.price || 0) * item.quantity).toFixed(2)}</span>
                             </li>

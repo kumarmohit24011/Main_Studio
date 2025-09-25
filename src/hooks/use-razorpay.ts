@@ -1,5 +1,4 @@
 
-
 'use client';
 
 import { useToast } from './use-toast';
@@ -10,7 +9,6 @@ import { useCart } from './use-cart';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
-// You should store this in environment variables
 const RAZORPAY_KEY_ID = process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || 'rzp_test_5fLkz3F2hR3gYq';
 
 declare global {
@@ -23,7 +21,6 @@ interface OrderDetails {
     couponCode?: string;
     discountAmount?: number;
 }
-
 
 export function useRazorpay() {
     const { toast } = useToast();
@@ -81,6 +78,7 @@ export function useRazorpay() {
                             name: item.name || '',
                             price: item.price || 0,
                             quantity: item.quantity,
+                            sku: item.sku || null,
                         })),
                         totalAmount: amount,
                         shippingAddress,

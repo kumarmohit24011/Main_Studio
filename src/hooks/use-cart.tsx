@@ -117,7 +117,8 @@ export function CartProvider({ children }: { children: ReactNode }) {
           name: product.name,
           price: product.price,
           imageUrl: product.imageUrl,
-          stock: product.stock
+          stock: product.stock,
+          sku: product.sku
       });
     }
     updateCart(newCart);

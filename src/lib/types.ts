@@ -36,6 +36,7 @@ export interface CartItem {
     price?: number;
     imageUrl?: string;
     stock?: number;
+    sku?: string;
 }
 
 export interface UserProfile {
@@ -82,6 +83,7 @@ export interface Order {
         name: string;
         price: number;
         quantity: number;
+        sku?: string;
     }[];
     totalAmount: number;
     orderStatus: 'processing' | 'shipped' | 'delivered' | 'cancelled';
