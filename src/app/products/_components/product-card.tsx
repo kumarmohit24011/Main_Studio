@@ -25,6 +25,9 @@ export function ProductCard({ product }: { product: Product }) {
 
   const showDiscount = product.salePrice && product.salePrice < product.price;
 
+  // Filter out special tags that have their own indicators
+  const displayTags = product.tags?.filter(tag => tag !== 'popular') || [];
+
   return (
     <Card className="overflow-hidden group border bg-card hover:shadow-lg transition-shadow duration-300 flex flex-col justify-between h-full">
       <div>
@@ -38,12 +41,24 @@ export function ProductCard({ product }: { product: Product }) {
                 className="object-cover transition-transform duration-300 group-hover:scale-105"
               />
           </Link>
-          
-          {product.tags?.includes('popular') && (
-            <Badge className="absolute top-2 left-2 bg-rose-500 text-rose-50 hover:bg-rose-600 border-none text-xs px-1.5 py-0.5">
-              Hot
-            </Badge>
-          )}
+
+          <div className="absolute top-2 left-2 flex flex-wrap gap-1">
+            {product.tags?.includes('popular') && (
+              <Badge className="bg-rose-500 text-rose-50 hover:bg-rose-600 border-none text-xs px-1.5 py-0.5">
+                Hot
+              </Badge>
+            )}
+            {product.isNewArrival && (
+                <Badge className="bg-blue-500 text-blue-50 hover:bg-blue-600 border-none text-xs px-1.5 py-0.5">
+                    New
+                </Badge>
+            )}
+            {displayTags.slice(0, 2).map((tag) => ( // Show first 2 custom tags
+                <Badge key={tag} variant="secondary" className="text-xs px-1.5 py-0.5 capitalize">
+                    {tag}
+                </Badge>
+            ))}
+          </div>
 
           <Button 
               variant="secondary" 

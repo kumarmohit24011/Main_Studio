@@ -176,13 +176,13 @@ export const addProduct = async (productData: Partial<Product> & { images?: File
 
 export const updateProduct = async (
     id: string, 
-    productData: Partial<Product> & { existingImageUrls?: string[] }, 
+    productData: Partial<Product> & { existingImageUrls?: string[], images?: File[] }, 
     newImageFiles: File[] = []
 ): Promise<void> => {
     try {
         const productRef = doc(db, 'products', id);
         
-        const { existingImageUrls, ...dataToSave } = productData;
+        const { existingImageUrls, images, ...dataToSave } = productData;
 
         let finalImageUrls = existingImageUrls || [];
 

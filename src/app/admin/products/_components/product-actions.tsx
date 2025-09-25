@@ -49,7 +49,7 @@ export function ProductActions({ products, categories }: ProductActionsProps) {
                 (product.sku && product.sku.toLowerCase().includes(searchQuery.toLowerCase()));
 
             const matchesCategory = 
-                categoryFilter === 'all' || product.category === categoryFilter;
+                categoryFilter === 'all' || (product.categories && product.categories.includes(categoryFilter));
             
             const matchesStock = () => {
                 switch(stockFilter) {

@@ -139,7 +139,7 @@ export function ProductTable({ products, selectedProducts, setSelectedProducts }
                     </TableCell>
                     <TableCell className="font-medium">{product.name}</TableCell>
                     <TableCell>{product.sku || 'N/A'}</TableCell>
-                    <TableCell><Badge variant="outline">{product.category}</Badge></TableCell>
+                    <TableCell><Badge variant="outline">{product.categories?.[0] || 'N/A'}</Badge></TableCell>
                     <TableCell>₹{product.price.toFixed(2)}</TableCell>
                     <TableCell>{product.stock}</TableCell>
                     <TableCell>

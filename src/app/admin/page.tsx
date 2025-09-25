@@ -338,7 +338,7 @@ export default function AdminDashboard() {
                                             <div className="font-medium">{product.name}</div>
                                         </TableCell>
                                          <TableCell className="hidden md:table-cell">
-                                            <div className="font-medium">{product.category}</div>
+                                            <div className="font-medium">{product.categories?.[0] || 'N/A'}</div>
                                         </TableCell>
                                         <TableCell className="text-right">₹{product.price.toFixed(2)}</TableCell>
                                     </TableRow>

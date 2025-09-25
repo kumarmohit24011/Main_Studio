@@ -173,9 +173,9 @@ export function SearchDialog({ children, onOpenChange, onResultClick }: SearchDi
                                 <p className="text-sm font-medium text-primary">
                                   ₹{product.price.toLocaleString()}
                                 </p>
-                                {product.category && (
+                                {product.categories && product.categories.length > 0 && (
                                   <Badge variant="outline" className="text-xs">
-                                    {product.category}
+                                    {product.categories[0]}
                                   </Badge>
                                 )}
                               </div>

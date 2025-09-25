@@ -15,11 +15,15 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
     notFound();
   }
 
-  // Fetch related products (from the same category, excluding the current one, limit 5)
-  const relatedProductsData = await getProductsByCategory(product.category);
-  const relatedProducts = relatedProductsData
-    .filter(p => p.id !== product.id && p.isPublished)
-    .slice(0, 5);
+  let relatedProducts: Product[] = [];
+  if (product.categories && product.categories.length > 0) {
+      // Fetch related products (from the first category, excluding the current one, limit 5)
+      const relatedProductsData = await getProductsByCategory(product.categories[0]);
+      relatedProducts = relatedProductsData
+        .filter(p => p.id !== product.id && p.isPublished)
+        .slice(0, 5);
+  }
+
 
   return (
     <div className="container mx-auto px-4 py-8 md:py-12">
