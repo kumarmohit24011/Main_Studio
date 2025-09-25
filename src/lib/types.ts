@@ -87,6 +87,7 @@ export interface Order {
     orderStatus: 'processing' | 'shipped' | 'delivered' | 'cancelled';
     paymentStatus: 'paid' | 'pending';
     shippingAddress: ShippingAddress;
+    shippingCost?: number;
     razorpayPaymentId?: string;
     couponCode?: string;
     discountAmount?: number;

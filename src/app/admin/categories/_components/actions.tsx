@@ -59,7 +59,7 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { Switch } from '@/components/ui/switch';
 import { DragDropContext, Droppable, Draggable, DropResult } from '@hello-pangea/dnd';
-import { MoreHorizontal, GripVertical } from 'lucide-react';
+import { MoreHorizontal } from 'lucide-react';
 
 const categorySchema = z.object({
   id: z.string().optional(),
@@ -80,7 +80,7 @@ export function CategoryActions({ categories: initialCategories }: { categories:
   const [preview, setPreview] = useState<string>('');
 
   useEffect(() => {
-    setCategories(initialCategories.sort((a, b) => a.order - b.order));
+    setCategories(initialCategories.sort((a, b) => (a.order || 0) - (b.order || 0)));
   }, [initialCategories]);
 
   const form = useForm<z.infer<typeof categorySchema>>({
@@ -193,7 +193,7 @@ export function CategoryActions({ categories: initialCategories }: { categories:
     } catch (error) {
       toast({ variant: "destructive", title: "Error", description: "Failed to save category order." });
       // Revert state if API call fails
-      setCategories(initialCategories.sort((a, b) => a.order - b.order));
+      setCategories(initialCategories.sort((a, b) => (a.order || 0) - (b.order || 0)));
     }
   };
 
@@ -332,7 +332,7 @@ export function CategoryActions({ categories: initialCategories }: { categories:
                       {(provided) => (
                         <TableRow ref={provided.innerRef} {...provided.draggableProps}>
                           <TableCell className="hidden sm:table-cell" {...provided.dragHandleProps}>
-                            <GripVertical className="h-5 w-5 text-muted-foreground" />
+                            <MoreHorizontal className="h-5 w-5 text-muted-foreground" />
                           </TableCell>
                           <TableCell className="font-medium">{category.name}</TableCell>
                           <TableCell className="hidden md:table-cell">{category.description}</TableCell>
