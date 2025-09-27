@@ -37,7 +37,7 @@ const newAddressSchema = shippingSchema.extend({
 });
 
 export function ShippingForm({ onFormSubmit }: ShippingFormProps) {
-  const { user, userProfile } = useAuth();
+  const { user, userProfile, refreshUserProfile } = useAuth();
   const { toast } = useToast();
   const [selectedAddressId, setSelectedAddressId] = useState<string | null>(null);
   const [showNewAddressForm, setShowNewAddressForm] = useState(false);
@@ -123,6 +123,7 @@ export function ShippingForm({ onFormSubmit }: ShippingFormProps) {
                     title: "Address Already Saved",
                     description: "This address is already in your address book.",
                 });
+                 setShowNewAddressForm(false);
                 return;
             }
 
@@ -133,11 +134,14 @@ export function ShippingForm({ onFormSubmit }: ShippingFormProps) {
             finalAddresses.push(newAddress);
 
             await updateUserProfile(user.uid, { addresses: finalAddresses });
+            await refreshUserProfile();
             
              toast({
                 title: "Address Saved",
                 description: "Your new shipping address has been saved.",
             });
+             setShowNewAddressForm(false);
+             handleAddressSelection(newAddress.id);
 
         } catch (error) {
              const errorMessage = error instanceof Error ? error.message : "An unknown error occurred.";

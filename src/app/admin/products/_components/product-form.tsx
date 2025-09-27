@@ -23,8 +23,11 @@ import { Checkbox } from '@/components/ui/checkbox';
 const productSchema = z.object({
   name: z.string().min(3, 'Product name must be at least 3 characters.'),
   description: z.string().min(10, 'Description must be at least 10 characters.'),
-  price: z.coerce.number().min(0, 'Price must be a positive number.'),
-  salePrice: z.coerce.number().min(0, 'Sale price must be a positive number.').optional(),
+  price: z.coerce.number().positive('Price must be a positive number.'),
+  salePrice: z.preprocess(
+    (val) => (val === '' || val === 0 || val === '0' ? null : val),
+    z.coerce.number().positive('Sale price must be a positive number.').nullable().optional()
+  ),
   stock: z.coerce.number().int().min(0, 'Stock must be a non-negative integer.'),
   categories: z.array(z.string()).nonempty({ message: 'Please select at least one category.' }),
   sku: z.string().optional(),

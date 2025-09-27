@@ -78,7 +78,7 @@ const ProductDetailsClient: React.FC<ProductDetailsClientProps> = ({ product }) 
           {/* Product Info */}
           <div className="flex flex-col gap-6">
             <div>
-                <h1 className="text-3xl md:text-4xl font-bold font-headline text-primary">{product.name}</h1>
+                <h1 className="text-3xl md:text-4xl font-bold font-headline text-black">{product.name}</h1>
                 <div className="flex items-baseline gap-2 mt-4">
                     <p className="text-3xl text-primary font-bold">
                         ₹{showDiscount ? product.salePrice?.toFixed(2) : product.price.toFixed(2)}
@@ -90,13 +90,13 @@ const ProductDetailsClient: React.FC<ProductDetailsClientProps> = ({ product }) 
                     )}
                 </div>
             </div>
-            <p className="text-muted-foreground leading-relaxed">{product.description}</p>
             <div className="flex items-center gap-4">
                 <AddToCartButton product={product} className="flex-grow" />
                 <Button variant="outline" size="icon" onClick={handleToggleWishlist}>
                     <Heart className={`w-5 h-5 ${inWishlist ? 'text-red-500 fill-red-500' : 'text-foreground'}`} />
                 </Button>
             </div>
+            <p className="text-muted-foreground leading-relaxed">{product.description}</p>
           </div>
         </div>
     );
