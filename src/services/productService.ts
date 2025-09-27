@@ -1,7 +1,7 @@
 
 import { db, storage } from '@/lib/firebase';
 import { Product } from '@/lib/types';
-import { collection, getDocs, query, where, limit, doc, getDoc, addDoc, serverTimestamp, updateDoc, deleteDoc, orderBy, getCountFromServer, writeBatch, documentId } from 'firebase/firestore';
+import { collection, getDocs, query, where, limit, doc, getDoc, addDoc, serverTimestamp, updateDoc, deleteDoc, orderBy, getCountFromServer, writeBatch, documentId, increment } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL, deleteObject } from 'firebase/storage';
 import { triggerCacheRevalidation } from '@/lib/cache-client';
 
@@ -379,6 +379,20 @@ export const updateProductStatus = async (
         await triggerCacheRevalidation('products', `/products/${productId}`);
     } catch (error) {
         console.error("Error updating product status:", error);
+        throw error;
+    }
+};
+
+export const updateProductStock = async (productId: string, quantity: number) => {
+    try {
+        const productRef = doc(db, 'products', productId);
+        await updateDoc(productRef, {
+            stock: increment(-quantity),
+            updatedAt: serverTimestamp(),
+        });
+        await triggerCacheRevalidation('products', `/products/${productId}`);
+    } catch (error) {
+        console.error(`Error updating stock for product ${productId}:`, error);
         throw error;
     }
 };

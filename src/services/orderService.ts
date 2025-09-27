@@ -1,8 +1,9 @@
 
 import { db } from '@/lib/firebase';
 import { Order } from '@/lib/types';
-import { collection, addDoc, serverTimestamp, query, where, getDocs, orderBy, doc, updateDoc } from 'firebase/firestore';
+import { collection, addDoc, serverTimestamp, query, where, getDocs, orderBy, doc, updateDoc, writeBatch } from 'firebase/firestore';
 import { triggerCacheRevalidation } from '@/lib/cache-client';
+import { updateProductStock } from './productService';
 
 const toPlainObject = (order: any): Order => {
     if (!order) return order;
@@ -16,10 +17,14 @@ const toPlainObject = (order: any): Order => {
     return plain;
 };
 
-// This function creates an order in Firestore
+// This function creates an order in Firestore and updates product stock
 export const createOrder = async (orderData: Omit<Order, 'id' | 'createdAt' | 'updatedAt'>) => {
+    const batch = writeBatch(db);
+
     try {
+        // 1. Create a new order document
         const orderCol = collection(db, 'orders');
+        const newOrderRef = doc(orderCol); // Create a new document reference with a unique ID
         
         const dataToSave: any = {
             ...orderData,
@@ -28,7 +33,6 @@ export const createOrder = async (orderData: Omit<Order, 'id' | 'createdAt' | 'u
         };
 
         // Firestore does not allow `undefined` values.
-        // We'll clean the object before saving.
         if (dataToSave.couponCode === undefined) {
             delete dataToSave.couponCode;
         }
@@ -36,10 +40,28 @@ export const createOrder = async (orderData: Omit<Order, 'id' | 'createdAt' | 'u
             delete dataToSave.discountAmount;
         }
 
-        await addDoc(orderCol, dataToSave);
+        batch.set(newOrderRef, dataToSave);
+
+        // 2. Update the stock for each product in the order
+        for (const item of orderData.items) {
+            const productRef = doc(db, 'products', item.productId);
+            batch.update(productRef, { 
+                stock: -item.quantity, // Decrement stock
+            });
+        }
+
+        // 3. Commit the batch write
+        await batch.commit();
+
+        // 4. Revalidate cache after successful order creation
         await triggerCacheRevalidation('orders');
+        orderData.items.forEach(item => {
+            triggerCacheRevalidation('products', `/products/${item.productId}`);
+        });
+
     } catch (error) {
         console.error("Error creating order: ", error);
+        // The batch is atomic, so no need to manually rollback.
         throw error;
     }
 };

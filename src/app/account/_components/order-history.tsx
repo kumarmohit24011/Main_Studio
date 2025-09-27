@@ -9,7 +9,7 @@ import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { AlertCircle, PackageSearch } from "lucide-react";
+import { AlertCircle, Package } from "lucide-react";
 
 interface OrderHistoryProps {
     userId: string;
@@ -93,7 +93,7 @@ export function OrderHistory({ userId, initialOrders }: OrderHistoryProps) {
                 <p className="text-muted-foreground">Review your past orders and check their fulfillment status.</p>
             </header>
             <div className="text-center py-16 text-muted-foreground border-2 border-dashed rounded-lg flex flex-col items-center justify-center">
-                <PackageSearch className="w-16 h-16 mb-4" />
+                <Package className="w-16 h-16 mb-4" />
                <h3 className="text-xl font-semibold mb-2">No Orders Found</h3>
                <p>You haven't placed any orders yet. Start shopping to see your order history.</p>
            </div>

@@ -115,7 +115,7 @@ export function ProductForm({ product, categories }: ProductFormProps) {
         finalTags.push('popular');
       }
       
-      const productData = { ...values, tags: finalTags };
+      const productData = { ...values, tags: finalTags, salePrice: values.salePrice || undefined };
       
       if (product) {
         const existingImageUrls = previews.filter(p => p.startsWith('http'));
