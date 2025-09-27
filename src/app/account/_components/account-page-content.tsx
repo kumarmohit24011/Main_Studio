@@ -231,7 +231,7 @@ export function AccountPageContent() {
                 </div>
             </TabsContent>
             <TabsContent value="orders" className="mt-6">
-                <OrderHistory userId={user.uid} />
+                 <OrderHistory userId={user.uid} />
             </TabsContent>
             <TabsContent value="wishlist" className="mt-6">
                 <WishlistTab />
