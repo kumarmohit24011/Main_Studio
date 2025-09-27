@@ -3,7 +3,9 @@ import { db, storage } from '@/lib/firebase';
 import { Product } from '@/lib/types';
 import { collection, getDocs, query, where, limit, doc, getDoc, addDoc, serverTimestamp, updateDoc, deleteDoc, orderBy, getCountFromServer, writeBatch, documentId, increment } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL, deleteObject } from 'firebase/storage';
-import { triggerCacheRevalidation } from '@/lib/cache-client';
+
+// NOTE: Cache revalidation has been removed from this service.
+// It should be handled by the client-side code that calls these functions.
 
 const toPlainObject = (product: any): Product => {
     if (!product) return product;
@@ -39,7 +41,6 @@ export const getProductsByIds = async (ids: string[]): Promise<Product[]> => {
     try {
         const products: Product[] = [];
         // Firestore 'in' query is limited to 30 items in a single query.
-        // We chunk the IDs to handle more than 30.
         for (let i = 0; i < ids.length; i += 30) {
             const chunk = ids.slice(i, i + 30);
             const productsRef = collection(db, 'products');
@@ -162,12 +163,11 @@ export const addProduct = async (productData: Partial<Product> & { images?: File
 
         await addDoc(productsCol, {
             ...dataToSave,
-            imageUrl: imageUrls[0] || '', // First image as primary
+            imageUrl: imageUrls[0] || '', 
             imageUrls,
             createdAt: serverTimestamp(),
             updatedAt: serverTimestamp(),
         });
-        await triggerCacheRevalidation('products');
     } catch (error) {
         console.error("Error adding product:", error);
         throw error;
@@ -199,7 +199,6 @@ export const updateProduct = async (
         };
 
         await updateDoc(productRef, updatePayload);
-        await triggerCacheRevalidation('products', `/products/${id}`);
 
     } catch (error) {
         console.error("Error updating product:", error);
@@ -217,15 +216,12 @@ export const deleteProduct = async (id: string, imageUrlsToDelete: string[] = []
                 return;
             }
             try {
-                // Correctly create a reference from the download URL
                 const imageRef = ref(storage, url);
                 await deleteObject(imageRef);
             } catch (error: any) {
                 if (error.code === 'storage/object-not-found') {
                     console.warn(`Image not found, skipping deletion: ${url}`);
                 } else if (error.code === 'storage/invalid-argument') {
-                    // This can happen if the URL is not a valid storage URL.
-                    // Let's try to extract the path.
                     try {
                         const path = new URL(url).pathname.split('/o/')[1];
                         const decodedPath = decodeURIComponent(path.split('?')[0]);
@@ -241,7 +237,6 @@ export const deleteProduct = async (id: string, imageUrlsToDelete: string[] = []
         });
         
         await Promise.all(deletePromises);
-        await triggerCacheRevalidation('products', `/products/${id}`);
 
     } catch (error) {
         console.error("Error deleting product and its images:", error);
@@ -275,8 +270,6 @@ export const deleteMultipleProducts = async (productsToDelete: Product[]): Promi
                 }
             }
         }
-        
-        await triggerCacheRevalidation('products');
 
     } catch (error) {
         console.error("Error bulk deleting products:", error);
@@ -290,8 +283,6 @@ export const searchProducts = async (searchTerm: string): Promise<Product[]> => 
             return [];
         }
 
-        // Get all published products and filter on the client side
-        // Firestore doesn't support full-text search, so we'll do client-side filtering
         const productsRef = collection(db, 'products');
         const q = query(productsRef, where("isPublished", "==", true));
         const snapshot = await getDocs(q);
@@ -303,7 +294,6 @@ export const searchProducts = async (searchTerm: string): Promise<Product[]> => 
         const products = snapshot.docs.map(doc => toPlainObject({ id: doc.id, ...doc.data() }));
         const searchTermLower = searchTerm.toLowerCase().trim();
         
-        // Filter products that match the search term
         const filteredProducts = products.filter(product => {
             const nameMatch = product.name?.toLowerCase().includes(searchTermLower);
             const descriptionMatch = product.description?.toLowerCase().includes(searchTermLower);
@@ -314,7 +304,6 @@ export const searchProducts = async (searchTerm: string): Promise<Product[]> => 
             return nameMatch || descriptionMatch || categoryMatch || skuMatch || tagsMatch;
         });
 
-        // Sort results by relevance (name matches first, then description, etc.)
         return filteredProducts.sort((a, b) => {
             const aNameMatch = a.name?.toLowerCase().includes(searchTermLower) ? 1 : 0;
             const bNameMatch = b.name?.toLowerCase().includes(searchTermLower) ? 1 : 0;
@@ -323,7 +312,6 @@ export const searchProducts = async (searchTerm: string): Promise<Product[]> => 
                 return bNameMatch - aNameMatch; // Name matches first
             }
             
-            // If both or neither match name, sort by creation date (newest first)
             const aDate = a.createdAt ? new Date(a.createdAt).getTime() : 0;
             const bDate = b.createdAt ? new Date(b.createdAt).getTime() : 0;
             return bDate - aDate;
@@ -376,7 +364,6 @@ export const updateProductStatus = async (
         }
 
         await updateDoc(productRef, updateData);
-        await triggerCacheRevalidation('products', `/products/${productId}`);
     } catch (error) {
         console.error("Error updating product status:", error);
         throw error;
@@ -390,7 +377,6 @@ export const updateProductStock = async (productId: string, quantity: number) =>
             stock: increment(-quantity),
             updatedAt: serverTimestamp(),
         });
-        await triggerCacheRevalidation('products', `/products/${productId}`);
     } catch (error) {
         console.error(`Error updating stock for product ${productId}:`, error);
         throw error;

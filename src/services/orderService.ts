@@ -2,7 +2,6 @@
 import { db } from '@/lib/firebase';
 import type { Order, Product } from '@/lib/types';
 import { collection, addDoc, serverTimestamp, query, where, getDocs, orderBy, doc, updateDoc, runTransaction, DocumentReference } from 'firebase/firestore';
-import { triggerCacheRevalidation } from '@/lib/cache-client';
 
 const toPlainObject = (order: any): Order => {
     if (!order) return order;
@@ -64,12 +63,7 @@ export const createOrder = async (orderData: Omit<Order, 'id' | 'createdAt' | 'u
             return newOrderRef.id; // Return the ID of the newly created order
         });
 
-        // 4. Revalidate cache after successful transaction
-        await triggerCacheRevalidation('orders');
-        orderData.items.forEach(item => {
-            triggerCacheRevalidation('products', `/products/${item.productId}`);
-        });
-
+        // Revalidation is now handled in the hook after this function succeeds
         return newOrderId;
 
     } catch (error) {
@@ -125,7 +119,7 @@ export const updateOrderStatus = async (orderId: string, status: Order['orderSta
             orderStatus: status,
             updatedAt: serverTimestamp()
         });
-        await triggerCacheRevalidation('orders');
+        // No revalidation here either, it should be called from the component that uses this function
     } catch (error) {
         console.error("Error updating order status: ", error);
         throw error;

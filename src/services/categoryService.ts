@@ -3,7 +3,9 @@ import { db, storage } from '@/lib/firebase';
 import { Category } from '@/lib/types';
 import { collection, getDocs, doc, getDoc, addDoc, serverTimestamp, updateDoc, deleteDoc, writeBatch, query, where } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
-import { triggerCacheRevalidation } from '@/lib/cache-client';
+
+// NOTE: Cache revalidation has been removed from this service.
+// It should be handled by the client-side code that calls these functions.
 
 export const getAllCategories = async (): Promise<Category[]> => {
     try {
@@ -88,7 +90,6 @@ export const addCategory = async (category: Omit<Category, 'id' | 'createdAt'>, 
             imageUrl,
             createdAt: serverTimestamp(),
         });
-        await triggerCacheRevalidation('categories');
     } catch (error) {
         console.error("Error adding category: ", error);
         throw error;
@@ -106,7 +107,6 @@ export const updateCategory = async (id: string, data: Partial<Omit<Category, 'i
         
         const categoryRef = doc(db, 'categories', id);
         await updateDoc(categoryRef, updateData);
-        await triggerCacheRevalidation('categories');
     } catch (error) {
         console.error("Error updating category: ", error);
         throw error;
@@ -121,7 +121,6 @@ export const updateCategoryOrder = async (categories: { id: string; order: numbe
             batch.update(categoryRef, { order: category.order });
         });
         await batch.commit();
-        await triggerCacheRevalidation('categories');
     } catch (error) {
         console.error("Error updating category order: ", error);
         throw error;
@@ -135,11 +134,9 @@ export const searchCategories = async (searchTerm: string): Promise<Category[]> 
             return [];
         }
 
-        // Get all categories and filter on the client side
         const categories = await getAllCategories();
         const searchTermLower = searchTerm.toLowerCase().trim();
         
-        // Filter categories that match the search term
         const filteredCategories = categories.filter(category => {
             const nameMatch = category.name?.toLowerCase().includes(searchTermLower);
             const descriptionMatch = category.description?.toLowerCase().includes(searchTermLower);
@@ -147,7 +144,6 @@ export const searchCategories = async (searchTerm: string): Promise<Category[]> 
             return nameMatch || descriptionMatch;
         });
 
-        // Sort results by relevance (name matches first, then by order)
         return filteredCategories.sort((a, b) => {
             const aNameMatch = a.name?.toLowerCase().includes(searchTermLower) ? 1 : 0;
             const bNameMatch = b.name?.toLowerCase().includes(searchTermLower) ? 1 : 0;
@@ -156,7 +152,6 @@ export const searchCategories = async (searchTerm: string): Promise<Category[]> 
                 return bNameMatch - aNameMatch; // Name matches first
             }
             
-            // If both or neither match name, sort by order
             return (a.order ?? 0) - (b.order ?? 0);
         });
     } catch (error) {
@@ -169,7 +164,6 @@ export const deleteCategory = async (id: string): Promise<void> => {
     try {
         const categoryRef = doc(db, 'categories', id);
         await deleteDoc(categoryRef);
-        await triggerCacheRevalidation('categories');
     } catch (error) {
         console.error("Error deleting category: ", error);
         throw error;

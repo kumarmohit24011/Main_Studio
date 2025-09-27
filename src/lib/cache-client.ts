@@ -1,6 +1,4 @@
 
-'use client';
-
 /**
  * Client-side cache invalidation utility
  * Calls the secure server-side API to trigger cache revalidation
@@ -14,19 +12,25 @@ const getApiUrl = () => {
 }
 
 /**
- * Trigger cache revalidation from client-side by calling secure server endpoint
- * Uses same-origin protection to ensure requests come from admin interface
+ * Trigger cache revalidation from client-side by calling secure server endpoint.
+ * This function no longer uses hooks and requires the auth token to be passed in.
  */
-export async function triggerCacheRevalidation(type: RevalidationType, specificPath?: string) {
+export async function triggerCacheRevalidation(token: string | null, type: RevalidationType, specificPath?: string) {
   try {
     const apiUrl = getApiUrl();
     const fullUrl = `${apiUrl}/api/revalidate-data`;
     
+    const headers: HeadersInit = {
+      'Content-Type': 'application/json',
+    };
+
+    if (token) {
+      headers['Authorization'] = `Bearer ${token}`;
+    }
+
     const response = await fetch(fullUrl, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers,
       body: JSON.stringify({
         type,
         specificPath
@@ -45,18 +49,4 @@ export async function triggerCacheRevalidation(type: RevalidationType, specificP
     console.error(`Error triggering cache revalidation for ${type}:`, error);
     // Don't throw - cache revalidation failure shouldn't break the user operation
   }
-}
-
-/**
- * Trigger product cache revalidation including specific product page
- */
-export async function triggerProductCacheRevalidation(productId?: string) {
-  await triggerCacheRevalidation('products', productId ? `/products/${productId}` : undefined);
-}
-
-/**
- * Trigger category cache revalidation
- */
-export async function triggerCategoryCacheRevalidation() {
-  await triggerCacheRevalidation('categories');
 }

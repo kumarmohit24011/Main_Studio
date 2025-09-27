@@ -14,6 +14,8 @@ interface CartContextType {
   updateQuantity: (productId: string, quantity: number) => void;
   clearCart: () => void;
   cartLoading: boolean;
+  isAddingToCart: boolean;
+  getItem: (productId: string) => CartItem | undefined;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -24,6 +26,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const { user, userProfile, authLoading } = useAuth();
   const [cart, setCart] = useState<CartItem[]>([]);
   const [cartLoading, setCartLoading] = useState(true);
+  const [isAddingToCart, setIsAddingToCart] = useState(false);
   const { toast } = useToast();
   const [isClient, setIsClient] = useState(false);
 
@@ -74,58 +77,63 @@ export function CartProvider({ children }: { children: ReactNode }) {
     setCartLoading(false);
   }, [user, userProfile, authLoading, getLocalCart, isClient]);
   
-  const updateCart = (newCart: CartItem[]) => {
+  const updateCart = async (newCart: CartItem[]) => {
     setCart(newCart);
     if (!isClient) return;
 
     if (user) {
-      updateUserProfile(user.uid, { cart: newCart });
+      await updateUserProfile(user.uid, { cart: newCart });
     } else {
       localStorage.setItem(CART_LOCALSTORAGE_KEY, JSON.stringify(newCart));
     }
   };
 
-  const addToCart = (product: Product, quantity = 1) => {
-    if (cartLoading) {
+  const addToCart = async (product: Product, quantity = 1) => {
+    if (cartLoading || isAddingToCart) {
       toast({ title: "Please wait", description: "Syncing your data, please try again shortly.", variant: "destructive" });
       return;
     }
 
-    if (product.stock < 1) {
-        toast({ title: "Out of Stock", description: `Sorry, ${product.name} is currently out of stock.`, variant: "destructive" });
-        return;
-    }
-
-    const newCart = [...cart];
-    const existingItemIndex = newCart.findIndex(item => item.productId === product.id);
-
-    if (existingItemIndex > -1) {
-        const newQuantity = newCart[existingItemIndex].quantity + quantity;
-        if (newQuantity > product.stock) {
-            toast({ title: "Stock Limit Exceeded", description: `You can only add up to ${product.stock} units of ${product.name}.`, variant: "destructive" });
+    setIsAddingToCart(true);
+    try {
+        if (product.stock < 1) {
+            toast({ title: "Out of Stock", description: `Sorry, ${product.name} is currently out of stock.`, variant: "destructive" });
             return;
         }
-        newCart[existingItemIndex].quantity = newQuantity;
-    } else {
-        if (quantity > product.stock) {
-            toast({ title: "Stock Limit Exceeded", description: `You can only add up to ${product.stock} units of ${product.name}.`, variant: "destructive" });
-            return;
+
+        const newCart = [...cart];
+        const existingItemIndex = newCart.findIndex(item => item.productId === product.id);
+
+        if (existingItemIndex > -1) {
+            const newQuantity = newCart[existingItemIndex].quantity + quantity;
+            if (newQuantity > product.stock) {
+                toast({ title: "Stock Limit Exceeded", description: `You can only add up to ${product.stock} units of ${product.name}.`, variant: "destructive" });
+                return;
+            }
+            newCart[existingItemIndex].quantity = newQuantity;
+        } else {
+            if (quantity > product.stock) {
+                toast({ title: "Stock Limit Exceeded", description: `You can only add up to ${product.stock} units of ${product.name}.`, variant: "destructive" });
+                return;
+            }
+          newCart.push({ 
+              productId: product.id, 
+              quantity,
+              name: product.name,
+              price: product.price,
+              imageUrl: product.imageUrl,
+              stock: product.stock,
+              sku: product.sku
+          });
         }
-      newCart.push({ 
-          productId: product.id, 
-          quantity,
-          name: product.name,
-          price: product.price,
-          imageUrl: product.imageUrl,
-          stock: product.stock,
-          sku: product.sku
-      });
+        await updateCart(newCart);
+        toast({
+            title: "Added to Cart",
+            description: `${product.name} has been added to your cart.`
+        });
+    } finally {
+        setIsAddingToCart(false);
     }
-    updateCart(newCart);
-    toast({
-        title: "Added to Cart",
-        description: `${product.name} has been added to your cart.`
-    });
   };
 
   const removeFromCart = (productId: string) => {
@@ -161,6 +169,10 @@ export function CartProvider({ children }: { children: ReactNode }) {
     updateCart([]);
   };
 
+  const getItem = (productId: string): CartItem | undefined => {
+    return cart.find(item => item.productId === productId);
+  };
+
   const value = {
     cart,
     addToCart,
@@ -168,6 +180,8 @@ export function CartProvider({ children }: { children: ReactNode }) {
     updateQuantity,
     clearCart,
     cartLoading,
+    isAddingToCart,
+    getItem,
   };
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
