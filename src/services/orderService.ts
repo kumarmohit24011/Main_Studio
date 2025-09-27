@@ -1,9 +1,8 @@
 
 import { db } from '@/lib/firebase';
-import { Order } from '@/lib/types';
-import { collection, addDoc, serverTimestamp, query, where, getDocs, orderBy, doc, updateDoc, writeBatch } from 'firebase/firestore';
+import type { Order, Product } from '@/lib/types';
+import { collection, addDoc, serverTimestamp, query, where, getDocs, orderBy, doc, updateDoc, runTransaction, DocumentReference } from 'firebase/firestore';
 import { triggerCacheRevalidation } from '@/lib/cache-client';
-import { updateProductStock } from './productService';
 
 const toPlainObject = (order: any): Order => {
     if (!order) return order;
@@ -17,51 +16,65 @@ const toPlainObject = (order: any): Order => {
     return plain;
 };
 
-// This function creates an order in Firestore and updates product stock
-export const createOrder = async (orderData: Omit<Order, 'id' | 'createdAt' | 'updatedAt'>) => {
-    const batch = writeBatch(db);
-
+// This function creates an order in Firestore and updates product stock atomically
+export const createOrder = async (orderData: Omit<Order, 'id' | 'createdAt' | 'updatedAt'>): Promise<string> => {
     try {
-        // 1. Create a new order document
-        const orderCol = collection(db, 'orders');
-        const newOrderRef = doc(orderCol); // Create a new document reference with a unique ID
-        
-        const dataToSave: any = {
-            ...orderData,
-            createdAt: serverTimestamp(),
-            updatedAt: serverTimestamp(),
-        };
+        const newOrderId = await runTransaction(db, async (transaction) => {
+            // 1. Check stock and get product data
+            const productsToUpdate: { ref: DocumentReference, newStock: number }[] = [];
+            for (const item of orderData.items) {
+                const productRef = doc(db, 'products', item.productId);
+                const productDoc = await transaction.get(productRef);
 
-        // Firestore does not allow `undefined` values.
-        if (dataToSave.couponCode === undefined) {
-            delete dataToSave.couponCode;
-        }
-        if (dataToSave.discountAmount === undefined) {
-            delete dataToSave.discountAmount;
-        }
+                if (!productDoc.exists()) {
+                    throw new Error(`Product with ID ${item.productId} not found.`);
+                }
 
-        batch.set(newOrderRef, dataToSave);
+                const productData = productDoc.data() as Product;
+                if (productData.stock < item.quantity) {
+                    throw new Error(`Not enough stock for ${productData.name}. Requested: ${item.quantity}, Available: ${productData.stock}`);
+                }
 
-        // 2. Update the stock for each product in the order
-        for (const item of orderData.items) {
-            const productRef = doc(db, 'products', item.productId);
-            batch.update(productRef, { 
-                stock: -item.quantity, // Decrement stock
-            });
-        }
+                productsToUpdate.push({
+                    ref: productRef,
+                    newStock: productData.stock - item.quantity,
+                });
+            }
 
-        // 3. Commit the batch write
-        await batch.commit();
+            // 2. Create the new order document
+            const orderCol = collection(db, 'orders');
+            const newOrderRef = doc(orderCol); // Create a new document reference with a unique ID
 
-        // 4. Revalidate cache after successful order creation
+            const dataToSave: any = {
+                ...orderData,
+                createdAt: serverTimestamp(),
+                updatedAt: serverTimestamp(),
+            };
+            // Clean undefined values
+            if (dataToSave.couponCode === undefined) delete dataToSave.couponCode;
+            if (dataToSave.discountAmount === undefined) delete dataToSave.discountAmount;
+
+            transaction.set(newOrderRef, dataToSave);
+
+            // 3. Update the stock for each product
+            for (const { ref, newStock } of productsToUpdate) {
+                transaction.update(ref, { stock: newStock });
+            }
+            
+            return newOrderRef.id; // Return the ID of the newly created order
+        });
+
+        // 4. Revalidate cache after successful transaction
         await triggerCacheRevalidation('orders');
         orderData.items.forEach(item => {
             triggerCacheRevalidation('products', `/products/${item.productId}`);
         });
 
+        return newOrderId;
+
     } catch (error) {
         console.error("Error creating order: ", error);
-        // The batch is atomic, so no need to manually rollback.
+        // Re-throw the specific error message to be handled by the caller
         throw error;
     }
 };
