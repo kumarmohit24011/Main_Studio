@@ -65,7 +65,6 @@ export function ShippingForm({ onFormSubmit }: ShippingFormProps) {
         handleAddressSelection(defaultAddress.id);
       }
     } else if (addresses.length === 0) {
-        // Automatically show the form if no addresses are saved
         setShowNewAddressForm(true);
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -112,7 +111,6 @@ export function ShippingForm({ onFormSubmit }: ShippingFormProps) {
             
             const existingAddresses = userProfile?.addresses || [];
             
-            // Prevent adding a duplicate address
             const addressExists = existingAddresses.some(addr => 
                 addr.street.toLowerCase() === newAddress.street.toLowerCase() &&
                 addr.city.toLowerCase() === newAddress.city.toLowerCase() &&
@@ -140,11 +138,6 @@ export function ShippingForm({ onFormSubmit }: ShippingFormProps) {
                 title: "Address Saved",
                 description: "Your new shipping address has been saved.",
             });
-
-            // Post-save UI updates
-            setShowNewAddressForm(false);
-            setSelectedAddressId(newAddress.id);
-            onFormSubmit(newAddress); // Ensure parent has the new address
 
         } catch (error) {
              const errorMessage = error instanceof Error ? error.message : "An unknown error occurred.";

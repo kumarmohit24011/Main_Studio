@@ -26,7 +26,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
-
+import React from 'react';
 import { Button } from '@/components/ui/button';
 import type { Product } from '@/lib/types';
 import Image from 'next/image';
@@ -48,12 +48,36 @@ interface ProductTableProps {
 export function ProductTable({ products, selectedProducts, setSelectedProducts }: ProductTableProps) {
     const { toast } = useToast();
     const router = useRouter();
+    const [sortConfig, setSortConfig] = React.useState<{ key: keyof Product; direction: 'ascending' | 'descending' } | null>(null);
+
+    const sortedProducts = React.useMemo(() => {
+        let sortableItems = [...products];
+        if (sortConfig !== null) {
+            sortableItems.sort((a, b) => {
+                if (a[sortConfig.key] < b[sortConfig.key]) {
+                    return sortConfig.direction === 'ascending' ? -1 : 1;
+                }
+                if (a[sortConfig.key] > b[sortConfig.key]) {
+                    return sortConfig.direction === 'ascending' ? 1 : -1;
+                }
+                return 0;
+            });
+        }
+        return sortableItems;
+    }, [products, sortConfig]);
+
+    const requestSort = (key: keyof Product) => {
+        let direction: 'ascending' | 'descending' = 'ascending';
+        if (sortConfig && sortConfig.key === key && sortConfig.direction === 'ascending') {
+            direction = 'descending';
+        }
+        setSortConfig({ key, direction });
+    };
 
     const handleDelete = async (product: Product) => {
         try {
             await deleteProduct(product.id, product.imageUrls);
             toast({ title: "Success", description: "Product deleted successfully." });
-            // Wait a bit for cache revalidation to complete, then refresh
             setTimeout(() => {
                 router.refresh();
             }, 100);
@@ -66,7 +90,6 @@ export function ProductTable({ products, selectedProducts, setSelectedProducts }
         try {
             await updateProductStatus(productId, { [statusType]: value });
             toast({ title: "Status Updated", description: "Product status changed successfully." });
-            // Wait a bit for cache revalidation to complete, then refresh
             setTimeout(() => {
                 router.refresh();
             }, 100);
@@ -107,11 +130,19 @@ export function ProductTable({ products, selectedProducts, setSelectedProducts }
                     <TableHead className="hidden w-[100px] sm:table-cell">
                         <span className="sr-only">Image</span>
                     </TableHead>
-                    <TableHead>Name</TableHead>
-                    <TableHead>SKU</TableHead>
+                    <TableHead onClick={() => requestSort('name')} className="cursor-pointer">
+                        Name {sortConfig?.key === 'name' ? (sortConfig.direction === 'ascending' ? '▲' : '▼') : ''}
+                    </TableHead>
+                    <TableHead onClick={() => requestSort('sku')} className="cursor-pointer">
+                        SKU {sortConfig?.key === 'sku' ? (sortConfig.direction === 'ascending' ? '▲' : '▼') : ''}
+                    </TableHead>
                     <TableHead>Category</TableHead>
-                    <TableHead>Price</TableHead>
-                    <TableHead>Stock</TableHead>
+                    <TableHead onClick={() => requestSort('price')} className="cursor-pointer">
+                        Price {sortConfig?.key === 'price' ? (sortConfig.direction === 'ascending' ? '▲' : '▼') : ''}
+                    </TableHead>
+                    <TableHead onClick={() => requestSort('stock')} className="cursor-pointer">
+                        Stock {sortConfig?.key === 'stock' ? (sortConfig.direction === 'ascending' ? '▲' : '▼') : ''}
+                    </TableHead>
                     <TableHead>Status</TableHead>
                     <TableHead>
                         <span className="sr-only">Actions</span>
@@ -119,7 +150,7 @@ export function ProductTable({ products, selectedProducts, setSelectedProducts }
                 </TableRow>
             </TableHeader>
             <TableBody>
-                {products.map((product) => (
+                {sortedProducts.map((product) => (
                 <TableRow key={product.id} data-state={selectedProducts.some(p => p.id === product.id) && "selected"}>
                     <TableCell>
                          <Checkbox 
