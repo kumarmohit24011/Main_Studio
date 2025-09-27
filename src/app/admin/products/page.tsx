@@ -10,6 +10,7 @@ import { useAuth } from "@/hooks/use-auth";
 import { useEffect, useState } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
+import * as XLSX from 'xlsx';
 
 function ProductsPageSkeleton() {
     return (
@@ -74,6 +75,13 @@ export default function AdminProductsPage() {
         fetchProductsData();
     }, [user, userProfile, authLoading]);
 
+    const handleExport = () => {
+        const worksheet = XLSX.utils.json_to_sheet(products);
+        const workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, "Products");
+        XLSX.writeFile(workbook, "products.xlsx");
+    };
+
     if (authLoading || loading) {
         return <ProductsPageSkeleton />;
     }
@@ -101,6 +109,11 @@ export default function AdminProductsPage() {
 
     return (
         <div className="flex flex-col gap-4">
+             <div className="flex justify-end">
+                <Button onClick={handleExport} disabled={products.length === 0}>
+                    Export to Excel
+                </Button>
+            </div>
             <Card>
                 <CardHeader>
                     <CardTitle>Manage Products</CardTitle>

@@ -78,7 +78,7 @@ export function useRazorpay() {
                             name: item.name || '',
                             price: item.price || 0,
                             quantity: item.quantity,
-                            sku: item.sku || null,
+                            sku: item.sku,
                         })),
                         totalAmount: amount,
                         shippingAddress,
