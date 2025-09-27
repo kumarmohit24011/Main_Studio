@@ -2,7 +2,7 @@
 
 import { Suspense, useEffect } from 'react';
 import { CheckoutClientPage } from "./_components/checkout-client-page";
-import { useAuth } from '@/hooks/useAuth';
+import { useAuth } from '@/hooks/use-auth';
 import { triggerCacheRevalidation } from '@/lib/cache-client';
 
 // A fallback component to show while the client component is loading
@@ -24,14 +24,25 @@ function CheckoutLoading() {
 }
 
 export default function CheckoutPage() {
-  const { user, loading } = useAuth();
+  const { user, authLoading } = useAuth();
 
   useEffect(() => {
-    if (!loading && user) {
-      triggerCacheRevalidation('orders', user.token);
-      triggerCacheRevalidation('products', user.token);
+    const revalidate = async () => {
+      if (user) {
+        try {
+          const token = await user.getIdToken();
+          triggerCacheRevalidation(token, 'orders');
+          triggerCacheRevalidation(token, 'products');
+        } catch (error) {
+          console.error('Error getting ID token for revalidation:', error);
+        }
+      }
+    };
+
+    if (!authLoading) {
+      revalidate();
     }
-  }, [user, loading]);
+  }, [user, authLoading]);
 
   return (
     <Suspense fallback={<CheckoutLoading />}>
