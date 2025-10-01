@@ -302,7 +302,7 @@ export function ProductForm({ product, categories }: ProductFormProps) {
                                         value={tagInput}
                                         onChange={(e) => setTagInput(e.target.value)}
                                         onKeyDown={handleAddTag}
-                                        disabled={field.value?.includes('new') || field.value?.includes('popular')}
+                                        
                                     />
                                     <div className="flex flex-wrap gap-2 mt-2">
                                         {field.value?.filter(tag => tag !== 'new' && tag !== 'popular').map(tag => (
