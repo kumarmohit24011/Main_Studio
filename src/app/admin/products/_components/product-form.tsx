@@ -9,7 +9,7 @@ import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, For
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import Image from 'next/image';
 import { useState } from 'react';
 import type { Product, Category } from '@/lib/types';
@@ -46,6 +46,7 @@ interface ProductFormProps {
 export function ProductForm({ product, categories }: ProductFormProps) {
   const { toast } = useToast();
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [previews, setPreviews] = useState<string[]>(product?.imageUrls || []);
   const [tagInput, setTagInput] = useState('');
 
@@ -129,8 +130,8 @@ export function ProductForm({ product, categories }: ProductFormProps) {
         await addProduct(productData, values.images);
         toast({ title: 'Success', description: 'Product added successfully.' });
       }
-      router.push('/admin/products');
-      router.refresh();
+      const redirectUrl = `/admin/products?${searchParams.toString()}`;
+      window.location.href = redirectUrl;
     } catch (error) {
       console.error(error);
       toast({

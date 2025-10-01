@@ -1,8 +1,6 @@
-
-
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import type { Product, Category } from '@/lib/types';
 import { ProductTable } from './product-table';
 import { Input } from '@/components/ui/input';
@@ -11,7 +9,7 @@ import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { deleteMultipleProducts } from '@/services/productService';
 import { useToast } from '@/hooks/use-toast';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -22,8 +20,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "@/components/ui/alert-dialog"
-
+} from "@/components/ui/alert-dialog";
 
 interface ProductActionsProps {
     products: Product[];
@@ -34,23 +31,37 @@ type StockStatus = 'all' | 'in-stock' | 'out-of-stock' | 'low-stock';
 const LOW_STOCK_THRESHOLD = 5;
 
 export function ProductActions({ products, categories }: ProductActionsProps) {
-    const [searchQuery, setSearchQuery] = useState('');
-    const [categoryFilter, setCategoryFilter] = useState('all');
-    const [stockFilter, setStockFilter] = useState<StockStatus>('all');
-    const [selectedProducts, setSelectedProducts] = useState<Product[]>([]);
-    const { toast } = useToast();
     const router = useRouter();
+    const pathname = usePathname();
+    const searchParams = useSearchParams();
+    const { toast } = useToast();
 
+    // URL is the single source of truth
+    const searchQuery = searchParams.get('search') || '';
+    const categoryFilter = searchParams.get('category') || 'all';
+    const stockFilter = (searchParams.get('stock') as StockStatus) || 'all';
+
+    const [selectedProducts, setSelectedProducts] = useState<Product[]>([]);
+
+    const handleFilterChange = (key: 'search' | 'category' | 'stock', value: string) => {
+        const params = new URLSearchParams(searchParams.toString());
+        if (value && value !== 'all') {
+            params.set(key, value);
+        } else {
+            params.delete(key);
+        }
+        router.push(`${pathname}?${params.toString()}`, { scroll: false });
+    };
 
     const filteredProducts = useMemo(() => {
         return products.filter(product => {
-            const matchesSearch = 
+            const matchesSearch =
                 product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
                 (product.sku && product.sku.toLowerCase().includes(searchQuery.toLowerCase()));
 
-            const matchesCategory = 
+            const matchesCategory =
                 categoryFilter === 'all' || (product.categories && product.categories.includes(categoryFilter));
-            
+
             const matchesStock = () => {
                 switch(stockFilter) {
                     case 'in-stock':
@@ -63,40 +74,38 @@ export function ProductActions({ products, categories }: ProductActionsProps) {
                     default:
                         return true;
                 }
-            }
+            };
 
             return matchesSearch && matchesCategory && matchesStock();
         });
     }, [products, searchQuery, categoryFilter, stockFilter]);
 
-     const handleBulkDelete = async () => {
+    const handleBulkDelete = async () => {
         try {
             await deleteMultipleProducts(selectedProducts);
             toast({ title: "Success", description: `${selectedProducts.length} products deleted.` });
             setSelectedProducts([]);
-            // Wait a bit for cache revalidation to complete, then refresh
-            setTimeout(() => {
-                router.refresh();
-            }, 100);
+            router.refresh();
         } catch (error) {
             toast({ variant: 'destructive', title: "Error", description: "Failed to delete products." });
         }
     };
 
+    const addProductHref = `/admin/products/new?${searchParams.toString()}`;
 
     return (
         <div>
             <div className="flex flex-col md:flex-row md:items-center gap-4 mb-6">
                 <div className="relative w-full md:flex-grow">
-                    <Input 
+                    <Input
                         placeholder="Search by name or SKU..."
                         value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
+                        onChange={(e) => handleFilterChange('search', e.target.value)}
                         className="pl-10 w-full"
                     />
                 </div>
                 <div className="flex flex-col sm:flex-row items-center gap-4 w-full md:w-auto">
-                    <Select value={categoryFilter} onValueChange={setCategoryFilter}>
+                    <Select value={categoryFilter} onValueChange={(value) => handleFilterChange('category', value)}>
                         <SelectTrigger className="w-full md:w-[180px]">
                             <SelectValue placeholder="Filter by category" />
                         </SelectTrigger>
@@ -107,7 +116,7 @@ export function ProductActions({ products, categories }: ProductActionsProps) {
                             ))}
                         </SelectContent>
                     </Select>
-                     <Select value={stockFilter} onValueChange={(value) => setStockFilter(value as StockStatus)}>
+                     <Select value={stockFilter} onValueChange={(value) => handleFilterChange('stock', value as StockStatus)}>
                         <SelectTrigger className="w-full md:w-[180px]">
                             <SelectValue placeholder="Filter by stock" />
                         </SelectTrigger>
@@ -142,14 +151,14 @@ export function ProductActions({ products, categories }: ProductActionsProps) {
                         </AlertDialog>
                     )}
                     <Button size="sm" className="h-10 gap-1 w-full sm:w-auto" asChild>
-                        <Link href="/admin/products/new">
+                         <Link href={addProductHref}>
                             Add Product
                         </Link>
                     </Button>
                 </div>
             </div>
-            <ProductTable 
-                products={filteredProducts} 
+            <ProductTable
+                products={filteredProducts}
                 selectedProducts={selectedProducts}
                 setSelectedProducts={setSelectedProducts}
             />
