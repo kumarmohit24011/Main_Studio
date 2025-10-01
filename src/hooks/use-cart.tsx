@@ -6,6 +6,7 @@ import { useAuth } from './use-auth';
 import { updateUserProfile } from '@/services/userService';
 import type { Product, CartItem } from '@/lib/types';
 import { useToast } from './use-toast';
+import { getProductById } from '@/services/productService';
 
 interface CartContextType {
   cart: CartItem[];
@@ -16,6 +17,7 @@ interface CartContextType {
   cartLoading: boolean;
   isAddingToCart: boolean;
   getItem: (productId: string) => CartItem | undefined;
+  validateCart: () => Promise<boolean>;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -96,33 +98,19 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
     setIsAddingToCart(true);
     try {
-        if (product.stock < 1) {
-            toast({ title: "Out of Stock", description: `Sorry, ${product.name} is currently out of stock.`, variant: "destructive" });
-            return;
-        }
-
         const newCart = [...cart];
         const existingItemIndex = newCart.findIndex(item => item.productId === product.id);
 
         if (existingItemIndex > -1) {
-            const newQuantity = newCart[existingItemIndex].quantity + quantity;
-            if (newQuantity > product.stock) {
-                toast({ title: "Stock Limit Exceeded", description: `You can only add up to ${product.stock} units of ${product.name}.`, variant: "destructive" });
-                return;
-            }
-            newCart[existingItemIndex].quantity = newQuantity;
+            newCart[existingItemIndex].quantity += quantity;
         } else {
-            if (quantity > product.stock) {
-                toast({ title: "Stock Limit Exceeded", description: `You can only add up to ${product.stock} units of ${product.name}.`, variant: "destructive" });
-                return;
-            }
           newCart.push({ 
               productId: product.id, 
               quantity,
               name: product.name,
               price: product.price,
               imageUrl: product.imageUrl,
-              stock: product.stock,
+              stock: product.stock, // Stock will be validated at checkout
               sku: product.sku
           });
         }
@@ -163,6 +151,64 @@ export function CartProvider({ children }: { children: ReactNode }) {
     );
     updateCart(newCart);
   };
+  
+  const validateCart = async (): Promise<boolean> => {
+    if (cart.length === 0) return true;
+
+    let cartHasIssues = false;
+    let cartNeedsDbUpdate = false;
+    let newCart = [...cart];
+
+    const validationPromises = newCart.map(async (item, index) => {
+      try {
+        const product = await getProductById(item.productId);
+        const stock = product?.stock ?? 0;
+
+        if (!product || stock <= 0) {
+          toast({
+            variant: "destructive",
+            title: "Item Removed From Cart",
+            description: `${item.name} is out of stock.`,
+          });
+          newCart[index].quantity = 0; 
+          cartHasIssues = true;
+          cartNeedsDbUpdate = true;
+        } else if (stock < item.quantity) {
+          toast({
+            variant: "default",
+            title: "Cart Quantity Adjusted",
+            description: `Only ${stock} of ${item.name} are available.`,
+          });
+          newCart[index].quantity = stock;
+          newCart[index].stock = stock;
+          cartHasIssues = true;
+          cartNeedsDbUpdate = true;
+        } else if (item.stock !== stock) {
+          newCart[index].stock = stock;
+          cartNeedsDbUpdate = true;
+        }
+      } catch (error) {
+        console.error(`Failed to validate product ${item.productId}:`, error);
+        toast({
+            variant: "destructive",
+            title: "Item Removed From Cart",
+            description: `We couldn\'t verify ${item.name}, so it has been removed.`,
+        });
+        newCart[index].quantity = 0;
+        cartHasIssues = true;
+        cartNeedsDbUpdate = true;
+      }
+    });
+
+    await Promise.all(validationPromises);
+    
+    if (cartNeedsDbUpdate) {
+      const finalCart = newCart.filter(item => item.quantity > 0);
+      await updateCart(finalCart);
+    }
+    
+    return !cartHasIssues;
+  };
 
   const clearCart = () => {
     if (cartLoading) return;
@@ -182,6 +228,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
     cartLoading,
     isAddingToCart,
     getItem,
+    validateCart,
   };
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;

@@ -13,12 +13,17 @@ import { getShippingSettings, type ShippingSettings } from "@/services/shippingS
 import { useEffect, useState } from "react";
 import { CouponForm } from "./_components/coupon-form";
 import type { Coupon } from "@/lib/types";
+import { useRouter } from "next/navigation";
+import { useToast } from "@/hooks/use-toast";
 
 export default function CartPage() {
-  const { cart, updateQuantity, removeFromCart, cartLoading } = useCart();
+  const { cart, updateQuantity, removeFromCart, cartLoading, validateCart } = useCart();
   const [shippingSettings, setShippingSettings] = useState<ShippingSettings | null>(null);
   const [loadingShipping, setLoadingShipping] = useState(true);
   const [appliedCoupon, setAppliedCoupon] = useState<Coupon | null>(null);
+  const [isCheckingOut, setIsCheckingOut] = useState(false);
+  const router = useRouter();
+  const { toast } = useToast();
 
   useEffect(() => {
     async function fetchShipping() {
@@ -27,7 +32,6 @@ export default function CartPage() {
         setShippingSettings(settings);
       } catch (error) {
         console.error("Error fetching shipping settings:", error);
-        // Use default settings on error to avoid breaking the page
         setShippingSettings({ fee: 50, threshold: 1000 });
       }
       setLoadingShipping(false);
@@ -56,6 +60,26 @@ export default function CartPage() {
     setAppliedCoupon(null);
   };
   
+  const handleCheckout = async () => {
+    setIsCheckingOut(true);
+    const isCartValid = await validateCart();
+    setIsCheckingOut(false);
+
+    if (isCartValid) {
+      const query = new URLSearchParams();
+      if (appliedCoupon) {
+        query.set('coupon', appliedCoupon.code);
+      }
+      router.push(`/checkout?${query.toString()}`);
+    } else {
+        toast({
+            variant: "default",
+            title: "Your Cart Was Updated",
+            description: "Some items were updated based on stock availability. Please review your cart before proceeding.",
+        });
+    }
+  };
+
   if (cartLoading || loadingShipping) {
     return (
       <div className="container mx-auto px-4 py-8 md:py-12">
@@ -211,13 +235,8 @@ export default function CartPage() {
                 </div>
             </CardContent>
             <CardFooter>
-                <Button asChild className="w-full" size="lg">
-                    <Link href={{
-                        pathname: '/checkout',
-                        query: { ...(appliedCoupon && { coupon: appliedCoupon.code }) }
-                    }}>
-                        Proceed to Checkout
-                    </Link>
+                <Button onClick={handleCheckout} disabled={isCheckingOut} className="w-full" size="lg">
+                    {isCheckingOut ? 'Validating...' : 'Proceed to Checkout'}
                 </Button>
             </CardFooter>
           </Card>
