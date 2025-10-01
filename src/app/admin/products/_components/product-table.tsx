@@ -33,7 +33,7 @@ import Image from 'next/image';
 import { Badge } from '@/components/ui/badge';
 import Link from 'next/link';
 import { useToast } from '@/hooks/use-toast';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { deleteProduct, updateProductStatus } from '@/services/productService';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Switch } from '@/components/ui/switch';
@@ -48,6 +48,7 @@ interface ProductTableProps {
 export function ProductTable({ products, selectedProducts, setSelectedProducts }: ProductTableProps) {
     const { toast } = useToast();
     const router = useRouter();
+    const searchParams = useSearchParams();
     const [sortConfig, setSortConfig] = React.useState<{ key: keyof Product; direction: 'ascending' | 'descending' } | null>(null);
 
     const sortedProducts = React.useMemo(() => {
@@ -230,7 +231,7 @@ export function ProductTable({ products, selectedProducts, setSelectedProducts }
                         <DropdownMenuContent align="end">
                         <DropdownMenuLabel>Actions</DropdownMenuLabel>
                         <DropdownMenuItem asChild>
-                           <Link href={`/admin/products/${product.id}/edit`}>
+                           <Link href={`/admin/products/${product.id}/edit?${searchParams.toString()}`}>
                              Edit
                            </Link>
                         </DropdownMenuItem>
