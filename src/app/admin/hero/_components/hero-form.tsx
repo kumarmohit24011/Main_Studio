@@ -14,8 +14,8 @@ import Image from 'next/image';
 import { useState } from 'react';
 
 const heroSchema = z.object({
-  headline: z.string().min(5, 'Headline must be at least 5 characters.'),
-  subtitle: z.string().min(10, 'Subtitle must be at least 10 characters.'),
+  headline: z.string().optional(),
+  subtitle: z.string().optional(),
   buttonText: z.string().min(2, 'Button text is required.'),
   buttonLink: z.string().url('Must be a valid URL (e.g., /products).'),
   image: z.any().optional(),
@@ -50,8 +50,8 @@ export function HeroForm({ heroData }: { heroData: PlainHeroData }) {
   const onSubmit = async (values: z.infer<typeof heroSchema>) => {
     try {
       await updateHeroSection({
-        headline: values.headline,
-        subtitle: values.subtitle,
+        headline: values.headline ?? '',
+        subtitle: values.subtitle ?? '',
         buttonText: values.buttonText,
         buttonLink: values.buttonLink,
       }, values.image);

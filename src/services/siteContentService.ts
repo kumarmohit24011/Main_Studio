@@ -1,10 +1,14 @@
 
 import { db, storage } from '@/lib/firebase';
 import { doc, getDoc, setDoc, serverTimestamp } from 'firebase/firestore';
-import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { ref, uploadBytes, getDownloadURL, deleteObject } from 'firebase/storage';
 
 // NOTE: Cache revalidation has been removed from this service.
 // It should be handled by the client-side code that calls these functions.
+
+const isFirebaseStorageUrl = (url: string): boolean => {
+    return typeof url === 'string' && url.includes('firebasestorage.googleapis.com');
+};
 
 export interface HeroSectionData {
     headline: string;
@@ -129,6 +133,10 @@ export const getSiteContent = async (): Promise<SiteContent> => {
 
 export const updateHeroSection = async (data: Omit<HeroSectionData, 'imageUrl' | 'updatedAt'>, imageFile?: File): Promise<void> => {
     try {
+        const docSnap = await getDoc(siteContentRef);
+        const existingData = docSnap.exists() ? docSnap.data() as SiteContent : defaultData;
+        const oldImageUrl = existingData.heroSection?.imageUrl;
+
         const updatePayload: Partial<SiteContent> = {};
 
         const updateData: any = {
@@ -137,6 +145,18 @@ export const updateHeroSection = async (data: Omit<HeroSectionData, 'imageUrl' |
         };
 
         if (imageFile) {
+            if (oldImageUrl && isFirebaseStorageUrl(oldImageUrl)) {
+                try {
+                    const oldImageRef = ref(storage, oldImageUrl);
+                    await deleteObject(oldImageRef);
+                } catch (deleteError: any) {
+                    if (deleteError.code === 'storage/object-not-found') {
+                        console.warn(`Old hero image not found, skipping deletion: ${oldImageUrl}`);
+                    } else {
+                        console.error("Error deleting old hero image:", deleteError);
+                    }
+                }
+            }
             const storageRef = ref(storage, `hero-images/${imageFile.name}-${Date.now()}`);
             const snapshot = await uploadBytes(storageRef, imageFile);
             updateData.imageUrl = await getDownloadURL(snapshot.ref);
@@ -154,12 +174,28 @@ export const updateHeroSection = async (data: Omit<HeroSectionData, 'imageUrl' |
 
 export const updatePromoBanner = async (bannerId: 'promoBanner1' | 'promoBanner2', data: Omit<PromoBannerData, 'imageUrl' | 'updatedAt'>, imageFile?: File): Promise<void> => {
     try {
+        const docSnap = await getDoc(siteContentRef);
+        const existingData = docSnap.exists() ? docSnap.data() as SiteContent : defaultData;
+        const oldImageUrl = existingData[bannerId]?.imageUrl;
+
         const updateData: any = {
             ...data,
             updatedAt: serverTimestamp()
         };
 
         if (imageFile) {
+            if (oldImageUrl && isFirebaseStorageUrl(oldImageUrl)) {
+                try {
+                    const oldImageRef = ref(storage, oldImageUrl);
+                    await deleteObject(oldImageRef);
+                } catch (deleteError: any) {
+                     if (deleteError.code === 'storage/object-not-found') {
+                        console.warn(`Old promo banner image not found, skipping deletion: ${oldImageUrl}`);
+                    } else {
+                        console.error(`Error deleting old promo banner image for ${bannerId}:`, deleteError);
+                    }
+                }
+            }
             const storageRef = ref(storage, `content-images/${bannerId}-${imageFile.name}-${Date.now()}`);
             const snapshot = await uploadBytes(storageRef, imageFile);
             updateData.imageUrl = await getDownloadURL(snapshot.ref);
