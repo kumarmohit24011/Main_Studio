@@ -131,7 +131,7 @@ export function ProductForm({ product, categories }: ProductFormProps) {
         toast({ title: 'Success', description: 'Product added successfully.' });
       }
       const redirectUrl = `/admin/products?${searchParams.toString()}`;
-      window.location.href = redirectUrl;
+      router.push(redirectUrl);
     } catch (error) {
       console.error(error);
       toast({
