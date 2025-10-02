@@ -36,10 +36,12 @@ export default async function Home() {
           <div className="max-w-xl">
              <h1 className="text-4xl md:text-6xl font-headline font-bold tracking-tight">{heroSection.headline}</h1>
              <p className="mt-6 text-lg md:text-xl text-foreground/80">{heroSection.subtitle}</p>
-             <Button asChild className="mt-8" size="lg">
+          </div>
+        </div>
+        <div className="absolute bottom-8 left-1/2 -translate-x-1/2">
+            <Button asChild className="mt-8" size="lg">
                 <Link href={heroSection.buttonLink}>{heroSection.buttonText}</Link>
             </Button>
-          </div>
         </div>
       </section>
 
