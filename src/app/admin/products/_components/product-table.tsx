@@ -55,10 +55,18 @@ export function ProductTable({ products, selectedProducts, setSelectedProducts }
         let sortableItems = [...products];
         if (sortConfig !== null) {
             sortableItems.sort((a, b) => {
-                if (a[sortConfig.key] < b[sortConfig.key]) {
+                let aValue = a[sortConfig.key];
+                let bValue = b[sortConfig.key];
+
+                if (sortConfig.key === 'price') {
+                    aValue = a.salePrice ?? a.price;
+                    bValue = b.salePrice ?? b.price;
+                }
+
+                if (aValue < bValue) {
                     return sortConfig.direction === 'ascending' ? -1 : 1;
                 }
-                if (a[sortConfig.key] > b[sortConfig.key]) {
+                if (aValue > bValue) {
                     return sortConfig.direction === 'ascending' ? 1 : -1;
                 }
                 return 0;
@@ -172,7 +180,18 @@ export function ProductTable({ products, selectedProducts, setSelectedProducts }
                     <TableCell className="font-medium">{product.name}</TableCell>
                     <TableCell>{product.sku || 'N/A'}</TableCell>
                     <TableCell><Badge variant="outline">{product.categories?.[0] || 'N/A'}</Badge></TableCell>
-                    <TableCell>₹{product.price.toFixed(2)}</TableCell>
+                    <TableCell>
+                        <div className="flex flex-col">
+                            {product.salePrice ? (
+                                <>
+                                    <span className="font-bold text-base">₹{product.salePrice.toFixed(2)}</span>
+                                    <span className="text-xs text-muted-foreground line-through">₹{product.price.toFixed(2)}</span>
+                                </>    
+                            ) : (
+                                <span>₹{product.price.toFixed(2)}</span>
+                            )}
+                        </div>
+                    </TableCell>
                     <TableCell>{product.stock}</TableCell>
                     <TableCell>
                         <div className="flex flex-col gap-2 items-start">
