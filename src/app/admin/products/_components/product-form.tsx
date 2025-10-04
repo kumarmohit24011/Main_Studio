@@ -26,8 +26,8 @@ const productSchema = z.object({
   description: z.string().min(10, 'Description must be at least 10 characters.'),
   price: z.coerce.number().positive('Price must be a positive number.'),
   salePrice: z.preprocess(
-    (val) => (val === '' || val === 0 || val === '0' ? null : val),
-    z.coerce.number().positive('Sale price must be a positive number.').nullable().optional()
+    (val) => (val === '' || val === 0 || val === '0' ? undefined : val),
+    z.coerce.number().positive('Sale price must be a positive number.').optional()
   ),
   stock: z.coerce.number().int().min(0, 'Stock must be a non-negative integer.'),
   categories: z.array(z.string()).nonempty({ message: 'Please select at least one category.' }),
@@ -215,7 +215,7 @@ export function ProductForm({ product, categories }: ProductFormProps) {
                                             <FormLabel>Discounted Price (₹)</FormLabel>
                                             <Button variant="ghost" size="sm" onClick={() => {
                                                 setShowSalePrice(false);
-                                                form.setValue('salePrice', null);
+                                                form.setValue('salePrice', undefined);
                                             }}>
                                                 <X className="h-4 w-4" />
                                                 Remove
