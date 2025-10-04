@@ -60,7 +60,18 @@ export default function CartPage() {
     setAppliedCoupon(null);
   };
   
+  const containsGift = cart.some(item => item.isGift);
+  const isGiftOnly = containsGift && cart.length === 1;
+
   const handleCheckout = async () => {
+    if (isGiftOnly) {
+        toast({
+            variant: "destructive",
+            title: "Cannot Checkout",
+            description: "You must add at least one other item to your cart to claim your gift.",
+        });
+        return;
+    }
     setIsCheckingOut(true);
     const isCartValid = await validateCart();
     setIsCheckingOut(false);
@@ -137,7 +148,7 @@ export default function CartPage() {
             </CardHeader>
             <CardContent className="divide-y divide-border">
               {cart.map((item) => (
-                <div key={item.productId} className="py-4 flex flex-col sm:flex-row items-start sm:items-center gap-4">
+                <div key={item.productId} className={`py-4 flex flex-col sm:flex-row items-start sm:items-center gap-4 ${item.isGift ? 'bg-green-50 rounded-md -mx-6 px-6' : ''}`}>
                   <div className="flex-shrink-0">
                     <div className="relative h-24 w-24 sm:h-20 sm:w-20 rounded-md overflow-hidden">
                       <Image
@@ -151,32 +162,38 @@ export default function CartPage() {
                   </div>
                   <div className="flex-grow grid grid-cols-12 gap-x-4 gap-y-2 items-center w-full">
                     <div className="col-span-12 sm:col-span-5">
-                      <h3 className="font-semibold truncate text-base">{item.name}</h3>
-                      <p className="text-muted-foreground text-sm">₹{item.price?.toFixed(2)}</p>
+                      <h3 className="font-semibold truncate text-base">{item.name} {item.isGift && <span className="text-sm font-normal text-green-600">(Gift)</span>}</h3>
+                      <p className="text-muted-foreground text-sm">{item.isGift ? 'FREE' : `₹${item.price?.toFixed(2)}`}</p>
                     </div>
                     <div className="col-span-7 sm:col-span-4 flex items-center gap-1">
-                      <Button
-                        variant="outline"
-                        size="icon"
-                        className="h-8 w-8 flex-shrink-0"
-                        onClick={() => updateQuantity(item.productId, item.quantity - 1)}
-                      >
-                        <Minus className="h-4 w-4" />
-                      </Button>
-                      <span className="w-10 text-center font-medium">{item.quantity}</span>
-                      <Button
-                        variant="outline"
-                        size="icon"
-                        className="h-8 w-8 flex-shrink-0"
-                        onClick={() => updateQuantity(item.productId, item.quantity + 1)}
-                        disabled={item.quantity >= (item.stock || 1)}
-                      >
-                        <Plus className="h-4 w-4" />
-                      </Button>
+                      {item.isGift ? (
+                        <span className="w-10 text-center font-medium">{item.quantity}</span>
+                      ) : (
+                        <>
+                          <Button
+                            variant="outline"
+                            size="icon"
+                            className="h-8 w-8 flex-shrink-0"
+                            onClick={() => updateQuantity(item.productId, item.quantity - 1)}
+                          >
+                            <Minus className="h-4 w-4" />
+                          </Button>
+                          <span className="w-10 text-center font-medium">{item.quantity}</span>
+                          <Button
+                            variant="outline"
+                            size="icon"
+                            className="h-8 w-8 flex-shrink-0"
+                            onClick={() => updateQuantity(item.productId, item.quantity + 1)}
+                            disabled={item.quantity >= (item.stock || 1)}
+                          >
+                            <Plus className="h-4 w-4" />
+                          </Button>
+                        </>
+                      )}
                     </div>
                     <div className="col-span-5 sm:col-span-3 flex items-center justify-end gap-2">
-                      <p className="font-semibold text-right text-base sm:text-right w-full">
-                        ₹{((item.price || 0) * item.quantity).toFixed(2)}
+                       <p className="font-semibold text-right text-base sm:text-right w-full">
+                        {item.isGift ? 'FREE' : `₹${((item.price || 0) * item.quantity).toFixed(2)}`}
                       </p>
                       <Button variant="ghost" size="icon" className="text-muted-foreground hover:text-destructive -mr-2" onClick={() => removeFromCart(item.productId)}>
                         <Trash2 className="h-5 w-5" />
@@ -234,8 +251,13 @@ export default function CartPage() {
                     <span>₹{total.toFixed(2)}</span>
                 </div>
             </CardContent>
-            <CardFooter>
-                <Button onClick={handleCheckout} disabled={isCheckingOut} className="w-full" size="lg">
+            <CardFooter className="flex-col space-y-2">
+                 {isGiftOnly && (
+                    <div className="text-center text-sm text-red-600 p-2 bg-red-50 rounded-md w-full">
+                        <p>You must add at least one more item to your cart to claim your gift.</p>
+                    </div>
+                )}
+                <Button onClick={handleCheckout} disabled={isCheckingOut || isGiftOnly} className="w-full" size="lg">
                     {isCheckingOut ? 'Validating...' : 'Proceed to Checkout'}
                 </Button>
             </CardFooter>

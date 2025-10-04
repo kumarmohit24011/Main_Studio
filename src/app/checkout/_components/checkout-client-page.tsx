@@ -13,7 +13,7 @@ import { z } from "zod";
 import { shippingSchema } from "@/lib/schemas";
 import { useToast } from "@/hooks/use-toast";
 import { Skeleton } from "@/components/ui/skeleton";
-import type { Coupon } from "@/lib/types";
+import type { Coupon, CartItem } from "@/lib/types";
 import { getSiteContent, type SiteContent } from "@/services/siteContentService";
 import { getCouponByCode } from "@/services/couponService";
 
@@ -59,6 +59,21 @@ export function CheckoutClientPage() {
       router.push('/products');
     }
   }, [cart.length, cartLoading, router]);
+  
+  const isGiftInCart = useMemo(() => cart.some(item => (item as CartItem & { isGift?: boolean }).isGift), [cart]);
+  const hasRegularItems = useMemo(() => cart.some(item => !(item as CartItem & { isGift?: boolean }).isGift), [cart]);
+  const isCheckoutDisabledForGift = useMemo(() => isGiftInCart && !hasRegularItems, [isGiftInCart, hasRegularItems]);
+
+  useEffect(() => {
+    if(isCheckoutDisabledForGift) {
+        toast({
+            variant: "destructive",
+            title: "Action Required",
+            description: "You must add at least one other item to your cart to claim your free gift.",
+        });
+    }
+  }, [isCheckoutDisabledForGift, toast])
+
 
   const subtotal = useMemo(() => cart.reduce((acc, item) => acc + (item.price || 0) * item.quantity, 0), [cart]);
 
@@ -93,6 +108,14 @@ export function CheckoutClientPage() {
         description: "Please select or add a shipping address.",
       });
       return;
+    }
+    if(isCheckoutDisabledForGift) {
+        toast({
+            variant: "destructive",
+            title: "Cannot Proceed to Checkout",
+            description: "Add another item to your cart to claim your free gift.",
+        });
+        return;
     }
     setIsSubmitting(true);
     const orderDetails = {
@@ -148,7 +171,7 @@ export function CheckoutClientPage() {
                         className="w-full mt-6" 
                         size="lg" 
                         onClick={handlePayment} 
-                        disabled={!shippingAddress || isSubmitting || !isReady}
+                        disabled={!shippingAddress || isSubmitting || !isReady || isCheckoutDisabledForGift}
                     >
                         {isSubmitting ? "Processing..." : (isReady ? `Pay ₹${total.toFixed(2)}` : "Loading Payment...")}
                     </Button>

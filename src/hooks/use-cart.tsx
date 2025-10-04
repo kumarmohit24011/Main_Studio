@@ -10,7 +10,7 @@ import { getProductById } from '@/services/productService';
 
 interface CartContextType {
   cart: CartItem[];
-  addToCart: (product: Product, quantity?: number) => void;
+  addToCart: (product: Product, quantity?: number, isGift?: boolean) => void;
   removeFromCart: (productId: string) => void;
   updateQuantity: (productId: string, quantity: number) => void;
   clearCart: () => void;
@@ -90,7 +90,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  const addToCart = async (product: Product, quantity = 1) => {
+  const addToCart = async (product: Product, quantity = 1, isGift = false) => {
     if (cartLoading || isAddingToCart) {
       toast({ title: "Please wait", description: "Syncing your data, please try again shortly.", variant: "destructive" });
       return;
@@ -108,10 +108,11 @@ export function CartProvider({ children }: { children: ReactNode }) {
               productId: product.id, 
               quantity,
               name: product.name,
-              price: product.salePrice || product.price,
+              price: isGift ? 0 : (product.salePrice || product.price),
               imageUrl: product.imageUrl,
               stock: product.stock, // Stock will be validated at checkout
-              sku: product.sku
+              sku: product.sku,
+              isGift,
           });
         }
         await updateCart(newCart);

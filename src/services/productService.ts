@@ -1,7 +1,7 @@
 
 import { db, storage } from '@/lib/firebase';
 import { Product } from '@/lib/types';
-import { collection, getDocs, query, where, limit, doc, getDoc, addDoc, serverTimestamp, updateDoc, deleteDoc, orderBy, getCountFromServer, writeBatch, documentId, increment } from 'firebase/firestore';
+import { collection, getDocs, query, where, limit, doc, getDoc, addDoc, serverTimestamp, updateDoc, deleteDoc, orderBy, getCountFromServer, writeBatch, documentId, increment, setDoc } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL, deleteObject } from 'firebase/storage';
 
 // NOTE: Cache revalidation has been removed from this service.
@@ -381,6 +381,30 @@ export const updateProductStock = async (productId: string, quantity: number) =>
         });
     } catch (error) {
         console.error(`Error updating stock for product ${productId}:`, error);
+        throw error;
+    }
+};
+
+export const getGiftFinderProducts = async (): Promise<string[]> => {
+    try {
+        const docRef = doc(db, 'siteContent', 'giftFinder');
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+            return docSnap.data().productIds || [];
+        }
+        return [];
+    } catch (error) {
+        console.error("Error fetching gift finder products: ", error);
+        return [];
+    }
+};
+
+export const updateGiftFinderProducts = async (productIds: string[]): Promise<void> => {
+    try {
+        const docRef = doc(db, 'siteContent', 'giftFinder');
+        await setDoc(docRef, { productIds });
+    } catch (error) {
+        console.error("Error updating gift finder products:", error);
         throw error;
     }
 };

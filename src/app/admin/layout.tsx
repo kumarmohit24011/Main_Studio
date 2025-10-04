@@ -161,6 +161,16 @@ export default function AdminLayout({
       >
         Promotions
       </Link>
+        <Link
+        href="/admin/gift-spinner"
+        className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all hover:text-primary ${
+          isActive('/admin/gift-spinner')
+            ? 'bg-muted text-primary'
+            : 'text-muted-foreground'
+        }`}
+      >
+        Gift Spinner
+      </Link>
       <Link
         href="/admin/settings"
         className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all hover:text-primary ${

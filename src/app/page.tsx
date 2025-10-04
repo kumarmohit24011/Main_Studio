@@ -8,6 +8,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { ProductCard } from "./products/_components/product-card";
 import { ShopByCategory } from "@/components/shop-by-category";
+import { Package } from 'lucide-react';
+
 
 // Revalidate this page every 60 seconds
 export const revalidate = 60;
@@ -46,6 +48,19 @@ export default async function Home() {
       </section>
 
       <ShopByCategory categories={categories} />
+
+      <section id="gift-finder-promo" className="bg-primary/10 py-16 lg:py-20">
+        <div className="container mx-auto px-4 text-center">
+            <Package className="mx-auto h-12 w-12 text-primary" />
+            <h2 className="text-3xl lg:text-4xl font-headline mt-6">Find the Perfect Gift</h2>
+            <p className="mt-4 max-w-2xl mx-auto text-muted-foreground">
+                Not sure what to get? Let our Gift Finder surprise you with a special, algorithmically-chosen item from our collection!
+            </p>
+            <Button asChild size="lg" className="mt-8 animate-pulse">
+                <Link href="/gift-finder">Spin to Win!</Link>
+            </Button>
+        </div>
+      </section>
 
       <section id="new-arrivals" className="py-16 lg:py-24 bg-background">
         <div className="container mx-auto px-4">

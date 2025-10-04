@@ -37,6 +37,7 @@ export interface CartItem {
     imageUrl?: string;
     stock?: number;
     sku?: string;
+    isGift?: boolean;
 }
 
 export interface UserProfile {
