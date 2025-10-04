@@ -47,6 +47,7 @@ export function ProductFilters({ categories, onFilterChange, initialCategory, in
                   <SelectItem value="newest">Newest</SelectItem>
                   <SelectItem value="price_asc">Price: Low to High</SelectItem>
                   <SelectItem value="price_desc">Price: High to Low</SelectItem>
+                  <SelectItem value="random">Random</SelectItem>
               </SelectContent>
             </Select>
         </div>

@@ -30,10 +30,17 @@ export function ProductView({ initialProducts, categories, initialCategory, init
     // Sort
     switch (filters.sortBy) {
       case 'price_asc':
-        tempProducts.sort((a, b) => a.price - b.price);
+        tempProducts.sort((a, b) => (a.salePrice || a.price) - (b.salePrice || b.price));
         break;
       case 'price_desc':
-        tempProducts.sort((a, b) => b.price - a.price);
+        tempProducts.sort((a, b) => (b.salePrice || b.price) - (a.salePrice || a.price));
+        break;
+      case 'random':
+        // Fisher-Yates shuffle algorithm
+        for (let i = tempProducts.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [tempProducts[i], tempProducts[j]] = [tempProducts[j], tempProducts[i]];
+        }
         break;
       case 'newest':
       default:
