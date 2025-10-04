@@ -19,6 +19,7 @@ import { Switch } from '@/components/ui/switch';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuCheckboxItem, DropdownMenuLabel, DropdownMenuSeparator } from '@/components/ui/dropdown-menu';
 import { Checkbox } from '@/components/ui/checkbox';
+import { X } from 'lucide-react';
 
 const productSchema = z.object({
   name: z.string().min(3, 'Product name must be at least 3 characters.'),
@@ -49,6 +50,7 @@ export function ProductForm({ product, categories }: ProductFormProps) {
   const searchParams = useSearchParams();
   const [previews, setPreviews] = useState<string[]>(product?.imageUrls || []);
   const [tagInput, setTagInput] = useState('');
+  const [showSalePrice, setShowSalePrice] = useState<boolean>(!!product?.salePrice);
 
   const form = useForm<z.infer<typeof productSchema>>({
     resolver: zodResolver(productSchema),
@@ -116,7 +118,7 @@ export function ProductForm({ product, categories }: ProductFormProps) {
         finalTags.push('popular');
       }
       
-      const productData = { ...values, tags: finalTags, salePrice: values.salePrice || undefined };
+      const productData = { ...values, tags: finalTags, salePrice: showSalePrice ? values.salePrice : undefined };
       
       if (product) {
         const existingImageUrls = previews.filter(p => p.startsWith('http'));
@@ -195,7 +197,7 @@ export function ProductForm({ product, categories }: ProductFormProps) {
                             name="price"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Price (₹)</FormLabel>
+                                    <FormLabel>Actual Price (₹)</FormLabel>
                                     <FormControl>
                                         <Input type="number" placeholder="e.g. 1200" {...field} />
                                     </FormControl>
@@ -203,20 +205,35 @@ export function ProductForm({ product, categories }: ProductFormProps) {
                                 </FormItem>
                             )}
                         />
-                        <FormField
-                            control={form.control}
-                            name="salePrice"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Sale Price (₹)</FormLabel>
-                                    <FormControl>
-                                        <Input type="number" placeholder="e.g. 900" {...field} value={field.value ?? ''} />
-                                    </FormControl>
-                                    <FormDescription>Leave blank if not on sale.</FormDescription>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
+                        {showSalePrice ? (
+                            <FormField
+                                control={form.control}
+                                name="salePrice"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <div className="flex justify-between items-center">
+                                            <FormLabel>Discounted Price (₹)</FormLabel>
+                                            <Button variant="ghost" size="sm" onClick={() => {
+                                                setShowSalePrice(false);
+                                                form.setValue('salePrice', null);
+                                            }}>
+                                                <X className="h-4 w-4" />
+                                                Remove
+                                            </Button>
+                                        </div>
+                                        <FormControl>
+                                            <Input type="number" placeholder="e.g. 900" {...field} value={field.value ?? ''} />
+                                        </FormControl>
+                                        <FormDescription>Leave blank if not on sale.</FormDescription>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                        ) : (
+                            <div className="flex items-end">
+                                <Button variant="outline" onClick={() => setShowSalePrice(true)}>Add Discounted Price</Button>
+                            </div>
+                        )}
                         <FormField
                             control={form.control}
                             name="stock"
@@ -429,7 +446,7 @@ export function ProductForm({ product, categories }: ProductFormProps) {
                                             className="h-7 w-7"
                                             onClick={() => handleRemovePreview(index)}
                                         >
-                                            X
+                                            <X className="h-4 w-4" />
                                         </Button>
                                     </div>
                                     {index === 0 && <Badge className="absolute bottom-1 left-1">Cover</Badge>}

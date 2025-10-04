@@ -163,6 +163,7 @@ export const addProduct = async (productData: Partial<Product> & { images?: File
 
         await addDoc(productsCol, {
             ...dataToSave,
+            salePrice: dataToSave.salePrice === undefined ? null : dataToSave.salePrice,
             imageUrl: imageUrls[0] || '', 
             imageUrls,
             createdAt: serverTimestamp(),
@@ -193,6 +194,7 @@ export const updateProduct = async (
 
         const updatePayload: any = {
             ...dataToSave,
+            salePrice: dataToSave.salePrice === undefined ? null : dataToSave.salePrice,
             imageUrls: finalImageUrls,
             imageUrl: finalImageUrls[0] || '',
             updatedAt: serverTimestamp(),
