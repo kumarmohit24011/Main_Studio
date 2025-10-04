@@ -3,8 +3,23 @@ import { db, storage } from '@/lib/firebase';
 import { doc, getDoc, setDoc, serverTimestamp } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL, deleteObject } from 'firebase/storage';
 
-// NOTE: Cache revalidation has been removed from this service.
-// It should be handled by the client-side code that calls these functions.
+
+async function revalidateHomePage() {
+  const fetchUrl = `${process.env.NEXT_PUBLIC_APP_URL}/api/revalidate?secret=${process.env.REVALIDATE_TOKEN}`
+  try {
+    const response = await fetch(fetchUrl, { 
+        method: 'POST',
+    });
+    if (response.ok) {
+      console.log('Successfully revalidated homepage');
+    } else {
+      const errorText = await response.text();
+      console.error('Failed to revalidate homepage:', response.status, errorText);
+    }
+  } catch (error) {
+    console.error('Error triggering revalidation:', error);
+  }
+}
 
 const isFirebaseStorageUrl = (url: string): boolean => {
     return typeof url === 'string' && url.includes('firebasestorage.googleapis.com');
@@ -165,6 +180,7 @@ export const updateHeroSection = async (data: Omit<HeroSectionData, 'imageUrl' |
         updatePayload.heroSection = updateData;
 
         await setDoc(siteContentRef, updatePayload, { merge: true });
+        await revalidateHomePage();
 
     } catch (error) {
         console.error("Error in updateHeroSection:", error);
@@ -204,6 +220,7 @@ export const updatePromoBanner = async (bannerId: 'promoBanner1' | 'promoBanner2
         const firestoreUpdate = { [bannerId]: updateData };
 
         await setDoc(siteContentRef, firestoreUpdate, { merge: true });
+        await revalidateHomePage();
 
     } catch (error) {
         console.error(`Error in updatePromoBanner for ${bannerId}:`, error);
@@ -228,6 +245,7 @@ export const updateShippingSettings = async (data: Omit<ShippingSettingsData, 'u
             updatedAt: serverTimestamp()
         };
         await setDoc(shippingOptionRef, shippingOptionData, { merge: true });
+        await revalidateHomePage();
 
     } catch (error) {
         console.error("Error updating shipping settings:", error);
