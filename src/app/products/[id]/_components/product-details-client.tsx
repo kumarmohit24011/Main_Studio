@@ -32,7 +32,7 @@ const ProductDetailsClient: React.FC<ProductDetailsClientProps> = ({ product }) 
         }
     };
 
-    const showDiscount = product.salePrice && product.salePrice < product.price;
+    const showDiscount = !!product.salePrice;
 
     if (!product) return null;
 

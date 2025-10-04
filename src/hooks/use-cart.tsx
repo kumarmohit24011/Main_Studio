@@ -108,7 +108,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
               productId: product.id, 
               quantity,
               name: product.name,
-              price: product.price,
+              price: product.salePrice || product.price,
               imageUrl: product.imageUrl,
               stock: product.stock, // Stock will be validated at checkout
               sku: product.sku

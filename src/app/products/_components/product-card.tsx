@@ -23,7 +23,7 @@ export function ProductCard({ product }: { product: Product }) {
     }
   };
 
-  const showDiscount = product.salePrice && product.salePrice < product.price;
+  const showDiscount = !!product.salePrice;
 
   // Filter out special tags that have their own indicators
   const displayTags = product.tags?.filter(tag => tag !== 'popular') || [];
