@@ -54,6 +54,8 @@ export interface SiteContent {
     promoBanner1: PromoBannerData;
     promoBanner2: PromoBannerData;
     shippingSettings: ShippingSettingsData;
+    showGiftFinder: boolean;
+    showPromoBanners: boolean;
 }
 
 export type PlainShippingSettingsData = Omit<ShippingSettingsData, 'updatedAt'> & { updatedAt?: string };
@@ -64,6 +66,8 @@ export type PlainSiteContent = {
     promoBanner1: Omit<PromoBannerData, 'updatedAt'> & { updatedAt?: string };
     promoBanner2: Omit<PromoBannerData, 'updatedAt'> & { updatedAt?: string };
     shippingSettings: PlainShippingSettingsData;
+    showGiftFinder: boolean;
+    showPromoBanners: boolean;
 };
 
 
@@ -99,7 +103,9 @@ const defaultData: SiteContent = {
         defaultFee: 50,
         freeShippingThreshold: 1000,
         updatedAt: new Date()
-    }
+    },
+    showGiftFinder: true,
+    showPromoBanners: true,
 };
 
 const toPlainObject = (data: any): any => {
@@ -122,15 +128,14 @@ export const getSiteContent = async (): Promise<SiteContent> => {
                 promoBanner1: toPlainObject(data.promoBanner1 || defaultData.promoBanner1),
                 promoBanner2: toPlainObject(data.promoBanner2 || defaultData.promoBanner2),
                 shippingSettings: toPlainObject(data.shippingSettings || defaultData.shippingSettings),
+                showGiftFinder: data.showGiftFinder === undefined ? defaultData.showGiftFinder : data.showGiftFinder,
+                showPromoBanners: data.showPromoBanners === undefined ? defaultData.showPromoBanners : data.showPromoBanners,
             };
         } else {
             // Return default data instead of trying to create the document on server-side
-            console.log("Site content document doesn't exist, returning defaults.");
+            console.log("Site content document doesn\'t exist, returning defaults.");
             return {
-                heroSection: toPlainObject(defaultData.heroSection),
-                promoBanner1: toPlainObject(defaultData.promoBanner1),
-                promoBanner2: toPlainObject(defaultData.promoBanner2),
-                shippingSettings: toPlainObject(defaultData.shippingSettings),
+                ...defaultData
             };
         }
     } catch (error) {
@@ -140,6 +145,8 @@ export const getSiteContent = async (): Promise<SiteContent> => {
             promoBanner1: toPlainObject(defaultData.promoBanner1),
             promoBanner2: toPlainObject(defaultData.promoBanner2),
             shippingSettings: toPlainObject(defaultData.shippingSettings),
+            showGiftFinder: defaultData.showGiftFinder,
+            showPromoBanners: defaultData.showPromoBanners,
         };
         return plainDefaultData as SiteContent;
     }
@@ -249,6 +256,34 @@ export const updateShippingSettings = async (data: Omit<ShippingSettingsData, 'u
 
     } catch (error) {
         console.error("Error updating shipping settings:", error);
+        throw error;
+    }
+};
+
+export const updateGiftFinderVisibility = async (show: boolean): Promise<void> => {
+    try {
+        const updatePayload = {
+            showGiftFinder: show,
+            updatedAt: serverTimestamp()
+        };
+        await setDoc(siteContentRef, updatePayload, { merge: true });
+        await revalidateHomePage();
+    } catch (error) {
+        console.error("Error updating gift finder visibility:", error);
+        throw error;
+    }
+};
+
+export const updatePromoBannerVisibility = async (show: boolean): Promise<void> => {
+    try {
+        const updatePayload = {
+            showPromoBanners: show,
+            updatedAt: serverTimestamp()
+        };
+        await setDoc(siteContentRef, updatePayload, { merge: true });
+        await revalidateHomePage();
+    } catch (error) {
+        console.error("Error updating promo banner visibility:", error);
         throw error;
     }
 };

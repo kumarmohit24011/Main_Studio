@@ -10,16 +10,12 @@ import { ProductCard } from "./products/_components/product-card";
 import { ShopByCategory } from "@/components/shop-by-category";
 import { Package } from 'lucide-react';
 
-
-// Revalidate this page every 60 seconds
-export const revalidate = 60;
-
 export default async function Home() {
   const newArrivals = await getNewArrivals(5);
   const trendingProducts = await getTrendingProducts(5);
   const siteContent = await getSiteContent();
   const categories = await getAllCategories();
-  const { heroSection, promoBanner1, promoBanner2 } = siteContent;
+  const { heroSection, promoBanner1, promoBanner2, showGiftFinder, showPromoBanners } = siteContent;
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -49,18 +45,20 @@ export default async function Home() {
 
       <ShopByCategory categories={categories} />
 
-      <section id="gift-finder-promo" className="bg-primary/10 py-16 lg:py-20">
-        <div className="container mx-auto px-4 text-center">
-            <Package className="mx-auto h-12 w-12 text-primary" />
-            <h2 className="text-3xl lg:text-4xl font-headline mt-6">Find the Perfect Gift</h2>
-            <p className="mt-4 max-w-2xl mx-auto text-muted-foreground">
-                Not sure what to get? Let our Gift Finder surprise you with a special, algorithmically-chosen item from our collection!
-            </p>
-            <Button asChild size="lg" className="mt-8 animate-pulse">
-                <Link href="/gift-finder">Spin to Win!</Link>
-            </Button>
-        </div>
-      </section>
+      {showGiftFinder && (
+        <section id="gift-finder-promo" className="bg-primary/10 py-16 lg:py-20">
+          <div className="container mx-auto px-4 text-center">
+              <Package className="mx-auto h-12 w-12 text-primary" />
+              <h2 className="text-3xl lg:text-4xl font-headline mt-6">Find the Perfect Gift</h2>
+              <p className="mt-4 max-w-2xl mx-auto text-muted-foreground">
+                  Not sure what to get? Let our Gift Finder surprise you with a special, algorithmically-chosen item from our collection!
+              </p>
+              <Button asChild size="lg" className="mt-8 animate-pulse">
+                  <Link href="/gift-finder">Spin to Win!</Link>
+              </Button>
+          </div>
+        </section>
+      )}
 
       <section id="new-arrivals" className="py-16 lg:py-24 bg-background">
         <div className="container mx-auto px-4">
@@ -96,50 +94,52 @@ export default async function Home() {
         </section>
       )}
 
-      <section id="sale-banners" className="py-16 lg:py-24 bg-background">
-        <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            <div className="relative rounded-lg overflow-hidden h-80 flex items-center justify-center text-white text-center p-6">
-              {promoBanner1.imageUrl && (
-                <Image
-                  src={promoBanner1.imageUrl}
-                  alt={promoBanner1.headline}
-                  data-ai-hint="jewelry sale"
-                  fill
-                  className="object-cover transition-transform duration-300 hover:scale-105"
-                />
-              )}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
-              <div className="relative z-10 flex flex-col items-center">
-                <h3 className="text-3xl font-headline font-bold">{promoBanner1.headline}</h3>
-                <p className="mt-2 text-lg">{promoBanner1.subtitle}</p>
-                <Button asChild className="mt-6" variant="secondary">
-                  <Link href={promoBanner1.buttonLink}>{promoBanner1.buttonText}</Link>
-                </Button>
+      {showPromoBanners && (
+        <section id="sale-banners" className="py-16 lg:py-24 bg-background">
+          <div className="container mx-auto px-4">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+              <div className="relative rounded-lg overflow-hidden h-80 flex items-center justify-center text-white text-center p-6">
+                {promoBanner1.imageUrl && (
+                  <Image
+                    src={promoBanner1.imageUrl}
+                    alt={promoBanner1.headline}
+                    data-ai-hint="jewelry sale"
+                    fill
+                    className="object-cover transition-transform duration-300 hover:scale-105"
+                  />
+                )}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
+                <div className="relative z-10 flex flex-col items-center">
+                  <h3 className="text-3xl font-headline font-bold">{promoBanner1.headline}</h3>
+                  <p className="mt-2 text-lg">{promoBanner1.subtitle}</p>
+                  <Button asChild className="mt-6" variant="secondary">
+                    <Link href={promoBanner1.buttonLink}>{promoBanner1.buttonText}</Link>
+                  </Button>
+                </div>
               </div>
-            </div>
-            <div className="relative rounded-lg overflow-hidden h-80 flex items-center justify-center text-white text-center p-6">
-              {promoBanner2.imageUrl && (
-                <Image
-                  src={promoBanner2.imageUrl}
-                  alt={promoBanner2.headline}
-                  data-ai-hint="ring promotion"
-                  fill
-                  className="object-cover transition-transform duration-300 hover:scale-105"
-                />
-              )}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
-              <div className="relative z-10 flex flex-col items-center">
-                <h3 className="text-3xl font-headline font-bold">{promoBanner2.headline}</h3>
-                <p className="mt-2 text-lg">{promoBanner2.subtitle}</p>
-                <Button asChild className="mt-6" variant="secondary">
-                  <Link href={promoBanner2.buttonLink}>{promoBanner2.buttonText}</Link>
-                </Button>
+              <div className="relative rounded-lg overflow-hidden h-80 flex items-center justify-center text-white text-center p-6">
+                {promoBanner2.imageUrl && (
+                  <Image
+                    src={promoBanner2.imageUrl}
+                    alt={promoBanner2.headline}
+                    data-ai-hint="ring promotion"
+                    fill
+                    className="object-cover transition-transform duration-300 hover:scale-105"
+                  />
+                )}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
+                <div className="relative z-10 flex flex-col items-center">
+                  <h3 className="text-3xl font-headline font-bold">{promoBanner2.headline}</h3>
+                  <p className="mt-2 text-lg">{promoBanner2.subtitle}</p>
+                  <Button asChild className="mt-6" variant="secondary">
+                    <Link href={promoBanner2.buttonLink}>{promoBanner2.buttonText}</Link>
+                  </Button>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
     </div>
   );
 }
