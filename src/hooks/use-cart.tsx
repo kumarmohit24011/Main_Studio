@@ -18,6 +18,7 @@ interface CartContextType {
   isAddingToCart: boolean;
   getItem: (productId: string) => CartItem | undefined;
   validateCart: () => Promise<boolean>;
+  hasGiftItem: () => boolean;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -220,6 +221,10 @@ export function CartProvider({ children }: { children: ReactNode }) {
     return cart.find(item => item.productId === productId);
   };
 
+  const hasGiftItem = () => {
+    return cart.some(item => item.isGift);
+  };
+
   const value = {
     cart,
     addToCart,
@@ -230,6 +235,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
     isAddingToCart,
     getItem,
     validateCart,
+    hasGiftItem,
   };
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;

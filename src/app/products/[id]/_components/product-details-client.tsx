@@ -11,6 +11,14 @@ import { AddToCartButton } from '@/components/shared/add-to-cart-button';
 import { Button } from '@/components/ui/button';
 import { Heart } from 'lucide-react';
 import { useWishlist } from '@/hooks/use-wishlist';
+import { useIsMobile } from '@/hooks/use-mobile'; 
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
 
 interface ProductDetailsClientProps {
     product: Product;
@@ -20,7 +28,7 @@ const ProductDetailsClient: React.FC<ProductDetailsClientProps> = ({ product }) 
     const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlist();
     const inWishlist = isInWishlist(product.id);
     const allImages = [...(product.imageUrls || [])].filter(Boolean) as string[];
-    const [mainImage, setMainImage] = useState(allImages[0]);
+    const isMobile = useIsMobile();
 
     const handleToggleWishlist = (e: React.MouseEvent) => {
         e.preventDefault();
@@ -39,40 +47,31 @@ const ProductDetailsClient: React.FC<ProductDetailsClientProps> = ({ product }) 
     return (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12 items-start">
           {/* Image Gallery */}
-          <div className="flex flex-col-reverse md:flex-row gap-4 md:sticky top-24">
-            {allImages.length > 1 && (
-                 <div className="grid grid-cols-5 gap-2 pb-2 md:flex md:flex-col md:gap-3 md:pb-0">
+          <div className="md:sticky top-24">
+            <Carousel className="w-full" opts={{ loop: true }}>
+                <CarouselContent>
                     {allImages.map((img, index) => (
-                        <button 
-                            key={index} 
-                            onClick={() => setMainImage(img)} 
-                            className={cn(
-                                'relative aspect-square rounded-lg overflow-hidden border-2 md:w-24 md:h-24',
-                                mainImage === img ? 'border-primary' : 'border-transparent hover:border-muted-foreground/50 transition-colors'
-                            )}
-                        >
-                            <Image
-                                src={img}
-                                alt={`${product.name} thumbnail ${index + 1}`}
-                                fill
-                                className="object-cover"
-                                sizes="(max-width: 768px) 20vw, 10vw"
-                            />
-                        </button>
+                        <CarouselItem key={index}>
+                            <div className="relative aspect-square w-full rounded-lg overflow-hidden border">
+                                <Image
+                                    src={img}
+                                    alt={`${product.name} image ${index + 1}`}
+                                    fill
+                                    className="object-cover"
+                                    sizes="(max-width: 768px) 100vw, 50vw"
+                                    priority={index === 0}
+                                />
+                            </div>
+                        </CarouselItem>
                     ))}
-                </div>
-            )}
-            <div className="relative aspect-square w-full rounded-lg overflow-hidden border">
-                <Image
-                    src={mainImage}
-                    alt={product.name}
-                    data-ai-hint="jewelry product"
-                    fill
-                    className="object-cover"
-                    sizes="(max-width: 768px) 100vw, 50vw"
-                    priority
-                />
-            </div>
+                </CarouselContent>
+                {allImages.length > 1 && !isMobile && (
+                    <>
+                        <CarouselPrevious className="absolute left-2 top-1/2 -translate-y-1/2" />
+                        <CarouselNext className="absolute right-2 top-1/2 -translate-y-1/2" />
+                    </>
+                )}
+            </Carousel>
           </div>
 
           {/* Product Info */}

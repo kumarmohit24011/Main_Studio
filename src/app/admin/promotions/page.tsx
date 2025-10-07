@@ -18,6 +18,8 @@ export default async function AdminPromotionsPage() {
     promoBanner1: toPlainData(siteContent.promoBanner1),
     promoBanner2: toPlainData(siteContent.promoBanner2),
     shippingSettings: toPlainData(siteContent.shippingSettings),
+    showGiftFinder: siteContent.showGiftFinder,
+    showPromoBanners: siteContent.showPromoBanners,
   };
 
   return (

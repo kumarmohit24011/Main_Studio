@@ -16,10 +16,15 @@ export default function GiftFinderPage() {
   const [spinning, setSpinning] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState(true);
-  const { addToCart } = useCart();
+  const { addToCart, hasGiftItem } = useCart();
   const router = useRouter();
 
   useEffect(() => {
+    if (hasGiftItem()) {
+      setLoading(false);
+      return;
+    }
+
     const existingGift = sessionStorage.getItem('wonGift');
     if (existingGift) {
         try {
@@ -51,7 +56,7 @@ export default function GiftFinderPage() {
     };
 
     fetchProducts();
-  }, []);
+  }, [hasGiftItem]);
 
   const handleSpin = () => {
     if (products.length === 0) return;
@@ -96,7 +101,7 @@ export default function GiftFinderPage() {
         action: <Button asChild><Link href="/cart">Go to Cart</Link></Button>
     });
     
-    router.push("/products");
+    router.push("/cart");
   };
 
   if (loading) {
@@ -107,13 +112,35 @@ export default function GiftFinderPage() {
     );
   }
 
+  if (hasGiftItem()) {
+    return (
+      <div className="container mx-auto py-12">
+        <Card className="max-w-2xl mx-auto">
+          <CardHeader>
+            <CardTitle className="text-center text-3xl font-bold tracking-tight">
+              You Already Have a Gift!
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="text-center space-y-6">
+            <p className="text-muted-foreground">
+              You have a gift in your cart. Please complete your order before spinning for a new one.
+            </p>
+            <Button asChild size="lg" className="w-full md:w-auto">
+              <Link href="/cart">View Your Cart</Link>
+            </Button>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
   if (selectedProduct) {
      return (
         <div className="container mx-auto py-12">
             <Card className="max-w-2xl mx-auto">
                 <CardHeader>
                     <CardTitle className="text-center text-3xl font-bold tracking-tight">
-                        You Already Won a Gift!
+                        You Won a Gift!
                     </CardTitle>
                 </CardHeader>
                 <CardContent className="text-center space-y-6">
