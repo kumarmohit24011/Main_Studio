@@ -10,6 +10,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertCircle, Package } from "lucide-react";
+import Image from 'next/image';
 
 interface OrderHistoryProps {
     userId: string;
@@ -119,23 +120,34 @@ export function OrderHistory({ userId, initialOrders }: OrderHistoryProps) {
                         </div>
                         <Badge variant={order.orderStatus === 'delivered' ? 'default' : 'secondary'} className='capitalize'>{order.orderStatus}</Badge>
                     </CardHeader>
-                    <CardContent className='p-4 sm:p-6'>
+                    <CardContent className='p-0'>
                         <Table>
                             <TableHeader>
                                 <TableRow>
-                                    <TableHead>Product</TableHead>
+                                    <TableHead className='pl-6'>Product</TableHead>
                                     <TableHead className='hidden sm:table-cell'>Price</TableHead>
                                     <TableHead className='hidden sm:table-cell'>Quantity</TableHead>
-                                    <TableHead className="text-right">Total</TableHead>
+                                    <TableHead className="text-right pr-6">Total</TableHead>
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
                                 {order.items.map(item => (
                                     <TableRow key={item.productId}>
-                                        <TableCell className="font-medium">{item.name}</TableCell>
+                                        <TableCell className="font-medium py-4 pl-6">
+                                            <div className='flex items-center gap-4'>
+                                                <Image 
+                                                    src={item.imageUrl || 'https://picsum.photos/100/100'}
+                                                    alt={item.name}
+                                                    width={64}
+                                                    height={64}
+                                                    className='rounded-md object-cover w-16 h-16 hidden sm:block'
+                                                />
+                                                <span>{item.name}</span>
+                                            </div>
+                                        </TableCell>
                                         <TableCell className='hidden sm:table-cell'>₹{item.price.toFixed(2)}</TableCell>
                                         <TableCell className='hidden sm:table-cell'>x{item.quantity}</TableCell>
-                                        <TableCell className="text-right">₹{(item.price * item.quantity).toFixed(2)}</TableCell>
+                                        <TableCell className="text-right pr-6">₹{(item.price * item.quantity).toFixed(2)}</TableCell>
                                     </TableRow>
                                 ))}
                             </TableBody>

@@ -10,6 +10,9 @@ import { useCart } from "@/hooks/use-cart";
 import { toast } from "@/hooks/use-toast";
 import Link from "next/link";
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
+import Confetti from 'react-confetti';
+import { useWindowSize } from 'react-use';
 
 export default function GiftFinderPage() {
   const [products, setProducts] = useState<Product[]>([]);
@@ -18,6 +21,8 @@ export default function GiftFinderPage() {
   const [loading, setLoading] = useState(true);
   const { addToCart, hasGiftItem } = useCart();
   const router = useRouter();
+  const [currentProductIndex, setCurrentProductIndex] = useState(0);
+  const { width, height } = useWindowSize();
 
   useEffect(() => {
     if (hasGiftItem()) {
@@ -65,11 +70,10 @@ export default function GiftFinderPage() {
     setSelectedProduct(null);
 
     const spinDuration = 3000;
-    const intervalDuration = 100;
-    let activeIndex = 0;
+    const intervalDuration = 150;
 
     const spinInterval = setInterval(() => {
-      activeIndex = (activeIndex + 1) % products.length;
+      setCurrentProductIndex(prevIndex => (prevIndex + 1) % products.length);
     }, intervalDuration);
 
     setTimeout(() => {
@@ -134,53 +138,63 @@ export default function GiftFinderPage() {
     );
   }
 
-  if (selectedProduct) {
-     return (
-        <div className="container mx-auto py-12">
-            <Card className="max-w-2xl mx-auto">
-                <CardHeader>
-                    <CardTitle className="text-center text-3xl font-bold tracking-tight">
-                        You Won a Gift!
-                    </CardTitle>
-                </CardHeader>
-                <CardContent className="text-center space-y-6">
-                    <p className="text-muted-foreground">
-                        Congratulations! Here is the gift you won. Claim it now by adding it to your cart.
-                    </p>
-                    <div className="space-y-4">
-                        <p className="text-lg font-semibold">Your Gift: {selectedProduct.name}</p>
-                        <div className="max-w-xs mx-auto">
-                            <ProductCard product={selectedProduct} />
-                        </div>
-                        <Button onClick={handleClaimGift} size="lg" className="w-full md:w-auto">
-                            Claim Your Gift
-                        </Button>
-                    </div>
-                </CardContent>
-            </Card>
-        </div>
-     );
+ if (selectedProduct) {
+    return (
+      <div className="relative container mx-auto py-12">
+        <Confetti width={width} height={height} recycle={false} numberOfPieces={500} tweenDuration={10000} />
+        <Card className="max-w-2xl mx-auto overflow-hidden shadow-2xl animate-fade-in-up">
+          <CardHeader className="bg-gradient-to-r from-yellow-400 via-red-500 to-pink-500 p-8">
+            <CardTitle className="text-center text-4xl font-extrabold tracking-tighter text-white drop-shadow-lg">
+              You Won a Gift!
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="text-center space-y-6 p-8 bg-background">
+            <p className="text-lg text-muted-foreground">
+              Congratulations! Here is the gift you won. Claim it now by adding it to your cart.
+            </p>
+            <div className="space-y-4">
+              <div className="max-w-xs mx-auto transform hover:scale-105 transition-transform duration-300">
+                <ProductCard product={selectedProduct} isGift={true} />
+              </div>
+              <Button onClick={handleClaimGift} size="lg" className="w-full md:w-auto text-lg py-6 mt-4 animate-pulse">
+                Claim Your FREE Gift
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    );
   }
 
   return (
     <div className="container mx-auto py-12">
-      <Card className="max-w-2xl mx-auto">
-        <CardHeader>
-          <CardTitle className="text-center text-3xl font-bold tracking-tight">
+      <Card className="max-w-2xl mx-auto shadow-lg">
+        <CardHeader className="bg-gradient-to-r from-primary to-primary-focus text-primary-foreground rounded-t-lg py-8">
+          <CardTitle className="text-center text-4xl font-extrabold tracking-tight">
             Spin to Win a Free Gift!
           </CardTitle>
         </CardHeader>
-        <CardContent className="text-center space-y-6">
-          <p className="text-muted-foreground">
+        <CardContent className="text-center space-y-8 py-10">
+          <p className="text-lg text-muted-foreground">
             Feeling lucky? Spin the wheel to win one of our exclusive products. Add it to your cart with any other purchase to claim!
           </p>
           
-          <div className="relative w-64 h-64 mx-auto border-4 border-primary rounded-full flex items-center justify-center overflow-hidden bg-muted">
-             {spinning && <div className="animate-spin-slow absolute inset-0 bg-gradient-to-r from-transparent via-primary/50 to-transparent"></div>}
-             <span className="text-xl font-semibold">?</span>
+          <div className="relative w-64 h-64 mx-auto border-8 border-primary rounded-full flex items-center justify-center overflow-hidden bg-white shadow-inner">
+             {spinning && <div className="animate-spin-slow absolute inset-0 bg-gradient-to-r from-transparent via-secondary/50 to-transparent"></div>}
+             <div className='transition-opacity duration-150 ease-in-out'>
+                {products.length > 0 && (
+                    <Image 
+                        src={products[currentProductIndex].imageUrl} 
+                        alt={products[currentProductIndex].name} 
+                        width={200} 
+                        height={200} 
+                        className='object-contain rounded-full aspect-square p-2' 
+                    />
+                )}
+             </div>
           </div>
 
-          <Button onClick={handleSpin} disabled={spinning || products.length === 0} size="lg" className="w-full md:w-auto">
+          <Button onClick={handleSpin} disabled={spinning || products.length === 0} size="lg" className="w-full md:w-auto transform hover:scale-105 transition-transform duration-200">
             {spinning ? "Spinning..." : (products.length > 0 ? "Spin the Wheel!" : "Spinner Not Available")}
           </Button>
         </CardContent>

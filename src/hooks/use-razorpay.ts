@@ -75,6 +75,7 @@ export function useRazorpay() {
                         price: item.price || 0,
                         quantity: item.quantity,
                         sku: item.sku,
+                        imageUrl: item.imageUrl, // Added this line
                     }));
 
                     await createOrder({

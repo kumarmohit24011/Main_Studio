@@ -76,16 +76,19 @@ export interface ShippingAddress {
       country: string;
 }
 
+export interface OrderItem {
+    productId: string;
+    name: string;
+    price: number;
+    quantity: number;
+    sku?: string;
+    imageUrl?: string; // Added this line
+}
+
 export interface Order {
     id: string;
     userId: string;
-    items: {
-        productId: string;
-        name: string;
-        price: number;
-        quantity: number;
-        sku?: string;
-    }[];
+    items: OrderItem[];
     totalAmount: number;
     orderStatus: 'processing' | 'shipped' | 'delivered' | 'cancelled';
     paymentStatus: 'paid' | 'pending';

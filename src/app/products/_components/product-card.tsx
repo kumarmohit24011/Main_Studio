@@ -1,3 +1,4 @@
+
 'use client';
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -9,7 +10,7 @@ import { Heart } from "lucide-react";
 import { useWishlist } from "@/hooks/use-wishlist";
 import { AddToCartButton } from "@/components/shared/add-to-cart-button";
 
-export function ProductCard({ product }: { product: Product }) {
+export function ProductCard({ product, isGift }: { product: Product; isGift?: boolean }) {
   const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlist();
   const inWishlist = isInWishlist(product.id);
 
@@ -25,7 +26,6 @@ export function ProductCard({ product }: { product: Product }) {
 
   const showDiscount = !!product.salePrice;
 
-  // Filter out special tags that have their own indicators
   const displayTags = product.tags?.filter(tag => tag !== 'popular') || [];
 
   return (
@@ -43,6 +43,11 @@ export function ProductCard({ product }: { product: Product }) {
           </Link>
 
           <div className="absolute top-2 left-2 flex flex-wrap gap-1">
+             {isGift && (
+                <Badge className="bg-green-500 text-white hover:bg-green-600 border-none text-base px-2 py-1">
+                    FREE
+                </Badge>
+            )}
             {product.tags?.includes('popular') && (
               <Badge className="bg-rose-500 text-rose-50 hover:bg-rose-600 border-none text-xs px-1.5 py-0.5">
                 Hot
@@ -53,7 +58,7 @@ export function ProductCard({ product }: { product: Product }) {
                     New
                 </Badge>
             )}
-            {displayTags.slice(0, 2).map((tag) => ( // Show first 2 custom tags
+            {displayTags.slice(0, 2).map((tag) => (
                 <Badge key={tag} variant="secondary" className="text-xs px-1.5 py-0.5 capitalize">
                     {tag}
                 </Badge>
@@ -75,18 +80,24 @@ export function ProductCard({ product }: { product: Product }) {
                 <h3 className="font-semibold text-sm sm:text-base text-foreground truncate min-h-[2.5em] sm:min-h-[2em]">{product.name}</h3>
             </Link>
             <div className="flex items-baseline gap-2 mt-1 sm:mt-2">
-                <p className="text-primary font-bold text-base sm:text-lg">
-                    ₹{showDiscount ? product.salePrice?.toFixed(2) : product.price.toFixed(2)}
-                </p>
-                {showDiscount && (
-                    <p className="text-muted-foreground text-xs sm:text-sm line-through">
-                        ₹{product.price.toFixed(2)}
-                    </p>
+                 {isGift ? (
+                    <p className="text-green-600 font-bold text-lg">FREE</p>
+                ) : (
+                    <>
+                        <p className="text-primary font-bold text-base sm:text-lg">
+                            ₹{showDiscount ? product.salePrice?.toFixed(2) : product.price.toFixed(2)}
+                        </p>
+                        {showDiscount && (
+                            <p className="text-muted-foreground text-xs sm:text-sm line-through">
+                                ₹{product.price.toFixed(2)}
+                            </p>
+                        )}
+                    </>
                 )}
             </div>
         </CardContent>
       </div>
-      <AddToCartButton product={product} size="sm" className="w-full rounded-none" />
+      {!isGift && <AddToCartButton product={product} size="sm" className="w-full rounded-none" />}
     </Card>
   );
 }
