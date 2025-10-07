@@ -14,6 +14,8 @@ import Image from 'next/image';
 import Confetti from 'react-confetti';
 import { useWindowSize } from 'react-use';
 
+const FALLBACK_IMAGE_URL = 'https://picsum.photos/200/200';
+
 export default function GiftFinderPage() {
   const [products, setProducts] = useState<Product[]>([]);
   const [spinning, setSpinning] = useState(false);
@@ -107,6 +109,8 @@ export default function GiftFinderPage() {
     
     router.push("/cart");
   };
+  
+  const currentProduct = products[currentProductIndex];
 
   if (loading) {
     return (
@@ -182,10 +186,10 @@ export default function GiftFinderPage() {
           <div className="relative w-64 h-64 mx-auto border-8 border-primary rounded-full flex items-center justify-center overflow-hidden bg-white shadow-inner">
              {spinning && <div className="animate-spin-slow absolute inset-0 bg-gradient-to-r from-transparent via-secondary/50 to-transparent"></div>}
              <div className='transition-opacity duration-150 ease-in-out'>
-                {products.length > 0 && (
+                {currentProduct && (
                     <Image 
-                        src={products[currentProductIndex].imageUrl} 
-                        alt={products[currentProductIndex].name} 
+                        src={currentProduct.imageUrl || FALLBACK_IMAGE_URL} 
+                        alt={currentProduct.name} 
                         width={200} 
                         height={200} 
                         className='object-contain rounded-full aspect-square p-2' 
