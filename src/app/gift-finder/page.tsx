@@ -171,38 +171,63 @@ export default function GiftFinderPage() {
   }
 
   return (
-    <div className="container mx-auto py-12">
-      <Card className="max-w-2xl mx-auto shadow-lg">
-        <CardHeader className="bg-gradient-to-r from-primary to-primary-focus text-primary-foreground rounded-t-lg py-8">
-          <CardTitle className="text-center text-4xl font-extrabold tracking-tight">
-            Spin to Win a Free Gift!
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="text-center space-y-8 py-10">
-          <p className="text-lg text-muted-foreground">
-            Feeling lucky? Spin the wheel to win one of our exclusive products. Add it to your cart with any other purchase to claim!
-          </p>
-          
-          <div className="relative w-64 h-64 mx-auto border-8 border-primary rounded-full flex items-center justify-center overflow-hidden bg-white shadow-inner">
-             {spinning && <div className="animate-spin-slow absolute inset-0 bg-gradient-to-r from-transparent via-secondary/50 to-transparent"></div>}
-             <div className='transition-opacity duration-150 ease-in-out'>
-                {currentProduct && (
-                    <Image 
-                        src={currentProduct.imageUrl || FALLBACK_IMAGE_URL} 
-                        alt={currentProduct.name} 
-                        width={200} 
-                        height={200} 
-                        className='object-contain rounded-full aspect-square p-2' 
-                    />
-                )}
-             </div>
-          </div>
+    <div className="container mx-auto py-12 bg-gray-50">
+      <div className="text-center mb-12">
+        <h1 className="text-5xl font-extrabold tracking-tight text-gray-900 sm:text-6xl drop-shadow-lg">
+          Spin the Wheel of Jewels!
+        </h1>
+        <p className="mt-4 max-w-2xl mx-auto text-xl text-gray-500">
+          A chance to win an exclusive piece from our collection. Are you ready to get lucky?
+        </p>
+      </div>
+      
+      <div className="relative w-96 h-96 mx-auto border-8 border-yellow-400 rounded-full flex items-center justify-center overflow-hidden bg-white shadow-2xl">
+         {spinning && <div className="animate-spin-slow absolute inset-0 bg-gradient-to-r from-transparent via-pink-500/50 to-transparent"></div>}
+         <div className='transition-opacity duration-150 ease-in-out'>
+            {currentProduct && (
+                <Image 
+                    src={currentProduct.imageUrl || FALLBACK_IMAGE_URL} 
+                    alt={currentProduct.name} 
+                    width={250} 
+                    height={250} 
+                    className='object-contain rounded-full aspect-square p-2' 
+                />
+            )}
+         </div>
+      </div>
 
-          <Button onClick={handleSpin} disabled={spinning || products.length === 0} size="lg" className="w-full md:w-auto transform hover:scale-105 transition-transform duration-200">
-            {spinning ? "Spinning..." : (products.length > 0 ? "Spin the Wheel!" : "Spinner Not Available")}
-          </Button>
-        </CardContent>
-      </Card>
+      <div className="mt-12 text-center">
+        <Button onClick={handleSpin} disabled={spinning || products.length === 0} size="lg" className="w-full md:w-auto transform hover:scale-105 transition-transform duration-200 text-2xl py-8 px-12 rounded-full font-bold text-white bg-gradient-to-r from-pink-500 to-yellow-500 hover:from-pink-600 hover:to-yellow-600 shadow-lg">
+          {spinning ? "Spinning..." : (products.length > 0 ? "SPIN NOW!" : "Spinner Not Available")}
+        </Button>
+      </div>
+
+      <div className="mt-24">
+          <h2 className="text-center text-3xl font-bold tracking-tight text-gray-900">How It Works</h2>
+          <div className="mt-8 grid md:grid-cols-3 gap-8 text-center">
+              <div className="space-y-4">
+                  <div className="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-yellow-400 text-white shadow-lg">
+                      <span className="text-2xl font-bold">1</span>
+                  </div>
+                  <h3 className="text-xl font-semibold">Spin the Wheel</h3>
+                  <p className="text-gray-500">Click the "SPIN NOW!" button for a chance to win.</p>
+              </div>
+              <div className="space-y-4">
+                  <div className="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-pink-500 text-white shadow-lg">
+                      <span className="text-2xl font-bold">2</span>
+                  </div>
+                  <h3 className="text-xl font-semibold">Win a Prize</h3>
+                  <p className="text-gray-500">If you're lucky, you'll win one of our exclusive products.</p>
+              </div>
+              <div className="space-y-4">
+                  <div className="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-yellow-400 text-white shadow-lg">
+                      <span className="text-2xl font-bold">3</span>
+                  </div>
+                  <h3 className="text-xl font-semibold">Claim Your Gift</h3>
+                  <p className="text-gray-500">Add the gift to your cart and checkout with at least one other item.</p>
+              </div>
+          </div>
+      </div>
     </div>
   );
 }
