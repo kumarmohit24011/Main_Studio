@@ -10,7 +10,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 const faqItems = [
   {
     question: "What materials are your jewelry made of?",
-    answer: "Our jewelry is crafted from high-quality materials including 925 sterling silver, 18k gold plating, and ethically sourced gemstones. Specific material details are listed on each product page."
+    answer: "We offer modern, trending jewellery in all varieties, including anti-tarnish, gold-plated, silver-plated, and more. For complete details, please check the description of each product."
   },
   {
     question: "How do I care for my jewelry?",
@@ -18,15 +18,15 @@ const faqItems = [
   },
   {
     question: "What is your shipping policy?",
-    answer: "We offer free standard shipping on all orders above ₹1000 within India. Express shipping is also available for a fee. Please see our Shipping & Returns page for detailed information."
+    answer: "We offer free standard shipping on all orders above ₹500 within India. Please see our Shipping & Returns page for detailed information."
   },
   {
     question: "What is your return policy?",
-    answer: "We accept returns within 15 days of delivery for a full refund or exchange, provided the item is in its original, unworn condition. Please visit our Shipping & Returns page for instructions on how to initiate a return."
+    answer: "We accept returns within 7 days of delivery for a full refund or exchange, provided the item is in its original, unworn condition. Please visit our Shipping & Returns page for instructions on how to initiate a return."
   },
   {
     question: "How can I track my order?",
-    answer: "Once your order has shipped, you will receive an email with a tracking number and a link to track your package. You can also find your order status and tracking information in the 'Order History' section of your account."
+    answer: "Once your order has shipped, You can find your order status and tracking information in the 'Order History' section of your account."
   },
   {
     question: "Do you offer international shipping?",

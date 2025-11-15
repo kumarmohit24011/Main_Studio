@@ -30,7 +30,7 @@ export default function ShippingAndReturnsPage() {
               <h4 className="font-semibold text-foreground">Shipping Rates & Delivery Estimates</h4>
               <ul className="list-disc list-inside space-y-2">
                 <li><strong>Standard Shipping:</strong> ₹50 (Free on orders over ₹1000). Delivery in 5-7 business days.</li>
-                <li><strong>Express Shipping:</strong> ₹150. Delivery in 2-3 business days.</li>
+                <li><strong>Express Shipping:</strong> Currently Not Available</li>
               </ul>
             </div>
             <p>
@@ -53,7 +53,7 @@ export default function ShippingAndReturnsPage() {
             </p>
             <div>
               <h4 className="font-semibold text-foreground">Return Period</h4>
-              <p>Our policy lasts 15 days. If 15 days have gone by since your purchase, unfortunately, we can’t offer you a refund or exchange.</p>
+              <p>Our policy lasts 7 days. If 7 days have gone by since your purchase, unfortunately, we can’t offer you a refund or exchange.</p>
             </div>
              <div>
               <h4 className="font-semibold text-foreground">Conditions for Return</h4>
@@ -65,7 +65,7 @@ export default function ShippingAndReturnsPage() {
             </div>
              <div>
               <h4 className="font-semibold text-foreground">How to Start a Return</h4>
-              <p>To initiate a return, please email us at <a href="mailto:support@redbow.com" className="text-primary hover:underline font-medium">support@redbow.com</a> with your order number and reason for return.</p>
+              <p>To initiate a return, please email us at <a href="mailto:redbowofficial@gmail.com" className="text-primary hover:underline font-medium">redbowofficial@gmail.com</a> with your order number and reason for return.</p>
             </div>
           </CardContent>
         </Card>

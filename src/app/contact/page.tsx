@@ -20,20 +20,20 @@ export default function ContactPage() {
                     <CardDescription>Get in touch directly via email or phone.</CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-6 text-muted-foreground">
-                     <a href="mailto:support@redbow.com" className="flex items-start gap-4 hover:text-primary transition-colors">
+                     <a href="mailto:redbowofficial@gmail.com" className="flex items-start gap-4 hover:text-primary transition-colors">
                         <div>
                             <p className="font-semibold text-foreground">Email</p>
-                            <p>support@redbow.com</p>
+                            <p>redbowofficial@gmail.com</p>
                             <p className="text-xs">We typically respond within 24 hours.</p>
                         </div>
                     </a>
-                     <a href="tel:+919876543210" className="flex items-start gap-4 hover:text-primary transition-colors">
+                     <div className="flex items-start gap-4">
                          <div>
-                            <p className="font-semibold text-foreground">Phone</p>
-                            <p>+91 987 654 3210</p>
+                            <p className="font-semibold text-foreground">Instagram</p>
+                            <p>redbow.jewels</p>
                              <p className="text-xs">Mon - Fri, 9am - 5pm IST</p>
                         </div>
-                    </a>
+                    </div>
                 </CardContent>
             </Card>
         </div>
@@ -46,11 +46,6 @@ export default function ContactPage() {
                     <CardDescription>Reach out on your favorite platform.</CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                    <Button asChild className="w-full" size="lg">
-                        <a href="https://wa.me/919876543210" target="_blank" rel="noopener noreferrer">
-                           Chat on WhatsApp
-                        </a>
-                    </Button>
                      <Button asChild className="w-full" size="lg" variant="secondary">
                         <Link href="https://www.instagram.com/redbow.jewels" target="_blank" rel="noopener noreferrer">
                            Instagram

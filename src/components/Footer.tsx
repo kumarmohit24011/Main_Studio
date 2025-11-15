@@ -35,12 +35,12 @@ export function Footer() {
               Crafting memories with every piece of jewelry. Timeless elegance for modern life.
             </p>
             <div className="space-y-2 text-muted-foreground">
-                <a href="mailto:support@redbow.com" className="flex items-center gap-2 hover:text-primary transition-colors">
-                    support@redbow.com
+                <a href="mailto:redbowofficial@gmail.com" className="flex items-center gap-2 hover:text-primary transition-colors">
+                    redbowofficial@gmail.com
                 </a>
-                <a href="tel:+919876543210" className="flex items-center gap-2 hover:text-primary transition-colors">
-                    +91 987 654 3210
-                </a>
+                <p className="flex items-center gap-2">
+                    redbow.jewels
+                </p>
             </div>
           </div>
           
@@ -72,7 +72,7 @@ export function Footer() {
 
         {/* Bottom Bar */}
         <div className="py-6 text-center text-xs text-muted-foreground">
-          <p>© {currentYear} Redbow Inc. All Rights Reserved.</p>
+          <p>© {new Date().getFullYear()} Redbow Inc. All Rights Reserved.</p>
            <div className="inline-flex gap-4 mt-2">
              <Link href="/terms" className="hover:text-primary transition-colors">Terms of Service</Link>
              <Link href="/privacy" className="hover:text-primary transition-colors">Privacy Policy</Link>
