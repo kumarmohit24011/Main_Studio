@@ -45,8 +45,6 @@ const nextConfig: NextConfig = {
     ]
   }),
   images: {
-    loader: 'custom',
-    loaderFile: './apphosting-image-loader.js',
     remotePatterns: [
       {
         protocol: 'https',
