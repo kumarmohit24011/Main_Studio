@@ -65,15 +65,17 @@ export function ProductCard({ product, isGift }: { product: Product; isGift?: bo
             ))}
           </div>
 
-          <Button 
-              variant="secondary" 
-              size="icon" 
-              onClick={handleToggleWishlist} 
-              className="absolute top-2 right-2 rounded-full h-8 w-8 bg-background/60 backdrop-blur-sm hover:bg-background"
-              aria-label="Toggle Wishlist"
-          >
-              <Heart className={`w-4 h-4 ${inWishlist ? 'text-red-500 fill-red-500' : 'text-foreground'}`}/>
-          </Button>
+          {!isGift && (
+            <Button 
+                variant="secondary" 
+                size="icon" 
+                onClick={handleToggleWishlist} 
+                className="absolute top-2 right-2 rounded-full h-8 w-8 bg-background/60 backdrop-blur-sm hover:bg-background"
+                aria-label="Toggle Wishlist"
+            >
+                <Heart className={`w-4 h-4 ${inWishlist ? 'text-red-500 fill-red-500' : 'text-foreground'}`}/>
+            </Button>
+          )}
         </div>
         <CardContent className="p-2 sm:p-4 pb-2 sm:pb-3">
             <Link href={`/products/${product.id}`}>
