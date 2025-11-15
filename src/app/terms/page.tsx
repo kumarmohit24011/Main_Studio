@@ -13,7 +13,7 @@ export default function TermsPage() {
         <CardContent className="p-8 space-y-6 text-muted-foreground">
           <section className="space-y-2">
             <h2 className="text-2xl font-semibold text-foreground">1. Introduction</h2>
-            <p>Welcome to Redbow! These Terms of Service ("Terms") govern your use of our website located at [Your Website URL] and any related services provided by Redbow. By accessing our website, you agree to abide by these Terms of Service and to comply with all applicable laws and regulations.</p>
+            <p>Welcome to Redbow! These Terms of Service ("Terms") govern your use of our website located at https://redbow.in/ and any related services provided by Redbow. By accessing our website, you agree to abide by these Terms of Service and to comply with all applicable laws and regulations.</p>
           </section>
 
           <section className="space-y-2">
