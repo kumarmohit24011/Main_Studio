@@ -203,7 +203,7 @@ export const updatePromoBanner = async (bannerId: 'promoBanner1' | 'promoBanner2
 
         const updateData: any = {
             ...data,
-            updatedAt: serverTimestamp()
+            updatedAt: serverTimestamp(),
         };
 
         if (imageFile) {
@@ -212,18 +212,18 @@ export const updatePromoBanner = async (bannerId: 'promoBanner1' | 'promoBanner2
                     const oldImageRef = ref(storage, oldImageUrl);
                     await deleteObject(oldImageRef);
                 } catch (deleteError: any) {
-                     if (deleteError.code === 'storage/object-not-found') {
+                    if (deleteError.code === 'storage/object-not-found') {
                         console.warn(`Old promo banner image not found, skipping deletion: ${oldImageUrl}`);
                     } else {
                         console.error(`Error deleting old promo banner image for ${bannerId}:`, deleteError);
                     }
                 }
             }
-            const storageRef = ref(storage, `content-images/${bannerId}-${imageFile.name}-${Date.now()}`);
+            const storageRef = ref(storage, `promo-banners/${bannerId}-${imageFile.name}-${Date.now()}`);
             const snapshot = await uploadBytes(storageRef, imageFile);
             updateData.imageUrl = await getDownloadURL(snapshot.ref);
         }
-        
+
         const firestoreUpdate = { [bannerId]: updateData };
 
         await setDoc(siteContentRef, firestoreUpdate, { merge: true });
@@ -233,7 +233,7 @@ export const updatePromoBanner = async (bannerId: 'promoBanner1' | 'promoBanner2
         console.error(`Error in updatePromoBanner for ${bannerId}:`, error);
         throw error;
     }
-}
+};
 
 export const updateShippingSettings = async (data: Omit<ShippingSettingsData, 'updatedAt'>): Promise<void> => {
     try {

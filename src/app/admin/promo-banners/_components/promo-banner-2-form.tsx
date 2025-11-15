@@ -9,12 +9,14 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import { updatePromoBanner, type PromoBannerData } from "@/services/siteContentService";
+import Image from 'next/image';
 
 const formSchema = z.object({
   headline: z.string().min(2, { message: "Headline must be at least 2 characters." }),
   subtitle: z.string().min(2, { message: "Subtitle must be at least 2 characters." }),
   buttonText: z.string().min(2, { message: "Button text must be at least 2 characters." }),
   buttonLink: z.string().url({ message: "Please enter a valid URL." }),
+  image: z.any(),
 });
 
 export function PromoBanner2Form({ data }: { data: PromoBannerData }) {
@@ -26,12 +28,16 @@ export function PromoBanner2Form({ data }: { data: PromoBannerData }) {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
-      await updatePromoBanner('promoBanner2', values);
-      toast({ title: "Success", description: "Promotional banner 2 updated." });
+        const { image, ...rest } = values;
+        const imageFile = image && image.length > 0 ? image[0] : undefined;
+        await updatePromoBanner('promoBanner2', rest, imageFile);
+        toast({ title: "Success", description: "Promotional banner 2 updated." });
     } catch (error) {
-      toast({ title: "Error", description: "Could not update promotional banner 2." });
+        console.error("Error updating promo banner 2:", error);
+        toast({ title: "Error", description: "Could not update promotional banner 2." });
     }
-  }
+}
+
 
   return (
     <Form {...form}>
@@ -87,6 +93,23 @@ export function PromoBanner2Form({ data }: { data: PromoBannerData }) {
               <FormMessage />
             </FormItem>
           )}
+        />
+        <div className="w-full flex items-center justify-center">
+            {data.imageUrl && <Image src={data.imageUrl} alt="Current promo image" width={200} height={200} className="rounded-lg" />}
+        </div>
+
+        <FormField
+            control={form.control}
+            name="image"
+            render={({ field }) => (
+                <FormItem>
+                <FormLabel>Promotional Image</FormLabel>
+                <FormControl>
+                    <Input type="file" accept="image/*" onChange={(e) => field.onChange(e.target.files)} />
+                </FormControl>
+                <FormMessage />
+                </FormItem>
+            )}
         />
         <Button type="submit">Save changes</Button>
       </form>
