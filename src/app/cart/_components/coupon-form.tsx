@@ -71,7 +71,7 @@ export function CouponForm({ onApplyCoupon, onRemoveCoupon, appliedCoupon, subto
             <Input 
                 placeholder="Discount code" 
                 value={couponCode}
-                onChange={(e) => setCouponCode(e.target.value)}
+                onChange={(e) => setCouponCode(e.target.value.toUpperCase().replace(/\s/g, ''))}
                 disabled={loading}
                 className="bg-background"
             />
